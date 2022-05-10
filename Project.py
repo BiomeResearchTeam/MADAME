@@ -20,14 +20,16 @@ class Project:
 
         return self.ProjectAvailability
 
+    def getProjectID(self):
+        return self.ProjectID
+
     def getProjectDescription(self):
         pass
 
     def getProjectName(self):
         pass
 
-    def getProjectID(self):
-        return self.ProjectID
+    def xml_iterator
 
 #   EDITATO FIN QUI ########
 
