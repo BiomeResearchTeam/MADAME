@@ -27,7 +27,7 @@ class Utilities:
     def __init__(self, name):
         self.name = name
 
-    def bytes_converter(bytes):
+    def bytes_converter(self, bytes):
     # Converts bytes    
         units = ['KB', 'MB', 'GB', 'TB']
         mult = 1024

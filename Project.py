@@ -1,10 +1,16 @@
 import requests as rq
+import os
+import xml.etree.ElementTree as ET
+import pandas as pd
 from Experiment import Experiment
+from Utilities import Utilities
 
 class Project:
     def __init__(self, projectID):
         self.ProjectID = projectID
     
+    def getProjectID(self):
+        return self.ProjectID
 
     def getProjectAvailability(self, projectID):
     # Check Project's availability based on its metadata availability
@@ -20,17 +26,69 @@ class Project:
 
         return self.ProjectAvailability
 
-    def getProjectID(self):
-        return self.ProjectID
+    def getProjectBytes(self, projectID):
+        os.chdir(projectID)
+        # Read experiments metadata
+        df = pd.read_csv(f'{projectID}_experiments-metadata.tsv', sep='\t')
 
-    def getProjectDescription(self):
-        pass
+        # Only read df lines which are not NaN in the fastq_bytes column (so, they are available runs)
+        df1 = df[df['fastq_bytes'].notna()]
 
-    def getProjectName(self):
-        pass
+        # Group by fastq_ftp and then fastq_bytes columns: so if a file is repeated in multiple
+        # lines (e.g. multiple samples for the same run), we count it only one time
+        df2 = df1.groupby(['fastq_ftp','fastq_bytes'])['fastq_bytes'].count().to_frame(name = 'count').reset_index()
 
-    def xml_iterator
+        # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
+        # Split the two numbers and add them to each other, before calculating the total of the column.
+        if df2['fastq_bytes'].dtypes != 'int64':
+            df3 = df2['fastq_bytes'].apply(lambda x: sum(map(int, x.split(';'))))
+            bytes = df3.sum()
 
+        # If files are single-end, values in fastq_bytes will be integers -> df.sum()
+        else:
+            bytes = df2['fastq_bytes'].sum() 
+
+        os.chdir(os.path.pardir)
+
+        return bytes
+
+    def getProjectSize(self, projectID):
+        bytes = self.getProjectBytes(projectID)
+        convert = Utilities("convert")
+        size = convert.bytes_converter(bytes)
+             
+        return size
+
+    def getProjectInfo(self, projectID, field):
+        # Utility function for getProjectName, getProjectTitle, getProjectDescription functions.
+        os.chdir(projectID)
+        tree = ET.parse(f'{projectID}_project-metadata.xml')
+        root = tree.getroot()
+
+        for children in root.iter("PROJECT"):
+            child = children.find(field)
+            if child is not None:
+                value = child.text
+            else:
+                value = f"ERROR: MISSING FIELD ({field})"
+        
+        os.chdir(os.path.pardir)
+
+        return value   
+
+    def getProjectName(self, projectID):
+        projectName = self.getProjectInfo(projectID, "NAME")
+        print('Project Name:', projectName)
+
+    def getProjectTitle(self, projectID):
+        projectTitle = self.getProjectInfo(projectID, "TITLE")
+        print('Project Title:', projectTitle)
+
+    def getProjectDescription(self, projectID):
+        projectDescription = self.getProjectInfo(projectID, "DESCRIPTION")
+        print('Project Description:', projectDescription)
+   
+    
 #   EDITATO FIN QUI ########
 
     def createExperiments(self, logger, listOfExp):
@@ -63,3 +121,7 @@ class Project:
             expXml = exp.toXMLExperiment()
 
         return
+
+os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
+size = Project("size")
+print(size.getProjectSize('PRJEB31610'))
