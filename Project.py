@@ -55,6 +55,7 @@ class Project:
         return bytes
 
     def getProjectSize(self, projectID, file_type):
+        # file_type can only be 'sra' or 'fastq'.
         bytes = self.getProjectBytes(projectID, file_type)
         convert = Utilities("convert")
         size = convert.bytes_converter(bytes)
@@ -71,20 +72,20 @@ class Project:
 
         return all_runs
 
-    def getAvailableRuns(self, projectID):
-
+    def getAvailableRuns(self, projectID, file_type):
+        # file_type can only be 'sra' or 'fastq'.
         metadata_file = (os.path.join(f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
         df = pd.read_csv(metadata_file, sep='\t')
-        df1 = df[df['sra_bytes'].notna()]
-        df2 = df1.groupby(['sra_ftp','sra_bytes','run_accession'])['sra_bytes'].count().to_frame(name = 'count').reset_index()
+        df1 = df[df[f'{file_type}_bytes'].notna()]
+        df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
         available_runs = df2['run_accession'].to_list()
 
         return available_runs
 
-    def getUnavailableRuns(self, projectID):
-        
+    def getUnavailableRuns(self, projectID, file_type):
+        # file_type can only be 'sra' or 'fastq'.
         all_runs = self.getAllRuns(projectID)
-        available_runs = self.getAvailableRuns(projectID)
+        available_runs = self.getAvailableRuns(projectID, file_type)
         subtraction = set(all_runs) - set(available_runs)
         unavailable_runs = list(subtraction)
 
@@ -110,15 +111,18 @@ class Project:
 
     def getProjectName(self, projectID):
         projectName = self.getProjectInfo(projectID, "NAME")
-        print('Project Name:', projectName)
+
+        return projectName
 
     def getProjectTitle(self, projectID):
         projectTitle = self.getProjectInfo(projectID, "TITLE")
-        print('Project Title:', projectTitle)
+        
+        return projectTitle
 
     def getProjectDescription(self, projectID):
         projectDescription = self.getProjectInfo(projectID, "DESCRIPTION")
-        print('Project Description:', projectDescription)
+        
+        return projectDescription
    
     
 #   EDITATO FIN QUI ########
