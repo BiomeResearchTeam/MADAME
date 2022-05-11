@@ -121,7 +121,8 @@ class SampleMetadataParser:
 
         # Save as parsed-samples-metadata.tsv outside sample_xml_directory
         parent_dir = os.path.join(os.getcwd(), os.pardir)
-        df.to_csv(os.path.join(parent_dir, "parsed-samples-metadata") + '.tsv', sep='\t', index=None)
+        projectID = os.path.basename(os.path.split(os.getcwd())[0])
+        df.to_csv(os.path.join(parent_dir, f"{projectID}_parsed-samples-metadata") + '.tsv', sep='\t', index=None)
 
         # Exits to project folder
         os.chdir(os.path.pardir)
