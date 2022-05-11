@@ -15,11 +15,15 @@ class SampleMetadataParser:
     # runs the parser on sample_xml_directory files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
         print("📑   Parsing samples metadata...")
-        for projectID in listOfProjectIDs:         
-            os.chdir(projectID)
-            sample_xml_directory = "samples-metadata_xml"
-            self.sampleMetadataParser(sample_xml_directory)
-            os.chdir(os.path.pardir)
+        for projectID in listOfProjectIDs:
+            # checks if .tsvparsed file already exists
+            if os.path.isfile(os.path.join(projectID, f'{projectID}_parsed-samples-metadata.tsv')):
+                pass  
+            else:     
+                os.chdir(projectID)
+                sample_xml_directory = "samples-metadata_xml"
+                self.sampleMetadataParser(sample_xml_directory)
+                os.chdir(os.path.pardir)
         print("✅   Parsing completed!")
 
 
