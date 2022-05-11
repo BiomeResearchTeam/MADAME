@@ -7,6 +7,7 @@ from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
 from SampleMetadataDownload import SampleMetadataDownload
 from Utilities import Directory
 from SampleMetadataParser import SampleMetadataParser
+from Project import Project
 
 
 def main():
@@ -95,6 +96,26 @@ def main():
         print("✨   trying metadata parsing...\n")
         MetadataParsing = SampleMetadataParser("MetadataParsing")
         MetadataParsing.runParseMetadata(listOfProjectIDs)
+
+        print("------------------------")
+        print("✨   trying some functions of Project.py!\n")
+        projectID = listOfProjectIDs[0]
+        first = Project("first")
+        print(f"📝 our first project in listOfProjectIDs: {projectID}")      
+        print(f"📝 availability: {first.getProjectAvailability(projectID)}")
+        print(f"📝 project size, sra: {first.getProjectSize(projectID, 'sra')}")
+        print(f"📝 project size, fastq: {first.getProjectSize(projectID, 'fastq')}")
+        print(f"📝 total runs: {len(first.getAllRuns(projectID))}")
+        print(f"📝 available runs, sra: {len(first.getAvailableRuns(projectID, 'sra'))}")
+        print(f"📝 unavailable runs, sra: {len(first.getUnavailableRuns(projectID, 'sra'))}")
+        print(f"📝 available runs, fastq: {len(first.getAvailableRuns(projectID, 'fastq'))}")
+        print(f"📝 unavailable runs, fastq: {len(first.getUnavailableRuns(projectID, 'fastq'))}")
+        print(f"📝 project name: {first.getProjectName(projectID)}")
+        print(f"📝 project title: {first.getProjectTitle(projectID)}")
+        print(f"📝 project description: {first.getProjectDescription(projectID)}")
+        
+        
+
 
 
 
