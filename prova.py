@@ -1,6 +1,7 @@
 import os
 import logging
 from os.path import exists
+from webbrowser import get
 
 from IDlist import GetIDlist
 from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
@@ -8,6 +9,7 @@ from SampleMetadataDownload import SampleMetadataDownload
 from Utilities import Directory
 from SampleMetadataParser import SampleMetadataParser
 from Project import Project
+from ProjectManager import ProjectManager
 
 
 def main():
@@ -68,7 +70,8 @@ def main():
 
         print("------------------------")
         print("✨   obtaining a list of AVAILABLE projects:")
-        listOfProjectIDs = prova.getAvailableProjects(logger, listOfProjectIDs)
+        get_available = ProjectManager("get_available")
+        listOfProjectIDs = get_available.getAvailableProjects(logger, listOfProjectIDs)
 
         print("------------------------")
         print("✨   trying metadata download (project + experiments)\n")
