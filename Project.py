@@ -123,8 +123,10 @@ class Project:
         projectDescription = self.getProjectInfo(projectID, "DESCRIPTION")
         
         return projectDescription
-   
+
     
+   
+
 #   EDITATO FIN QUI ########
 
     def createExperiments(self, logger, listOfExp):
