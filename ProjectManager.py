@@ -7,9 +7,30 @@ from Project import Project
 
 
 class ProjectManager:
-    def __init__(self, name, projectName):
-        self.projectManagerName = projectName
-        self.listOfProject = []
+    def __init__(self, name): #projectName):
+        self.name = name
+        #self.projectManagerName = projectName
+        #self.listOfProject = []
+
+    def getAvailableProjects(self, logger, listOfProjectIDs):
+    # Input is the full list of project IDs, output is the list of the available projects.
+    # This list is needed for all steps after getting a listOfProjectIDs.
+
+        listOfAvailableProjects = []
+
+        for projectID in listOfProjectIDs:
+            project = Project(projectID) 
+            if project.getProjectAvailability(projectID) == True:
+                listOfAvailableProjects.append(projectID)
+
+        
+        logger.info(f"Available projects: {listOfAvailableProjects}")
+
+        return listOfAvailableProjects
+
+
+
+#   EDITATO FIN QUI ########
 
     def getListOfProject(self):
         return self.listOfProject
