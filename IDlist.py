@@ -150,20 +150,4 @@ class GetIDlist:
         output = print(f"📑   Details of entered accessions:\naccession\tdescription\n{joined_results}")
 
         return output
-
-    def getAvailableProjects(self, logger, listOfProjectIDs):
-    # Input is the full list of project IDs, output is the list of the available projects.
-    # This list is needed for all steps after getting a listOfProjectIDs.
-
-        list_of_available_projects = []
-
-        for projectID in listOfProjectIDs:
-            project = Project(projectID) 
-            if project.getProjectAvailability(projectID) == True:
-                list_of_available_projects.append(projectID)
-
-        listOfProjectIDs = list_of_available_projects
-        logger.info(f"Available projects: {listOfProjectIDs}")
-
-        return listOfProjectIDs
     
