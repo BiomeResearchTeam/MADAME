@@ -55,7 +55,7 @@ class Project:
         return bytes
 
     def getProjectSize(self, projectID, file_type):
-        # file_type can only be 'sra' or 'fastq'.
+        # Accepted file_types: {submitted,fastq,sra}
         bytes = self.getProjectBytes(projectID, file_type)
         convert = Utilities("convert")
         size = convert.bytes_converter(bytes)
@@ -65,7 +65,7 @@ class Project:
     
     def getAllRuns(self, projectID):
 
-        metadata_file = (os.path.join(f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
+        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
         df = pd.read_csv(metadata_file, sep='\t')
         df1 = df['run_accession'].value_counts().to_frame(name = 'value_counts').reset_index()
         all_runs = df1['index'].to_list()
@@ -73,8 +73,8 @@ class Project:
         return all_runs
 
     def getAvailableRuns(self, projectID, file_type):
-        # file_type can only be 'sra' or 'fastq'.
-        metadata_file = (os.path.join(f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
+        # Accepted file_types: {submitted,fastq,sra}
+        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
         df = pd.read_csv(metadata_file, sep='\t')
         df1 = df[df[f'{file_type}_bytes'].notna()]
         df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
@@ -83,13 +83,31 @@ class Project:
         return available_runs
 
     def getUnavailableRuns(self, projectID, file_type):
-        # file_type can only be 'sra' or 'fastq'.
+        # Accepted file_types: {submitted,fastq,sra}
         all_runs = self.getAllRuns(projectID)
         available_runs = self.getAvailableRuns(projectID, file_type)
         subtraction = set(all_runs) - set(available_runs)
         unavailable_runs = list(subtraction)
 
         return unavailable_runs
+
+    def getSubmittedFormat(self, projectID):
+        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
+        df = pd.read_csv(metadata_file, sep='\t')
+        df1 = df['submitted_format'].value_counts().to_frame(name = 'value_counts').reset_index()
+        submitted_format = df1['index'].tolist()
+        # If there's multiple submitted formats, output will be the list 
+        # If not, output will be the only submitted format 
+        if len(submitted_format) == 1:
+            submitted_format = submitted_format[0]
+            return submitted_format
+        elif len(submitted_format) == 0:
+            return None
+        else:
+            return submitted_format
+
+
+        
 
     def getProjectInfo(self, projectID, field):
         # Utility function for getProjectName, getProjectTitle, getProjectDescription functions.
@@ -160,6 +178,12 @@ class Project:
 
         return
 
-
-
+listids = []
+os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
+prova = Project('etc')
+for folder in os.listdir():
+    listids.append(folder)
+for id in listids:
+    print(id, prova.getSubmittedFormat(id), prova.getProjectSize(id, 'submitted'))
+#prova.getSubmittedFormat("PRJEB39351")
 

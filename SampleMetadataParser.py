@@ -68,7 +68,7 @@ class SampleMetadataParser:
             # If TAG_3 exists, its VALUE_2 will be appended to 'data' - otherwise, the string 'NA' is appended.
             # <TAG_1>
             #     <TAG_2> VALUE_1 </TAG_2>
-            #     <TAG_3> VALUE_2 </TAG_2>
+            #     <TAG_3> VALUE_2 </TAG_3>
             # </TAG_1>
                 for child in root.iter(tag_1):
                     node_1 = child.find(tag_2)
