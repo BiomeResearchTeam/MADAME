@@ -120,7 +120,7 @@ class Project:
             if child is not None:
                 value = child.text
             else:
-                value = f"ERROR: MISSING FIELD ({field})"
+                value = f"ERROR: MISSING FIELD [{field}]"
                 sys.exit()
         
         os.chdir(os.path.pardir)
@@ -178,12 +178,12 @@ class Project:
 
         return
 
-listids = []
-os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
-prova = Project('etc')
-for folder in os.listdir():
-    listids.append(folder)
-for id in listids:
-    print(id, prova.getSubmittedFormat(id), prova.getProjectSize(id, 'submitted'))
-#prova.getSubmittedFormat("PRJEB39351")
+# listids = []
+# os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
+# prova = Project('etc')
+# for folder in os.listdir():
+#     listids.append(folder)
+# for id in listids:
+#     print(id, prova.getSubmittedFormat(id), prova.getProjectSize(id, 'submitted'))
+# #prova.getSubmittedFormat("PRJEB39351")
 
