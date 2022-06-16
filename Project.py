@@ -92,7 +92,7 @@ class Project:
         return unavailable_runs
 
     def getSubmittedFormat(self, projectID):
-        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
+        metadata_file = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
         df = pd.read_csv(metadata_file, sep='\t')
         df1 = df['submitted_format'].value_counts().to_frame(name = 'value_counts').reset_index()
         submitted_format = df1['index'].tolist()

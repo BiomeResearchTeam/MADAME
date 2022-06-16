@@ -10,7 +10,7 @@ class Exp_Proj_MetadataDownload:
     
     def runDownloadMetadata(self, listOfProjectIDs):
     # For each projectID in listOfProjectIDs creates project folder and downloads metadata.
-    # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
+    # WARNING : it needs a list of the AVAILABLE PROJECTS (ProjectManager.getAvailableProjects(listOfProjectIDs))
         for projectID in listOfProjectIDs:
             projectDirectory = Directory("CreateDirectory")
             projectDirectory.createDirectory(projectID)

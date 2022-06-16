@@ -1,7 +1,6 @@
 import requests as rq
 import re
 import sys
-from Project import Project
 
 # Class for getting the ID list from query or user input.
 # It also has methods for printing accessions' details from ENA 
@@ -65,7 +64,7 @@ class GetIDlist:
 
     def IDlistFromUserInput(self, logger, user_input):
     # Get ID list from a series of accession codes derived from user input.
-    # Accession codes needs to be entered separated by comma.
+    # Accession codes need to be entered separated by comma.
         submitted_list = user_input.split(",")
 
         runs = []

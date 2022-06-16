@@ -11,8 +11,8 @@ class SampleMetadataDownload:
 
     def runDownloadMetadata(self, listOfProjectIDs):
     # For each projectID in listOfProjectIDs, enters the project folder, creates
-    # sample_xml_Directory, extracts sample ids from previously downloaded experiments metadata,
-    # downloads sample metadata (xml) in sample_xml_Directory, exits to main dir.
+    # samples-metadata_xml folder, extracts sample ids from previously downloaded experiments metadata,
+    # downloads sample metadata (xml) in samples-metadata_xml folder, exits to main dir.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
         for projectID in listOfProjectIDs:            
             os.chdir(projectID)

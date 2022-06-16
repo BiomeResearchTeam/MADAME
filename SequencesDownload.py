@@ -1,7 +1,6 @@
 import subprocess
 import os
 from Project import Project
-from subprocess import Popen, PIPE
 
 
 class SequencesDownload:

@@ -12,7 +12,7 @@ class SampleMetadataParser:
     
     def runParseMetadata(self, listOfProjectIDs):
     # For each projectID in listOfProjectIDs, enters the project folder,
-    # runs the parser on sample_xml_directory files, exits to main folder.
+    # runs the parser on samples-metadata_xml's files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
         print("📑   Parsing samples metadata...")
         for projectID in listOfProjectIDs:
@@ -95,7 +95,7 @@ class SampleMetadataParser:
         xml_files = os.listdir()
         empty_df = []
 
-        # Loop through xml files and parse them, using enaSampleIterator function for convenience.
+        # Loops through xml files and parses them, using enaSampleIterator function for convenience.
         # 'labels' will be the first row, shared between metadata files of the same project.
         for xml in xml_files:
             tree = ET.parse(xml)
