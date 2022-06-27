@@ -27,21 +27,44 @@ class GetPublications:
 
 
     def PMC_dataframe(self, accessions_list):
-        # ...
         #aggiungere le due colonne con id cercato e id trovato
 
-        def europePMCIterator(tag_1, tag_2, tag_2_renamed = None):
-            for children in tree.iter(tag_1):
-                child = children.find(tag_2)
+        def europePMCIterator(tag_1, tag_2 = None, tag_renamed = None, mode = None):
+            
+            if mode == None:
+            
+                for children in tree.iter(tag_1):
+                    child = children.find(tag_2) 
+
+                    if tag_renamed:
+                        labels.append(tag_renamed)
+                    else:
+                        labels.append(tag_2)
+
+                    if child is not None:
+                        value = child.text                 
+                        data.append(value)
+                    else:
+                        data.append("NA")
+
+    
                 
-                if tag_2_renamed:
-                        labels.append(tag_2_renamed)
+            if mode == "multiple":
+
+                value_list = []
+
+                if tag_renamed:
+                    labels.append(tag_renamed)
                 else:
-                        labels.append(tag_2) 
-                
-                if child is not None:
-                    value = child.text                 
-                    data.append(value)
+                    labels.append(tag_1) 
+
+                for children in tree.iter(tag_1):
+                    single_value = children.text
+                    value_list.append(single_value)
+
+                if value_list:
+                    values = ';'.join(value_list)
+                    data.append(values)
                 else:
                     data.append("NA")
 
@@ -53,14 +76,17 @@ class GetPublications:
             response = urllib.request.urlopen(query).read()
             tree = ET.fromstring(response)
 
-            labels = []
-            data = []
             
             for hit in tree.iter('responseWrapper'):
                 hitcount = int(hit.find('hitCount').text)
                 if hitcount == 0:
                     pass
-                else:
+
+                else:                    
+                    labels = []
+                    data = []
+                    labels.append("queried_accession_id")
+                    data.append(accession_id)
                     europePMCIterator('result', 'id')
                     europePMCIterator('result', 'source')
                     europePMCIterator('result', 'pmid')
@@ -68,26 +94,56 @@ class GetPublications:
                     europePMCIterator('result', 'doi')
                     europePMCIterator('result', 'title')
                     europePMCIterator('result', 'authorString')
-                    europePMCIterator('journal', 'title', 'journal_title')
                     europePMCIterator('journalInfo', 'issue', 'journal_issue')
                     europePMCIterator('journalInfo', 'volume', 'journal_volume')
+                    europePMCIterator('journalInfo', 'journalIssueId')
+                    europePMCIterator('journalInfo', 'dateOfPublication', 'journal_dateOfPublication')
+                    europePMCIterator('journalInfo', 'monthOfPublication', 'journal_monthOfPublication')
+                    europePMCIterator('journalInfo', 'yearOfPublication', 'journal_yearOfPublication')
+                    europePMCIterator('journalInfo', 'printPublicationDate', 'journal_printPublicationDate')
+                    europePMCIterator('journal', 'title', 'journal_title')
+                    europePMCIterator('journal', 'ISOAbbreviation', 'journal_ISOAbbreviation')
+                    europePMCIterator('journal', 'medlineAbbreviation', 'journal_medlineAbbreviation')
+                    europePMCIterator('journal', 'NLMid', 'journal_NLMid')
+                    europePMCIterator('journal', 'ISSN', 'journal_ISSN')
+                    europePMCIterator('journal', 'ESSN', 'journal_ESSN')
                     europePMCIterator('result', 'pubYear')
                     europePMCIterator('result', 'pageInfo')
-                    europePMCIterator('pubTypeList', 'pubType')
+                    europePMCIterator('result', 'abstractText')
+                    europePMCIterator('result', 'affiliation')
+                    europePMCIterator('result', 'publicationStatus')
+                    europePMCIterator('result', 'language')
+                    europePMCIterator('result', 'pubModel')
+                    europePMCIterator('pubType', tag_renamed='pubTypeList', mode='multiple')
+                    europePMCIterator('keyword', tag_renamed='keywords', mode='multiple')
                     europePMCIterator('result', 'isOpenAccess')
                     europePMCIterator('result', 'inEPMC')
                     europePMCIterator('result', 'inPMC')
                     europePMCIterator('result', 'hasPDF')
+                    europePMCIterator('result', 'hasBook')
                     europePMCIterator('result', 'hasSuppl')
+                    europePMCIterator('result', 'citedByCount')
                     europePMCIterator('result', 'hasData')
-                    europePMCIterator('result', 'hasTextMinedTerms')              
+                    europePMCIterator('result', 'hasReferences')
+                    europePMCIterator('result', 'hasTextMinedTerms') 
+                    europePMCIterator('result', 'hasDbCrossReferences')
+                    europePMCIterator('result', 'hasLabsLinks')  
+                    europePMCIterator('result', 'license')  
+                    europePMCIterator('result', 'hasTMAccessionNumbers')
+                    europePMCIterator('accessionType', tag_renamed='tmAccessionTypeList', mode='multiple') 
+                    europePMCIterator('result', 'dateOfCreation')
+                    europePMCIterator('result', 'firstIndexDate')
+                    europePMCIterator('result', 'fullTextReceivedDate')
+                    europePMCIterator('result', 'dateOfRevision')
+                    europePMCIterator('result', 'electronicPublicationDate')
+                    europePMCIterator('result', 'firstPublicationDate')
 
-            # Build dictionary from labels and relative data
-            d = dict(zip(labels, data))  #e se d è vuoto?
-            empty_df.append(d)
+                    # Build dictionary from labels and relative data
+                    d = dict(zip(labels, data))  
+                    empty_df.append(d)
 
         # Convert into dataframe
-        PMC_dataframe = pd.DataFrame(empty_df)
+        PMC_dataframe = pd.DataFrame(empty_df).fillna("NA")
         PMC_dataframe.to_csv("prova.tsv", sep="\t") #temporaneo
 
         return PMC_dataframe
@@ -110,5 +166,6 @@ class GetPublications:
 os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
 
 prova = GetPublications('prova')
-print(prova.PMC_dataframe(['PRJEB33230']))
-prova.runGetPublications(['PRJEB25465'])
+print(prova.PMC_dataframe(['PRJEB31610', 'PPR505492']))
+
+#prova.runGetPublications(['PRJEB31610'])
