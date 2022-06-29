@@ -73,7 +73,7 @@ class GetIDlist:
         projects = []
        
         for accession in submitted_list:
-            if re.match(GetIDlist.PROJECTS_PATTERN, accession):
+            if re.match(GetIDlist.RUNS_PATTERN, accession):
                 runs.append(accession)
             elif re.match(GetIDlist.SAMPLES_PATTERN, accession):
                 samples.append(accession)

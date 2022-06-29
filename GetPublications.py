@@ -14,20 +14,33 @@ class GetPublications:
     def runGetPublications(self, listOfProjectIDs):
 
         for projectID in listOfProjectIDs:
-            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
-            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-            accessions_list = []
-            accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-            for column in accessions_columns:
-                accessions = metadata_df[column].unique().tolist()
-                for accession in accessions:
-                    accessions_list.append(accession)
-            print(accessions_list)   #prova
-        
+
+            if os.path.isfile(os.path.join(projectID, f'{projectID}_publications-metadata.tsv')):
+                print(f'{projectID}_publications-metadata.tsv already exist!')
+
+            else:
+                experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+                metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+                accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+                accessions_list = []
+                
+                for column in accessions_columns:
+                    accessions = metadata_df[column].unique().tolist()
+                    for accession in accessions:
+                        accessions_list.append(accession)
+                
+                PMC_dataframe = self.PMC_dataframe(accessions_list, input_accession_id=projectID) 
+
+                if len(PMC_dataframe.columns) == 0:
+                    print(f"🔎  Couldn't find any publications for {projectID}")
+
+                else:
+                    PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
 
 
-    def PMC_dataframe(self, accessions_list):
-        #aggiungere le due colonne con id cercato e id trovato
+    def PMC_dataframe(self, accessions_list, input_accession_id=None):
+       
 
         def europePMCIterator(tag_1, tag_2 = None, tag_renamed = None, mode = None):
             
@@ -69,28 +82,39 @@ class GetPublications:
                     data.append("NA")
 
 
-        empty_df = []      
+        dict_list = []      
 
-        for accession_id in accessions_list:
-            query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={accession_id}&format=xml&resultType=core"
+        for queried_accession_id in accessions_list:
+            query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core"
             response = urllib.request.urlopen(query).read()
             tree = ET.fromstring(response)
-
             
             for hit in tree.iter('responseWrapper'):
                 hitcount = int(hit.find('hitCount').text)
                 if hitcount == 0:
-                    pass
+                    break
 
                 else:                    
                     labels = []
                     data = []
+
+                    for children in tree.iter("result"):
+                        pub_id = children.find("id").text
+                    if any(d.get('id') == pub_id for d in dict_list):
+                        break
+
+                    if input_accession_id is not None:
+                        labels.append("input_accession_id")
+                        data.append(input_accession_id)
+
                     labels.append("queried_accession_id")
-                    data.append(accession_id)
+                    data.append(queried_accession_id)
+
                     europePMCIterator('result', 'id')
                     europePMCIterator('result', 'source')
                     europePMCIterator('result', 'pmid')
                     europePMCIterator('result', 'pmcid')
+                    europePMCIterator('fullTextId', tag_renamed='fullTextIdList', mode='multiple')
                     europePMCIterator('result', 'doi')
                     europePMCIterator('result', 'title')
                     europePMCIterator('result', 'authorString')
@@ -115,7 +139,7 @@ class GetPublications:
                     europePMCIterator('result', 'language')
                     europePMCIterator('result', 'pubModel')
                     europePMCIterator('pubType', tag_renamed='pubTypeList', mode='multiple')
-                    europePMCIterator('keyword', tag_renamed='keywords', mode='multiple')
+                    europePMCIterator('keyword', tag_renamed='keywordList', mode='multiple')
                     europePMCIterator('result', 'isOpenAccess')
                     europePMCIterator('result', 'inEPMC')
                     europePMCIterator('result', 'inPMC')
@@ -138,34 +162,85 @@ class GetPublications:
                     europePMCIterator('result', 'electronicPublicationDate')
                     europePMCIterator('result', 'firstPublicationDate')
 
+
+                    # Getting HTML and PDF links
+                    list_of_links = {}
+
+                    for node in tree.iter("fullTextUrl"):
+                        documentStyle = node.find("documentStyle")
+                        if documentStyle is not None:
+                            style = documentStyle.text
+                            url = node.find("url").text
+                            list_of_links[style] = url
+                       
+                    if list_of_links:   #questa linea è superflua?
+                        if "html" in list_of_links:
+                            labels.append("HTML")
+                            data.append(list_of_links["html"])
+                        if "pdf" in list_of_links:
+                            labels.append("PDF")
+                            data.append(list_of_links["pdf"])
+
+                            #PDF size
+                            response = rq.head(list_of_links["pdf"], allow_redirects=True)
+                            pdf_bytes = int(response.headers['Content-Length'])
+                            labels.append("PDF_bytes")
+                            data.append(pdf_bytes)
+                        
+
+                    # Getting fulltext XML links
+                    index = labels.index("fullTextIdList")
+                    fullTextIdList = data[index]
+                    if fullTextIdList != "NA":
+                        IdList = fullTextIdList.split(";")
+                        fulltextXML_links = []
+                        for id in IdList:
+                            link = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/fullTextXML"
+                            fulltextXML_links.append(link)
+                        
+                        labels.append("fulltextXML")
+                        data.append(';'.join(fulltextXML_links))
+                    
+                    
+                    # Getting TGZ package link
+                    index = labels.index("pmcid")
+                    pmcid = data[index]
+                    if pmcid != "NA":
+                        tgz_xml = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}" 
+                        response = urllib.request.urlopen(tgz_xml).read()
+                        tree = ET.fromstring(response)
+                        records = tree.find('records')
+
+                        if records is not None:
+                            tgz = tree.find(".//*[@format='tgz']")                                    
+                            tgz_download_link = tgz.get('href').replace("ftp://", "http://")
+
+                            labels.append("TGZpackage")
+                            data.append(tgz_download_link)
+
+                            # TGZ package size
+                            response = rq.head(tgz_download_link, allow_redirects=True)
+                            tgz_bytes = int(response.headers['Content-Length'])
+
+                            labels.append("TGZpackage_bytes")
+                            data.append(tgz_bytes)
+
+
                     # Build dictionary from labels and relative data
-                    d = dict(zip(labels, data))  
-                    empty_df.append(d)
+                    dictionary = dict(zip(labels, data))  
+                    dict_list.append(dictionary)
 
         # Convert into dataframe
-        PMC_dataframe = pd.DataFrame(empty_df).fillna("NA")
-        PMC_dataframe.to_csv("prova.tsv", sep="\t") #temporaneo
-
+        PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")
+        
         return PMC_dataframe
 
 
-    def retrievePublicationID(self, projectID):
-        pass
-
-    def getXMLfulltext(self, publicationID):
-        pass
-
-    def getFileLinks(self, publicationID):
-        pass
-
-    def getFileSize(self, file_link):
-        pass
 
 
 
-os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
 
-prova = GetPublications('prova')
-print(prova.PMC_dataframe(['PRJEB31610', 'PPR505492']))
 
-#prova.runGetPublications(['PRJEB31610'])
+
+
+

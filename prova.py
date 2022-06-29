@@ -10,6 +10,7 @@ from Utilities import Directory
 from SampleMetadataParser import SampleMetadataParser
 from Project import Project
 from ProjectManager import ProjectManager
+from GetPublications import GetPublications
 
 
 def main():
@@ -116,6 +117,11 @@ def main():
         print(f"📝 project name: {first.getProjectName(projectID)}")
         print(f"📝 project title: {first.getProjectTitle(projectID)}")
         print(f"📝 project description: {first.getProjectDescription(projectID)}")
+
+        print("------------------------")
+        print("✨   trying to get publications!\n")
+        getpublications = GetPublications("getpublications")
+        getpublications.runGetPublications(listOfProjectIDs)
         
         
 
