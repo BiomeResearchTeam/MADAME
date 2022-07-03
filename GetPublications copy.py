@@ -1,6 +1,7 @@
-from user_agent import generate_user_agent
 import xml.etree.ElementTree as ET
 import requests as rq
+from user_agent import generate_user_agent
+import time
 import pandas as pd
 import os
 
@@ -12,30 +13,31 @@ class GetPublications:
         self.name = name 
 
     def runGetPublications(self, listOfProjectIDs):
+              
+        dict_list = []
 
         for projectID in listOfProjectIDs:
            
-            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+            experiments_metadata = f'{projectID}.tsv'
             metadata_df = pd.read_csv(experiments_metadata, sep='\t')
             accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
             accessions_list = []
             
             for column in accessions_columns:
                 accessions = metadata_df[column].unique().tolist()
-                for accession in accessions:
-                    accessions_list.append(accession)
+                accessions_list.extend(accessions)
 
             print(f"now working on {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}")
             
-            dict_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID)  
-            PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")   
-
-            if len(PMC_dataframe.columns) == 0:
-                print(f"🔎  Couldn't find any publications for {projectID}")
-
-            else:
-                PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
-                print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
+            dictionary_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID) 
+            dict_list.extend(dictionary_list)
+            time.sleep(5)
+        
+        PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")   
+        PMC_dataframe.to_csv('df3_publications-metadata.tsv', sep="\t") 
+        print("done!")
+        
+          
 
 
     def PMC_dataframe(self, accessions_list, input_accession_id=None):
@@ -58,6 +60,8 @@ class GetPublications:
                         data.append(value)
                     else:
                         data.append("NA")
+
+    
                 
             if mode == "multiple":
 
@@ -78,6 +82,7 @@ class GetPublications:
                 else:
                     data.append("NA")
 
+
         dict_list = []      
 
         for queried_accession_id in accessions_list:
@@ -86,7 +91,7 @@ class GetPublications:
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core"
             headers = {"User-Agent": generate_user_agent()}
             response = rq.get(query, headers=headers, timeout=20).content
-
+            
             tree = ET.fromstring(response)
             
             for hit in tree.iter('responseWrapper'):
@@ -186,7 +191,6 @@ class GetPublications:
                             is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
                             content_length_s = response.headers.get('content-length')
 
-
                             if not is_chunked and content_length_s.isdigit():
                                 pdf_bytes = int(content_length_s)
                             else:
@@ -194,7 +198,7 @@ class GetPublications:
                           
                             labels.append("PDF_bytes")
                             data.append(pdf_bytes)
-                        
+
 
                     # Getting fulltext XML links
                     index = labels.index("fullTextIdList")
@@ -214,7 +218,7 @@ class GetPublications:
                     index = labels.index("pmcid")
                     pmcid = data[index]
                     if pmcid != "NA":
-
+        
                         tgz_xml = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}" 
                         response = rq.get(tgz_xml, headers=headers, timeout=20).content
                         tree = ET.fromstring(response)
@@ -244,15 +248,45 @@ class GetPublications:
                     # Build dictionary from labels and relative data
                     dictionary = dict(zip(labels, data))  
                     dict_list.append(dictionary)
-
         
         return dict_list
 
+from datetime import datetime
+now = datetime.now()
+current_time = now.strftime("%H:%M:%S")
+print("Current Time =", current_time)
+os.chdir("/mnt/c/Users/conog/Desktop/DF3_METADATA")
+listOfProjectIDs = [os.path.splitext(filename)[0] for filename in os.listdir("/mnt/c/Users/conog/Desktop/DF3_METADATA")]
+prova = GetPublications("a")
+prova.runGetPublications(listOfProjectIDs)
+print("Current Time =", current_time)
 
 
 
+# os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
 
+# prova = GetPublications("a")
+# idlist = prova.runGetPublications(["PRJNA719282"])
+# print("idlist lenght:", len(idlist))
+# queries = []
 
+# index = 0
+# string = idlist[index]
+
+# #while index <= len(idlist)-2:
+# for id in idlist[index+1:]:
+#     if len(string) + len('%20OR%20') + len(id) <= 1959:
+#         string = string + '%20OR%20' + id
+#         index = idlist.index(id)
+#     else:
+#         string = string
+#         query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={string}&format=xml&resultType=core"
+#         queries.append(query)
+#         print("last index:", index)
+#         print("query lenght:", len(query), "/ 2048")
+#         break
+
+# print(queries)
 
 
 
