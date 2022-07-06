@@ -3,18 +3,26 @@ import xml.etree.ElementTree as ET
 import requests as rq
 import pandas as pd
 import os
+import time
 
-# Class for finding publications from one or more accession IDs.
-# It returns a .tsv dataframe.
+# Class for finding publications from sequences' accessions.
+# It returns one .tsv dataframe for each input accession.
 
 class GetPublications:
     def __init__(self, name):
         self.name = name 
 
     def runGetPublications(self, listOfProjectIDs):
+    # For each project ID, reads from the already downloaded experiments metadata file and
+    # creates a list of all the accessions in it. The list of accessions plus the project ID 
+    # are given as input to GetPublicatios.PMC_dataframe, which returns a list of dictionaries
+    # after querying each accession. This list of dictionaries, if not empty, is converted to
+    # a pandas dataframe and then saved as a .tsv file to the corresponding project directory.
+        no_publication_list = []
 
         for projectID in listOfProjectIDs:
-           
+
+            # Fetching local metadata file and building the accessions list 
             experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
             metadata_df = pd.read_csv(experiments_metadata, sep='\t')
             accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
@@ -25,17 +33,25 @@ class GetPublications:
                 for accession in accessions:
                     accessions_list.append(accession)
 
+            # Temporary counter. Could become a progress bar?
             print(f"now working on {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}")
             
             dict_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID)  
-            PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")   
-
-            if len(PMC_dataframe.columns) == 0:
+               
+            if len(dict_list) == 0:
                 print(f"🔎  Couldn't find any publications for {projectID}")
+                no_publication_list.append(projectID)
 
             else:
+                PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")
                 PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
                 print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
+            
+            time.sleep(10)
+            
+        
+        print("DONE!")
+        print(f"🔎  Couldn't find any publications for these projects: {no_publication_list}")
 
 
     def PMC_dataframe(self, accessions_list, input_accession_id=None):
@@ -78,14 +94,17 @@ class GetPublications:
                 else:
                     data.append("NA")
 
-        dict_list = []      
+        dict_list = [] 
+        rq.adapters.DEFAULT_RETRIES = 5 
+        s = rq.session()
+        s.keep_alive = False     
 
         for queried_accession_id in accessions_list:
             print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}")
 
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core"
             headers = {"User-Agent": generate_user_agent()}
-            response = rq.get(query, headers=headers, timeout=20).content
+            response = s.get(query, headers=headers).content
 
             tree = ET.fromstring(response)
             
@@ -100,6 +119,7 @@ class GetPublications:
 
                     for children in tree.iter("result"):
                         pub_id = children.find("id").text
+                        
                     if any(d.get('id') == pub_id for d in dict_list):
                         break
 
@@ -182,7 +202,7 @@ class GetPublications:
                             data.append(list_of_links["pdf"])
 
                             #PDF size
-                            response = rq.head(list_of_links["pdf"], headers=headers, allow_redirects=True, timeout=20)
+                            response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
                             is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
                             content_length_s = response.headers.get('content-length')
 
@@ -197,8 +217,8 @@ class GetPublications:
                         
 
                     # Getting fulltext XML links
-                    index = labels.index("fullTextIdList")
-                    fullTextIdList = data[index]
+                    fullTextIdList_index = labels.index("fullTextIdList")
+                    fullTextIdList = data[fullTextIdList_index]
                     if fullTextIdList != "NA":
                         IdList = fullTextIdList.split(";")
                         fulltextXML_links = []
@@ -208,15 +228,28 @@ class GetPublications:
                         
                         labels.append("fulltextXML")
                         data.append(';'.join(fulltextXML_links))
+
+
+                    # Getting supplementaries links
+                        hasSuppl_index = labels.index("hasSuppl")
+                        hasSuppl = data[hasSuppl_index]
+                        if fullTextIdList != "NA" and hasSuppl == "Y":
+                            suppl_links = []
+                            for id in IdList:
+                                suppl = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/supplementaryFiles?includeInlineImage=yes"
+                                suppl_links.append(suppl)
+                            
+                            labels.append("Suppl")
+                            data.append(';'.join(suppl_links))
                     
                     
                     # Getting TGZ package link
-                    index = labels.index("pmcid")
-                    pmcid = data[index]
+                    pmcid_index = labels.index("pmcid")
+                    pmcid = data[pmcid_index]
                     if pmcid != "NA":
 
                         tgz_xml = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}" 
-                        response = rq.get(tgz_xml, headers=headers, timeout=20).content
+                        response = s.get(tgz_xml, headers=headers).content
                         tree = ET.fromstring(response)
                         records = tree.find('records')
 
@@ -228,7 +261,7 @@ class GetPublications:
                             data.append(tgz_download_link)
 
                             # TGZ package size
-                            response = rq.head(tgz_download_link, headers=headers, allow_redirects=True, timeout=20)
+                            response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
                             is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
                             content_length_s = response.headers.get('content-length')
 

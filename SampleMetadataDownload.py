@@ -19,9 +19,10 @@ class SampleMetadataDownload:
             sample_xml_Directory = Directory("CreateSamplesXMLDirectory")
             sample_xml_Directory.createDirectory("samples-metadata_xml")
             experiments_metadata = pd.read_csv(f'{projectID}_experiments-metadata.tsv', sep='\t')
-            sample_ids = experiments_metadata['sample_accession'].tolist()
+            sample_ids = experiments_metadata['sample_accession'].unique().tolist()
             for sampleID in sample_ids:
                 self.sampleMetadataDownload(sampleID)
+                print(f"Downloading {sampleID} metadata ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project #{listOfProjectIDs.index(projectID)+1}")
             os.chdir(os.path.pardir)
             print(f'✅   Successful download of {projectID} samples metadata!')  
 
@@ -31,9 +32,14 @@ class SampleMetadataDownload:
         if os.path.isfile(os.path.join('samples-metadata_xml', f'{sampleID}.xml')):
             pass
         else:
+            rq.adapters.DEFAULT_RETRIES = 5 
+            s = rq.session()
+            s.keep_alive = False   
+            from urllib3.exceptions import InsecureRequestWarning
+            from urllib3 import disable_warnings
+            disable_warnings(InsecureRequestWarning)
             url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
-            download = rq.get(url, allow_redirects=True)
+            download = s.get(url, allow_redirects=True)
             with open((os.path.join('samples-metadata_xml', f'{sampleID}.xml')), 'wb') as file:
                 file.write(download.content)
-
 
