@@ -2,6 +2,8 @@ import os
 import requests as rq
 import pandas as pd
 from Utilities import Directory
+from user_agent import generate_user_agent
+from requests.adapters import HTTPAdapter, Retry
 
 # Class for downloading sample metadata.
 
@@ -32,14 +34,15 @@ class SampleMetadataDownload:
         if os.path.isfile(os.path.join('samples-metadata_xml', f'{sampleID}.xml')):
             pass
         else:
-            rq.adapters.DEFAULT_RETRIES = 5 
             s = rq.session()
-            s.keep_alive = False   
-            from urllib3.exceptions import InsecureRequestWarning
-            from urllib3 import disable_warnings
-            disable_warnings(InsecureRequestWarning)
+            retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[500, 502, 503, 504])
+            s.mount('https://', HTTPAdapter(max_retries=retries)) 
+
             url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
-            download = s.get(url, allow_redirects=True)
+            headers = {"User-Agent": generate_user_agent()}
+            download = s.get(url, headers=headers, allow_redirects=True)
             with open((os.path.join('samples-metadata_xml', f'{sampleID}.xml')), 'wb') as file:
                 file.write(download.content)
 

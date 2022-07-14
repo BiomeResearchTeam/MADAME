@@ -39,52 +39,15 @@ class GetPublications:
           
 
 
-    def PMC_dataframe(self, accessions_list, input_accession_id=None):
-       
-
-        def europePMCIterator(tag_1, tag_2 = None, tag_renamed = None, mode = None):
-            
-            if mode == None:
-                 
-                child = children.find(tag_1) 
-
-                if tag_renamed:
-                    labels.append(tag_renamed)
-                else:
-                    labels.append(tag_1)
-
-                if child is not None:
-                    value = child.text                 
-                    data.append(value)
-                else:
-                    data.append("NA")
-
-    
-                
-            if mode == "multiple":
-
-                value_list = []
-
-                if tag_renamed:
-                    labels.append(tag_renamed)
-                else:
-                    labels.append(tag_1) 
-
-                for children in tree.iter(tag_1):
-                    single_value = children.text
-                    value_list.append(single_value)
-
-                if value_list:
-                    values = ';'.join(value_list)
-                    data.append(values)
-                else:
-                    data.append("NA")
-
+    def PMC_dataframe(self, accessions_list, input_accession_id=None):     
 
         dict_list = []  
         rq.adapters.DEFAULT_RETRIES = 5 
         s = rq.session()
         s.keep_alive = False    
+
+          
+
 
         for queried_accession_id in accessions_list:
             print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}")
@@ -104,8 +67,40 @@ class GetPublications:
                     labels = []
                     data = []
 
-                    for children in tree.findall("result"):
+                    for children in tree.iter("result"):
+
+                        def EPMC_tree_parser(tag_or_XPath, tag_name = None, mode = None):
+                            
+                            if mode == None:    
+                                
+                                if tag_name:
+                                    labels.append(tag_name)
+                                else:
+                                    labels.append(tag_or_XPath)
+                                
+                                child = children.find(tag_or_XPath)
+                                if child is not None:
+                                    value = child.text                 
+                                    data.append(value)
+                                else:
+                                    data.append("NA") 
+                                    
+                            if mode == "value_list":
+
+                                labels.append(tag_name)
+                                
+                                value_list = []
+                                for single_value in children.findall(tag_or_XPath):
+                                    str = single_value.text
+                                    value_list.append(str)
+                                if value_list:
+                                    values = ';'.join(value_list) 
+                                    data.append(values)
+                                else:
+                                    data.append("NA")
+
                         pub_id = children.find("id").text
+
                         if any(d.get('id') == pub_id for d in dict_list):
                             break
 
@@ -116,168 +111,174 @@ class GetPublications:
                         labels.append("queried_accession_id")
                         data.append(queried_accession_id)
 
-                        europePMCIterator('id')
-                        europePMCIterator('source')
-                        europePMCIterator('pmid')
-                        europePMCIterator('pmcid')
-                        # europePMCIterator('fullTextId', tag_renamed='fullTextIdList', mode='multiple')
-                        # europePMCIterator('result', 'doi')
-                        # europePMCIterator('result', 'title')
-                        # europePMCIterator('result', 'authorString')
-                        # europePMCIterator('journalInfo', 'issue', 'journal_issue')
-                        # europePMCIterator('journalInfo', 'volume', 'journal_volume')
-                        # europePMCIterator('journalInfo', 'journalIssueId')
-                        # europePMCIterator('journalInfo', 'dateOfPublication', 'journal_dateOfPublication')
-                        # europePMCIterator('journalInfo', 'monthOfPublication', 'journal_monthOfPublication')
-                        # europePMCIterator('journalInfo', 'yearOfPublication', 'journal_yearOfPublication')
-                        # europePMCIterator('journalInfo', 'printPublicationDate', 'journal_printPublicationDate')
-                        # europePMCIterator('journal', 'title', 'journal_title')
-                        # europePMCIterator('journal', 'ISOAbbreviation', 'journal_ISOAbbreviation')
-                        # europePMCIterator('journal', 'medlineAbbreviation', 'journal_medlineAbbreviation')
-                        # europePMCIterator('journal', 'NLMid', 'journal_NLMid')
-                        # europePMCIterator('journal', 'ISSN', 'journal_ISSN')
-                        # europePMCIterator('journal', 'ESSN', 'journal_ESSN')
-                        # europePMCIterator('result', 'pubYear')
-                        # europePMCIterator('result', 'pageInfo')
-                        # europePMCIterator('result', 'abstractText')
-                        # europePMCIterator('result', 'affiliation')
-                        # europePMCIterator('result', 'publicationStatus')
-                        # europePMCIterator('result', 'language')
-                        # europePMCIterator('result', 'pubModel')
-                        # europePMCIterator('pubType', tag_renamed='pubTypeList', mode='multiple')
-                        # europePMCIterator('keyword', tag_renamed='keywordList', mode='multiple')
-                        # europePMCIterator('result', 'isOpenAccess')
-                        # europePMCIterator('result', 'inEPMC')
-                        # europePMCIterator('result', 'inPMC')
-                        # europePMCIterator('result', 'hasPDF')
-                        # europePMCIterator('result', 'hasBook')
-                        # europePMCIterator('result', 'hasSuppl')
-                        # europePMCIterator('result', 'citedByCount')
-                        # europePMCIterator('result', 'hasData')
-                        # europePMCIterator('result', 'hasReferences')
-                        # europePMCIterator('result', 'hasTextMinedTerms') 
-                        # europePMCIterator('result', 'hasDbCrossReferences')
-                        # europePMCIterator('result', 'hasLabsLinks')  
-                        # europePMCIterator('result', 'license')  
-                        # europePMCIterator('result', 'hasTMAccessionNumbers')
-                        # europePMCIterator('accessionType', tag_renamed='tmAccessionTypeList', mode='multiple') 
-                        # europePMCIterator('result', 'dateOfCreation')
-                        # europePMCIterator('result', 'firstIndexDate')
-                        # europePMCIterator('result', 'fullTextReceivedDate')
-                        # europePMCIterator('result', 'dateOfRevision')
-                        # europePMCIterator('result', 'electronicPublicationDate')
-                        # europePMCIterator('result', 'firstPublicationDate')
+                        EPMC_tree_parser('id')
+                        EPMC_tree_parser('source')
+                        EPMC_tree_parser('pmid')
+                        EPMC_tree_parser('pmcid')
+                        EPMC_tree_parser('./fullTextIdList/fullTextId', 'fullTextIdList', mode='value_list')
+                        EPMC_tree_parser('doi')
+                        EPMC_tree_parser('title')
+                        EPMC_tree_parser('authorString')
+                        EPMC_tree_parser('./journalInfo/issue', 'journal_issue')
+                        EPMC_tree_parser('./journalInfo/volume', 'journal_volume')
+                        EPMC_tree_parser('./journalInfo/journalIssueId', 'journalIssueId')
+                        EPMC_tree_parser('./journalInfo/dateOfPublication', 'journal_dateOfPublication')
+                        EPMC_tree_parser('./journalInfo/monthOfPublication', 'journal_monthOfPublication')
+                        EPMC_tree_parser('./journalInfo/yearOfPublication', 'journal_yearOfPublication')
+                        EPMC_tree_parser('./journalInfo/printPublicationDate', 'journal_printPublicationDate')
+                        EPMC_tree_parser('./journalInfo/journal/title', 'journal_title')
+                        EPMC_tree_parser('./journalInfo/journal/ISOAbbreviation', 'journal_ISOAbbreviation')
+                        EPMC_tree_parser('./journalInfo/journal/medlineAbbreviation', 'journal_medlineAbbreviation')
+                        EPMC_tree_parser('./journalInfo/journal/NLMid', 'journal_NLMid')
+                        EPMC_tree_parser('./journalInfo/journal/ISSN', 'journal_ISSN')
+                        EPMC_tree_parser('./journalInfo/journal/ESSN', 'journal_ESSN')
+                        EPMC_tree_parser('pubYear')
+                        EPMC_tree_parser('pageInfo')
+                        EPMC_tree_parser('abstractText')
+                        EPMC_tree_parser('affiliation')
+                        EPMC_tree_parser('publicationStatus')
+                        EPMC_tree_parser('language')
+                        EPMC_tree_parser('pubModel')
+                        EPMC_tree_parser('./pubTypeList/pubType', 'pubTypeList', mode='value_list')
+                        EPMC_tree_parser('./keywordList/keyword', 'keywordList', mode='value_list')
+                        EPMC_tree_parser('isOpenAccess')
+                        EPMC_tree_parser('inEPMC')
+                        EPMC_tree_parser('inPMC')
+                        EPMC_tree_parser('hasPDF')
+                        EPMC_tree_parser('hasBook')
+                        EPMC_tree_parser('hasSuppl')
+                        EPMC_tree_parser('citedByCount')
+                        EPMC_tree_parser('hasData')
+                        EPMC_tree_parser('hasReferences')
+                        EPMC_tree_parser('hasTextMinedTerms') 
+                        EPMC_tree_parser('hasDbCrossReferences')
+                        EPMC_tree_parser('hasLabsLinks')  
+                        EPMC_tree_parser('license')  
+                        EPMC_tree_parser('hasTMAccessionNumbers')
+                        EPMC_tree_parser('./tmAccessionTypeList/accessionType', 'tmAccessionTypeList', mode='value_list') 
+                        EPMC_tree_parser('dateOfCreation')
+                        EPMC_tree_parser('firstIndexDate')
+                        EPMC_tree_parser('fullTextReceivedDate')
+                        EPMC_tree_parser('dateOfRevision')
+                        EPMC_tree_parser('electronicPublicationDate')
+                        EPMC_tree_parser('firstPublicationDate')
 
 
-                        # # Getting HTML and PDF links
-                        # list_of_links = {}
+                        # Getting HTML and PDF links
 
-                        # for node in tree.iter("fullTextUrl"):
-                        #     documentStyle = node.find("documentStyle")
-                        #     if documentStyle is not None:
-                        #         style = documentStyle.text
-                        #         url = node.find("url").text
-                        #         list_of_links[style] = url
+                        list_of_links = {}
+                        for node in children.findall("./fullTextUrlList/fullTextUrl"):
+                            documentStyle = node.find("documentStyle")
+                            if documentStyle is not None:
+                                style = documentStyle.text
+                                url = node.find("url").text
+                                list_of_links[style] = url
                         
-                        # if list_of_links:   #questa linea è superflua?
-                        #     if "html" in list_of_links:
-                        #         labels.append("HTML")
-                        #         data.append(list_of_links["html"])
-                        #     if "pdf" in list_of_links:
-                        #         labels.append("PDF")
-                        #         data.append(list_of_links["pdf"])
+                     
+                            if "html" in list_of_links:
+                                labels.append("HTML")
+                                data.append(list_of_links["html"])
+                            if "pdf" in list_of_links:
+                                labels.append("PDF")
+                                data.append(list_of_links["pdf"])
 
-                        #         #PDF size
-                        #         response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
-                        #         is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                        #         content_length_s = response.headers.get('content-length')
+                                #PDF size
+                                response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
+                                is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
+                                content_length_s = response.headers.get('content-length')
 
-                        #         if not is_chunked and content_length_s.isdigit():
-                        #             pdf_bytes = int(content_length_s)
-                        #         else:
-                        #             pdf_bytes = "NA"
+                                if not is_chunked and content_length_s.isdigit():
+                                    pdf_bytes = int(content_length_s)
+                                else:
+                                    pdf_bytes = "NA"
                             
-                        #         labels.append("PDF_bytes")
-                        #         data.append(pdf_bytes)
+                                labels.append("PDF_bytes")
+                                data.append(pdf_bytes)
 
 
-                        # # Getting fulltext XML links
-                        # fullTextIdList_index = labels.index("fullTextIdList")
-                        # fullTextIdList = data[fullTextIdList_index]
-                        # if fullTextIdList != "NA":
-                        #     IdList = fullTextIdList.split(";")
-                        #     fulltextXML_links = []
-                        #     for id in IdList:
-                        #         link = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/fullTextXML"
-                        #         fulltextXML_links.append(link)
+                        # Getting fulltext XML links
+                        fullTextIdList_index = labels.index("fullTextIdList")
+                        fullTextIdList = data[fullTextIdList_index]
+                        if fullTextIdList != "NA":
+                            IdList = fullTextIdList.split(";")
+                            fulltextXML_links = []
+                            for id in IdList:
+                                link = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/fullTextXML"
+                                fulltextXML_links.append(link)
                             
-                        #     labels.append("fulltextXML")
-                        #     data.append(';'.join(fulltextXML_links))
+                            labels.append("fulltextXML")
+                            data.append(';'.join(fulltextXML_links))
 
 
-                        # # Getting supplementaries links
-                        # hasSuppl_index = labels.index("hasSuppl")
-                        # hasSuppl = data[hasSuppl_index]
-                        # if fullTextIdList != "NA" and hasSuppl == "Y":
-                        #     suppl_links = []
-                        #     for id in IdList:
-                        #         suppl = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/supplementaryFiles?includeInlineImage=yes"
-                        #         suppl_links.append(suppl)
+                        # Getting supplementaries links
+                        hasSuppl_index = labels.index("hasSuppl")
+                        hasSuppl = data[hasSuppl_index]
+                        if fullTextIdList != "NA" and hasSuppl == "Y":
+                            suppl_links = []
+                            for id in IdList:
+                                suppl = f"https://www.ebi.ac.uk/europepmc/webservices/rest/{id}/supplementaryFiles?includeInlineImage=yes"
+                                suppl_links.append(suppl)
                             
-                        #     labels.append("Suppl")
-                        #     data.append(';'.join(suppl_links))
+                            labels.append("Suppl")
+                            data.append(';'.join(suppl_links))
                         
                         
-                        # # Getting TGZ package link
-                        # pmcid_index = labels.index("pmcid")
-                        # pmcid = data[pmcid_index]
-                        # if pmcid != "NA":
+                        # Getting TGZ package link
+                        pmcid_index = labels.index("pmcid")
+                        pmcid = data[pmcid_index]
+                        if pmcid != "NA":
             
-                        #     tgz_xml = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}" 
-                        #     response = s.get(tgz_xml, headers=headers).content
-                        #     tree = ET.fromstring(response)
-                        #     records = tree.find('records')
+                            tgz_xml = f"https://www.ncbi.nlm.nih.gov/pmc/utils/oa/oa.fcgi?id={pmcid}" 
+                            response = s.get(tgz_xml, headers=headers).content
+                            tree = ET.fromstring(response)
+                            records = tree.find('records')
 
-                        #     if records is not None:
-                        #         tgz = tree.find(".//*[@format='tgz']")                                    
-                        #         tgz_download_link = tgz.get('href').replace("ftp://", "http://")
+                            if records is not None:
+                                tgz = tree.find(".//*[@format='tgz']")                                    
+                                tgz_download_link = tgz.get('href').replace("ftp://", "http://")
 
-                        #         labels.append("TGZpackage")
-                        #         data.append(tgz_download_link)
+                                labels.append("TGZpackage")
+                                data.append(tgz_download_link)
 
-                        #         # TGZ package size
-                        #         response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
-                        #         is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                        #         content_length_s = response.headers.get('content-length')
+                                # TGZ package size
+                                response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
+                                is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
+                                content_length_s = response.headers.get('content-length')
 
-                        #         if not is_chunked and content_length_s.isdigit():
-                        #             tgz_bytes = int(content_length_s)
-                        #         else:
-                        #             tgz_bytes = "NA"
+                                if not is_chunked and content_length_s.isdigit():
+                                    tgz_bytes = int(content_length_s)
+                                else:
+                                    tgz_bytes = "NA"
 
-                        #         labels.append("TGZpackage_bytes")
-                        #         data.append(tgz_bytes)
+                                labels.append("TGZpackage_bytes")
+                                data.append(tgz_bytes)
 
 
                         # Build dictionary from labels and relative data
-                        dictionary = dict(zip(labels, data))  
+                        dictionary = dict(zip(labels, data))      
                         dict_list.append(dictionary)
-            
+
+                    print(dict_list)
+
         return dict_list
 
-from datetime import datetime
-now = datetime.now()
-current_time = now.strftime("%H:%M:%S")
-print("Current Time =", current_time)
-os.chdir("/mnt/c/Users/conog/Desktop/DF3_METADATA")
-listOfProjectIDs = [os.path.splitext(filename)[0] for filename in os.listdir("/mnt/c/Users/conog/Desktop/DF3_METADATA")]
+        
+
+
+#os.chdir("/mnt/c/Users/conog/Desktop")
+#listOfProjectIDs = [os.path.splitext(filename)[0] for filename in os.listdir("/mnt/c/Users/conog/Desktop/DF3_METADATA")]
 prova = GetPublications("a")
-prova.runGetPublications(listOfProjectIDs)
-print("Current Time =", current_time)
+#prova.runGetPublications(listOfProjectIDs)
+
+os.chdir("/mnt/c/Users/conog/Desktop")
+prova.PMC_dataframe(["ERP005182"])
 
 
 
-# os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
+
+
+
+
 
 # prova = GetPublications("a")
 # idlist = prova.runGetPublications(["PRJNA719282"])
