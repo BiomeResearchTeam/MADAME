@@ -326,7 +326,6 @@ class GetPublications:
         for projectID in listOfProjectIDs:      
             # Fetching local publications metadata file 
             publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
-            url_list = []
 
             if os.path.isfile(publications_metadata):
                 metadata_df = pd.read_csv(publications_metadata, sep='\t')
@@ -338,11 +337,65 @@ class GetPublications:
                         ids = id_list.split(";")
                         article_ids.extend(ids)
 
-                    for id in article_ids: 
-                        source = id[:3]
-                        external_id = id[3:]
-                        url = f"https://www.ebi.ac.uk/europepmc/annotations_api/annotationsByArticleIds?articleIds={source}%{external_id}&provider=Europe%20PMC&format=XML"
-                        url_list.append(url)
+                    for article_id in article_ids: 
+                        source = article_id[:3]
+                        external_id = article_id[3:]
+                        url = f"https://www.ebi.ac.uk/europepmc/annotations_api/annotationsByArticleIds?articleIds={source}:{external_id}&format=XML"
+
+                        s = rq.session()
+                        retries = Retry(total=5,
+                                        backoff_factor=0.1,
+                                        status_forcelist=[500, 502, 503, 504])
+                        s.mount('https://', HTTPAdapter(max_retries=retries))
+                        headers = {"User-Agent": generate_user_agent()}
+                        response = s.get(url, headers=headers).content
+
+                        dict_list = []
+
+                        tree = ET.fromstring(response)
+                        for children in tree.iter("annotation"):
+
+                            # Create "labels" and "data" lists for storing parsed articles metadata              
+                            labels = []
+                            data = []
+
+                            def tmt_tree_parser(tag_or_XPath, tag_name = None):
+                            # Custom ElementTree parser. Takes a tag or an XPath as input and an optional 
+                            # custom name for renaming the tag (it will be the column name in the pandas
+                            # dataframe). 
+
+                                if tag_name:
+                                    labels.append(tag_name)
+                                else:
+                                    labels.append(tag_or_XPath)       
+                                child = children.find(tag_or_XPath)
+                                if child is not None:
+                                    value = child.text                 
+                                    data.append(value)
+                                else:
+                                    data.append("NA") 
+
+                            labels.append("article_id")
+                            data.append(article_id)
+
+                            tmt_tree_parser("prefix") 
+                            tmt_tree_parser("exact")
+                            tmt_tree_parser("postfix")
+                            tmt_tree_parser("./tags/tag/name", "tag_name")
+                            tmt_tree_parser("./tags/tag/uri", "tag_uri")
+                            tmt_tree_parser("id")
+                            tmt_tree_parser("type")
+                            tmt_tree_parser("section")
+                            tmt_tree_parser("provider")
+
+                            dictionary = dict(zip(labels, data))  
+                            dict_list.append(dictionary)
+
+                        text_mined_terms_dataframe = pd.DataFrame(dict_list)
+                        text_mined_terms_dataframe.to_csv(os.path.join(projectID, f'{projectID}_{article_id}_text-mined-terms.tsv'), sep="\t") 
+                        print(f'✅  Text mined terms saved as {projectID}_{article_id}_text-mined-terms.tsv')  
+
+                     
                 else:
                     print(f"No {projectID} publication has text mined terms available.")
 
@@ -350,18 +403,9 @@ class GetPublications:
                 print(f"{projectID}_publications-metadata.tsv not found. Either {projectID} has no associated publication or you didn't download this file yet.")
                 # try to download it?
 
-            if url_list: 
-                for url in url_list:
-                    s = rq.session()
-                    retries = Retry(total=5,
-                        backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
-                    s.mount('https://', HTTPAdapter(max_retries=retries))
-                    headers = {"User-Agent": generate_user_agent()}
-                    response = s.get(url, headers=headers).content
+  
+                    
 
-                    tree = ET.fromstring(response)
-                    for children in tree.iter("..."):
 
 
 
