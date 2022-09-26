@@ -43,14 +43,18 @@ class Project:
         # lines (e.g. multiple samples for the same run), we count it only one time
         df2 = df1.groupby([ftp_column, bytes_column])[bytes_column].count().to_frame(name = 'count').reset_index()
 
+        # If files are single-end, values in fastq_bytes will be integers -> df.sum()
+        if df2[bytes_column].dtypes == 'int64':
+            bytes = df2[bytes_column].sum()
+
+        elif df2[bytes_column].dtypes == 'float64':
+            bytes = df2[bytes_column].sum()
+
         # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
-        # Split the two numbers and add them to each other, before calculating the total of the column.
-        if df2[bytes_column].dtypes != 'int64':
+        # Split the two numbers and add them to each other, before calculating the total of the column. 
+        else:
             df3 = df2[bytes_column].apply(lambda x: sum(map(int, x.split(';'))))
             bytes = df3.sum()
-        # If files are single-end, values in fastq_bytes will be integers -> df.sum()
-        else:
-            bytes = df2[bytes_column].sum() 
 
         return bytes
 
@@ -178,12 +182,4 @@ class Project:
 
         return
 
-# listids = []
-# os.chdir("/mnt/c/Users/conog/Desktop/MADAME")
-# prova = Project('etc')
-# for folder in os.listdir():
-#     listids.append(folder)
-# for id in listids:
-#     print(id, prova.getSubmittedFormat(id), prova.getProjectSize(id, 'submitted'))
-# #prova.getSubmittedFormat("PRJEB39351")
 

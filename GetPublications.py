@@ -8,7 +8,6 @@ import time
 
 # Class for finding publications from sequences' accessions.
 # It returns one .tsv dataframe for each input accession.
-
 class GetPublications:
     def __init__(self, name):
         self.name = name 
@@ -23,42 +22,49 @@ class GetPublications:
 
         for projectID in listOfProjectIDs:
 
-            # Fetching local metadata file and building the accessions list 
-            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
-            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-            accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-            accessions_list = []
-            
-            for column in accessions_columns:
-                accessions = metadata_df[column].unique().tolist()
-                accessions_list.extend(accessions)
-
-            # Temporary counter. Could become a progress bar?
-            print(f"now working on {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}")
-            
-            dict_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID)  
-               
-            if len(dict_list) == 0:
-                print(f"🔎  Couldn't find any publications for {projectID}")
-                no_publication_list.append(projectID)
-
+            publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
+            temp_file = os.path.join(projectID, 'temp_file')
+            if os.path.isfile(publications_metadata):
+                print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
+            elif os.path.isfile(temp_file):
+                print(f'No publication found for {projectID}. Skipping')
             else:
-                PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")
-                PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
-                print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
+
+                # Fetching local metadata file and building the accessions list 
+                experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+                metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+                accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+                accessions_list = []
+                
+                for column in accessions_columns:
+                    accessions = metadata_df[column].unique().tolist()
+                    accessions_list.extend(accessions)
+
+                # Temporary counter. Could become a progress bar?
+                print(f"now working on {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}")
+                
+                dict_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID)  
+                
+                if len(dict_list) == 0:
+                    print(f"🔎  Couldn't find any publications for {projectID}")
+                    no_publication_list.append(projectID)
+                    with open(os.path.join(projectID, 'temp_file'), 'w') as file:  ###############!
+                        file.write(" ")
+
+                else:
+                    PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")
+                    PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
+                
+                time.sleep(10)  # how many seconds between each project?
             
-            time.sleep(10)  # how many seconds between each project?
-            
-            # Print a list of projects with no found publication
-            if no_publication_list: 
-                print(f"🔎  Couldn't find any publications for these projects: {no_publication_list}")
 
 
     def PMC_dataframe(self, accessions_list, input_accession_id=None):
        
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
-        retries = Retry(total=5,
+        retries = Retry(total=6,
                         backoff_factor=0.1,
                         status_forcelist=[500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
@@ -228,20 +234,20 @@ class GetPublications:
                             if "pdf" in list_of_links:
                                 data.append(list_of_links["pdf"])
 
-                                # Get PDF size
-                                response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
-                                is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                                content_length_s = response.headers.get('content-length')
+                                # # Get PDF size
+                                # response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
+                                # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
+                                # content_length_s = response.headers.get('content-length')
 
-                                if not is_chunked and content_length_s.isdigit():
-                                    pdf_bytes = int(content_length_s)
-                                else:
-                                    pdf_bytes = "NA"
+                                # if not is_chunked and content_length_s.isdigit():
+                                #     pdf_bytes = int(content_length_s)
+                                # else:
+                                #     pdf_bytes = "NA"
                             
-                                labels.append("PDF_bytes")
-                                data.append(pdf_bytes)
+                                # labels.append("PDF_bytes")
+                                # data.append(pdf_bytes)
 
-                            else:
+                            # else:
                                 data.append("NA")
 
 
@@ -297,15 +303,15 @@ class GetPublications:
 
                                 data.append(tgz_download_link)
 
-                                # Get TGZ package size
-                                response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
-                                is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                                content_length_s = response.headers.get('content-length')
+                                # # Get TGZ package size
+                                # response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
+                                # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
+                                # content_length_s = response.headers.get('content-length')
 
-                                if not is_chunked and content_length_s.isdigit():
-                                    tgz_bytes = int(content_length_s)
-                                else:
-                                    tgz_bytes = "NA"
+                                # if not is_chunked and content_length_s.isdigit():
+                                #     tgz_bytes = int(content_length_s)
+                                # else:
+                                tgz_bytes = "NA" # spostato
 
                                 labels.append("TGZpackage_bytes")
                                 data.append(tgz_bytes)
@@ -404,7 +410,30 @@ class GetPublications:
                 # try to download it?
 
   
-                    
+    def download_publications(self, listOfProjectIDs):
+    ######TUTTO DA SCRIVERE#######
+
+        for projectID in listOfProjectIDs:      
+            # Fetching local publications metadata file 
+            publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
+
+            if os.path.isfile(publications_metadata):
+                metadata_df = pd.read_csv(publications_metadata, sep='\t')
+
+                for link in metadata_df['PDF'].unique().tolist():             
+                    if link != "NA": 
+                        print(projectID)
+                        print(link)
+                        # download = rq.get(link, allow_redirects=True)
+                        # with open((os.path.join(projectID, f'{projectID}_project-metadata.xml')), 'wb') as file:
+                        #     file.write(download.content)
+                        # print(f'✅  Successful download of {projectID}_project-metadata.xml')
+                        
+
+
+
+            
+
 
 
 
