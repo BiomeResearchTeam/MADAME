@@ -1,7 +1,6 @@
 import os
 import logging
 from os.path import exists
-from webbrowser import get
 
 from IDlist import GetIDlist
 from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
