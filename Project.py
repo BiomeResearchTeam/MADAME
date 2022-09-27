@@ -49,7 +49,6 @@ class Project:
 
         elif df2[bytes_column].dtypes == 'float64':
             bytes = df2[bytes_column].sum()
-
         # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
         # Split the two numbers and add them to each other, before calculating the total of the column. 
         else:
