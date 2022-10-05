@@ -218,37 +218,37 @@ class GetPublications:
                                 url = node.find("url").text
                                 list_of_links[style] = url  
 
-                            labels.append("DOI")
-                            if "doi" in list_of_links: 
-                                data.append(list_of_links["doi"])
-                            else:
-                                data.append("NA")
-                  
-                            labels.append("HTML")
-                            if "html" in list_of_links: 
-                                data.append(list_of_links["html"])
-                            else:
-                                data.append("NA")
+                        labels.append("DOI")
+                        if "doi" in list_of_links: 
+                            data.append(list_of_links["doi"])
+                        else:
+                            data.append("NA")
+                
+                        labels.append("HTML")
+                        if "html" in list_of_links: 
+                            data.append(list_of_links["html"])
+                        else:
+                            data.append("NA")
 
-                            labels.append("PDF")
-                            if "pdf" in list_of_links:
-                                data.append(list_of_links["pdf"])
+                        labels.append("PDF")
+                        if "pdf" in list_of_links:
+                            data.append(list_of_links["pdf"])
 
-                                # # Get PDF size
-                                # response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
-                                # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                                # content_length_s = response.headers.get('content-length')
+                            # # Get PDF size
+                            # response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
+                            # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
+                            # content_length_s = response.headers.get('content-length')
 
-                                # if not is_chunked and content_length_s.isdigit():
-                                #     pdf_bytes = int(content_length_s)
-                                # else:
-                                #     pdf_bytes = "NA"
-                            
-                                # labels.append("PDF_bytes")
-                                # data.append(pdf_bytes)
-
+                            # if not is_chunked and content_length_s.isdigit():
+                            #     pdf_bytes = int(content_length_s)
                             # else:
-                                data.append("NA")
+                            #     pdf_bytes = "NA"
+                        
+                            # labels.append("PDF_bytes")
+                            # data.append(pdf_bytes)
+
+                        # else:
+                            data.append("NA")
 
 
 
