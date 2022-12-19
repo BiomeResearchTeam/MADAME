@@ -113,8 +113,8 @@ class Project:
 
     def getProjectInfo(self, projectID, field):
         # Utility function for getProjectName, getProjectTitle, getProjectDescription functions.
-        os.chdir(projectID)
-        tree = ET.parse(f'{projectID}_project-metadata.xml')
+        
+        tree = ET.parse(os.path.join(projectID, f'{projectID}_project-metadata.xml'))
         root = tree.getroot()
 
         for children in root.iter("PROJECT"):
@@ -124,8 +124,6 @@ class Project:
             else:
                 value = f"ERROR: MISSING FIELD [{field}]"
                 sys.exit()
-        
-        os.chdir(os.path.pardir)
 
         return value   
 

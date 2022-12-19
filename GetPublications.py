@@ -5,6 +5,7 @@ from requests.adapters import HTTPAdapter, Retry
 import pandas as pd
 import os
 import time
+from rich.progress import track
 
 # Class for finding publications from sequences' accessions.
 # It returns one .tsv dataframe for each input accession.
@@ -18,49 +19,33 @@ class GetPublications:
     # are given as input to GetPublicatios.PMC_dataframe, which returns a list of dictionaries
     # after querying each accession. This list of dictionaries, if not empty, is converted to
     # a pandas dataframe and then saved as a .tsv file to the corresponding project directory.
-        no_publication_list = []
 
-        for projectID in listOfProjectIDs:
+        projects_with_no_publication = []   #### lo utilizziamo?
+
+        for projectID in track(listOfProjectIDs, description="Searching for publications..."):
 
             publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
-            temp_file = os.path.join(projectID, 'temp_file')
             if os.path.isfile(publications_metadata):
                 print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
-            elif os.path.isfile(temp_file):
-                print(f'No publication found for {projectID}. Skipping')
-            else:
 
-                # Fetching local metadata file and building the accessions list 
-                experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
-                metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-                accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-                accessions_list = []
+            else:              
+                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID)  
                 
-                for column in accessions_columns:
-                    accessions = metadata_df[column].unique().tolist()
-                    accessions_list.extend(accessions)
-
-                # Temporary counter. Could become a progress bar?
-                print(f"now working on {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}")
-                
-                dict_list = self.PMC_dataframe(accessions_list, input_accession_id=projectID)  
-                
-                if len(dict_list) == 0:
+                if PMC_pd_dataframe.empty:   
                     print(f"🔎  Couldn't find any publications for {projectID}")
-                    no_publication_list.append(projectID)
-                    with open(os.path.join(projectID, 'temp_file'), 'w') as file:  ###############!
-                        file.write(" ")
+                    projects_with_no_publication.append(projectID)
+                    with open(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
+                        file.write("")  #### dovremmo scrivere NA? lasciamo vuoto?
 
                 else:
-                    PMC_dataframe = pd.DataFrame(dict_list).fillna("NA")
-                    PMC_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    PMC_pd_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
                     print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
                 
-                time.sleep(10)  # how many seconds between each project?
+                time.sleep(10)  ##### how many seconds between each project?
             
 
 
-    def PMC_dataframe(self, accessions_list, input_accession_id=None):
+    def PMC_pd_dataframe(self, projectID):
        
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
@@ -71,6 +56,16 @@ class GetPublications:
 
         # dict_list will be filled with a dictionary of labels and values for each publication found.   
         dict_list = [] 
+
+        # Fetching local metadata file and building the accessions list 
+        experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+        metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+        accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+        accessions_list = []
+        
+        for column in accessions_columns:
+            accessions = metadata_df[column].unique().tolist()
+            accessions_list.extend(accessions)
 
         for queried_accession_id in accessions_list:
             # Temporary counter. Could become a progress bar?
@@ -146,10 +141,9 @@ class GetPublications:
                         if any(d.get('id') == pub_id for d in dict_list):
                             break
 
-                        # Input accession (e.g. Project ID)
-                        if input_accession_id is not None:
-                            labels.append("input_accession_id")
-                            data.append(input_accession_id)
+                        # Project ID column
+                        labels.append("project_id")
+                        data.append(projectID)
 
                         # Queried accession, associated with input accession
                         labels.append("queried_accession_id")
@@ -324,8 +318,14 @@ class GetPublications:
                         dictionary = dict(zip(labels, data))  
                         dict_list.append(dictionary)
 
+
+        if len(dict_list) == 0:
+            PMC_pd_dataframe = pd.DataFrame(dict_list) 
+        else:
+            PMC_pd_dataframe = pd.DataFrame(dict_list).fillna("NA")
+            
         
-        return dict_list
+        return PMC_pd_dataframe
 
     def getTextMinedTerms(self, listOfProjectIDs):
 
@@ -411,23 +411,10 @@ class GetPublications:
 
   
     def download_publications(self, listOfProjectIDs):
-    ######TUTTO DA SCRIVERE#######
 
-        for projectID in listOfProjectIDs:      
-            # Fetching local publications metadata file 
-            publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
+        ######DA SCRIVERE#######
 
-            if os.path.isfile(publications_metadata):
-                metadata_df = pd.read_csv(publications_metadata, sep='\t')
-
-                for link in metadata_df['PDF'].unique().tolist():             
-                    if link != "NA": 
-                        print(projectID)
-                        print(link)
-                        # download = rq.get(link, allow_redirects=True)
-                        # with open((os.path.join(projectID, f'{projectID}_project-metadata.xml')), 'wb') as file:
-                        #     file.write(download.content)
-                        # print(f'✅  Successful download of {projectID}_project-metadata.xml')
+        return
                         
 
 

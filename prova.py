@@ -8,7 +8,6 @@ from SampleMetadataDownload import SampleMetadataDownload
 from Utilities import Directory
 from SampleMetadataParser import SampleMetadataParser
 from Project import Project
-from ProjectManager import ProjectManager
 from GetPublications import GetPublications
 
 
@@ -70,7 +69,7 @@ def main():
 
         # print("------------------------")
         # print("✨   obtaining a list of AVAILABLE projects:")
-        # get_available = ProjectManager("get_available")
+        # get_available = Project("get_available")
         # listOfProjectIDs = get_available.getAvailableProjects(logger, listOfProjectIDs)
 
 

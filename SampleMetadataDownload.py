@@ -19,12 +19,11 @@ class SampleMetadataDownload:
         
         for projectID in listOfProjectIDs:  
 
-            os.chdir(projectID)
-            
             # Read metadata file and check if it's empty or not
-            experiments_metadata = f'{projectID}_experiments-metadata.tsv'
+            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+
             if os.path.getsize(experiments_metadata) == 0:
-                print(f'{projectID}_experiments-metadata.tsv is empty. Skipping.')  # no samples column!
+                print(f'Metadata file for {projectID} is empty. Skipping.')  # no samples column!
             else:
                 sample_xml_Directory = Directory("CreateSamplesXMLDirectory")
                 sample_xml_Directory.createDirectory("samples-metadata_xml")
@@ -40,8 +39,6 @@ class SampleMetadataDownload:
                         print(f"Downloading {sampleID} metadata ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project {listOfProjectIDs.index(projectID)+1}/{len(listOfProjectIDs)}")
                         self.sampleMetadataDownload(sampleID)
                 print(f'✅   Successful download of {projectID} samples metadata!')  
-
-            os.chdir(os.path.pardir)
 
 
     def sampleMetadataDownload(self, sampleID):

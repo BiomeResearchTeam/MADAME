@@ -16,19 +16,22 @@ class SampleMetadataParser:
     # runs the parser on samples-metadata_xml's files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
         for projectID in track(listOfProjectIDs, description="📑 Parsing samples metadata..."):
-            # checks if .tsvparsed file already exists
+
+            #### aggiungere altre info sul processo?
+
+            # Pass if .tsv parsed file already exists
             if os.path.isfile(os.path.join(projectID, f'{projectID}_parsed-samples-metadata.tsv')):
-                pass  
-            else:     
-                os.chdir(projectID)
-                sample_xml_directory = "samples-metadata_xml"
-                if os.path.isdir(sample_xml_directory):    
-                    self.sampleMetadataParser(sample_xml_directory)
-                os.chdir(os.path.pardir)
+                pass 
+
+            else:      
+                self.sampleMetadataParser(projectID)
+
         print("✅   Parsing completed!")
 
 
-    def sampleMetadataParser(self, sample_xml_directory):
+    def sampleMetadataParser(self, projectID):
+
+        ##################### CUSTOM PARSER START #####################
 
         def enaSampleIterator(tag_1, tag_2, tag_3=None, mode='value'): 
         # For convenience, three different options can be specified in the mode parameter,
@@ -91,9 +94,16 @@ class SampleMetadataParser:
             else:
                 print("Enter a valid mode:\n•'value' (default)\n•'attribute'\n•'couple'") 
 
-        # Enter directory containing xml files, build list of those files, initialize empty dataframe
-        os.chdir(sample_xml_directory)
-        xml_files = os.listdir()
+        ##################### CUSTOM PARSER END #####################
+
+        # Build list of sample xml files, initialize empty dataframe 
+        sample_xml_directory = os.path.join(projectID, "samples-metadata_xml")
+
+        # Exit function if sample_xml_directory doesn't exist
+        if not os.path.isdir(sample_xml_directory):
+            return
+         
+        xml_files = os.listdir(sample_xml_directory)
         empty_df = []
 
         # Loops through xml files and parses them, using enaSampleIterator function for convenience.
@@ -118,16 +128,11 @@ class SampleMetadataParser:
             enaSampleIterator('SAMPLE_ATTRIBUTE', 'TAG', 'VALUE', mode='couple')
 
             # Build dictionary from labels and relative data
-            d = dict(zip(labels, data))
-            empty_df.append(d)
+            dictionary = dict(zip(labels, data))
+            empty_df.append(dictionary)
 
         # Convert into dataframe
         df = pd.DataFrame(empty_df)
 
-        # Save as parsed-samples-metadata.tsv outside sample_xml_directory
-        parent_dir = os.path.join(os.getcwd(), os.pardir)
-        projectID = os.path.basename(os.path.split(os.getcwd())[0])
-        df.to_csv(os.path.join(parent_dir, f"{projectID}_parsed-samples-metadata") + '.tsv', sep='\t', index=None)
-
-        # Exits to project folder
-        os.chdir(os.path.pardir)
+        # Save as parsed-samples-metadata.tsv 
+        df.to_csv(os.path.join(projectID, f"{projectID}_parsed-samples-metadata.tsv"), sep='\t', index=None)
