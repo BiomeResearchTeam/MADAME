@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 import xml.etree.ElementTree as ET
+from rich.progress import track
 
 # Class for parsing sample metadata (from xml to tsv) using ElementTree.
 
@@ -14,15 +15,15 @@ class SampleMetadataParser:
     # For each projectID in listOfProjectIDs, enters the project folder,
     # runs the parser on samples-metadata_xml's files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
-        print("📑   Parsing samples metadata...")
-        for projectID in listOfProjectIDs:
+        for projectID in track(listOfProjectIDs, description="📑 Parsing samples metadata..."):
             # checks if .tsvparsed file already exists
             if os.path.isfile(os.path.join(projectID, f'{projectID}_parsed-samples-metadata.tsv')):
                 pass  
             else:     
                 os.chdir(projectID)
                 sample_xml_directory = "samples-metadata_xml"
-                self.sampleMetadataParser(sample_xml_directory)
+                if os.path.isdir(sample_xml_directory):    
+                    self.sampleMetadataParser(sample_xml_directory)
                 os.chdir(os.path.pardir)
         print("✅   Parsing completed!")
 

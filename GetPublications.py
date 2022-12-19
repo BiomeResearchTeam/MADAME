@@ -407,7 +407,7 @@ class GetPublications:
 
             else:
                 print(f"{projectID}_publications-metadata.tsv not found. Either {projectID} has no associated publication or you didn't download this file yet.")
-                # try to download it?
+            
 
   
     def download_publications(self, listOfProjectIDs):

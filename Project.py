@@ -146,39 +146,19 @@ class Project:
         return projectDescription
 
     
-   
+    def getAvailableProjects(self, logger, listOfProjectIDs):
+    # Input is the full list of project IDs, output is the list of the available projects.
+    # This list is needed for all steps after getting a listOfProjectIDs.
 
-#   EDITATO FIN QUI ########
+        listOfAvailableProjects = []
 
-    def createExperiments(self, logger, listOfExp):
-        logger.info('[CREATE-EXPERIMENTS]: ' + str(listOfExp))
-        for item, idExp in enumerate(listOfExp):
-            experiment = Experiment(projectID=idExp)
-            self.listOfExperiments.append(experiment)
+        for projectID in listOfProjectIDs:
+            project = Project(projectID) 
+            if project.getProjectAvailability(projectID) == True:
+                listOfAvailableProjects.append(projectID)
 
-    def toXML(self, logger):
-        logger.info('[CREATE-XML-PROJECT] - ID: ' + str(self.IDProject))
-        # qui creo il singolo nodo xml per il progetto corrente
-        # richiamo experiment.toXML() perchè ogni singolo project
-        # contiene una (potenziale) lista di experiments
-        # gli xml-element degli experiment fanno riferimento allo stesso
-        # xml-element di projects
-        '''
-            <project id="PRJEB1787">
-                <experiments>
-                    <exp1>
-                        <samples> <sample> </sample> </samples>
-                    </exp1>
-                    <exp2>
-                        <samples> <sample> </sample> </samples>
-                    </exp2>
-                </experiments>
-            <project>
-        '''
-        logger.info('[CREATE-XML-EXPERIMENTS] - IDs: ' + str(self.listOfExperiments))
-        for exp in self.listOfExperiments:
-            expXml = exp.toXMLExperiment()
+        
+        logger.info(f"Available projects: {listOfAvailableProjects}")
 
-        return
-
+        return listOfAvailableProjects
 

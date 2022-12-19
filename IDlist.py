@@ -1,6 +1,6 @@
-import requests as rq
 import re
 import sys
+import requests as rq
 
 # Class for getting the ID list from query or user input.
 # It also has methods for printing accessions' details from ENA 

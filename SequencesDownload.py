@@ -38,7 +38,8 @@ class SequencesDownload:
                 check_submitted_type = Project("check_submitted_type")
                 file_type = check_submitted_type.getSubmittedFormat(projectID)
 
-                os.rename(os.path.join(projectID, projectID), os.path.join(projectID, f'{projectID}_{file_type}_files'))
+            os.rename(os.path.join(projectID, projectID), os.path.join(projectID, f'{projectID}_{file_type}_files'))
+        
         else:
             print("Something went wrong with your download.\nTry again or change file_type.")
 

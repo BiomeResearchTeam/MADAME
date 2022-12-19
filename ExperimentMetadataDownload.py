@@ -3,6 +3,7 @@ import requests as rq
 from Utilities import Directory
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
+from rich.progress import track
 
 # Class for downloading project and experiments metadata.
 
@@ -13,14 +14,16 @@ class Exp_Proj_MetadataDownload:
     def runDownloadMetadata(self, listOfProjectIDs):
     # For each projectID in listOfProjectIDs creates project folder and downloads metadata.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (ProjectManager.getAvailableProjects(listOfProjectIDs))
-        for projectID in listOfProjectIDs:
+        #with alive_bar(len(listOfProjectIDs)) as bar:
+        
+        
+        for projectID in track(listOfProjectIDs, description="Downloading..."):
             projectDirectory = Directory("CreateDirectory")
             projectDirectory.createDirectory(projectID)
-            self.projectMetadataDownload(projectID)
+            self.projectMetadataDownload(projectID) 
             self.experimentsMetadataDownload(projectID)
-        return
 
-    
+  
     def projectMetadataDownload(self, projectID):
     # Download project metadata file only if it doesn't exist
         if os.path.isfile(os.path.join(projectID, f'{projectID}_project-metadata.xml')):
