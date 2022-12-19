@@ -3,7 +3,6 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 import pandas as pd
-from Experiment import Experiment
 from Utilities import Utilities
 
 class Project:
