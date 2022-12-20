@@ -26,6 +26,21 @@ class Project:
 
         return self.ProjectAvailability
 
+    def getAvailableProjects(self, logger, listOfProjectIDs):
+    # Input is the full list of project IDs, output is the list of the available projects.
+    # This list is needed for all steps after getting a listOfProjectIDs.
+
+        listOfAvailableProjects = []
+
+        for projectID in listOfProjectIDs:
+            project = Project(projectID) 
+            if project.getProjectAvailability(projectID) == True:
+                listOfAvailableProjects.append(projectID)
+
+        logger.info(f"Available projects: {listOfAvailableProjects}")
+
+        return listOfAvailableProjects
+
     def getProjectBytes(self, projectID, file_type):
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
@@ -143,19 +158,5 @@ class Project:
         return projectDescription
 
     
-    def getAvailableProjects(self, logger, listOfProjectIDs):
-    # Input is the full list of project IDs, output is the list of the available projects.
-    # This list is needed for all steps after getting a listOfProjectIDs.
-
-        listOfAvailableProjects = []
-
-        for projectID in listOfProjectIDs:
-            project = Project(projectID) 
-            if project.getProjectAvailability(projectID) == True:
-                listOfAvailableProjects.append(projectID)
-
-        
-        logger.info(f"Available projects: {listOfAvailableProjects}")
-
-        return listOfAvailableProjects
+    
 

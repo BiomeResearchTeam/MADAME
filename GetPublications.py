@@ -31,11 +31,11 @@ class GetPublications:
             else:              
                 PMC_pd_dataframe = self.PMC_pd_dataframe(projectID)  
                 
-                if PMC_pd_dataframe.empty:   
+                if PMC_pd_dataframe.empty:   #DA TESTARE, FUNZIONA???
                     print(f"🔎  Couldn't find any publications for {projectID}")
                     projects_with_no_publication.append(projectID)
                     with open(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
-                        file.write("")  #### dovremmo scrivere NA? lasciamo vuoto?
+                        file.write("")  #### dovremmo scrivere NA? lasciamo vuoto????
 
                 else:
                     PMC_pd_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
@@ -44,8 +44,26 @@ class GetPublications:
                 time.sleep(10)  ##### how many seconds between each project?
             
 
+    def ENA_Xref_check(self, projectID):
+        
+        # Create an empty accessions_list
+        accessions_list = []
+        # Check projectID with ENA Xref API:
+        ENA_Xref_url = f"https://www.ebi.ac.uk/ena/xref/rest/tsv/search?accession={projectID}"
+        # Read dataframe online:
+        df = pd.read_csv(ENA_Xref_url, sep='\t')
+        # If df is empty, return accessions_list as it is (empty)
+        if df.empty:
+            return accessions_list
 
-    def PMC_pd_dataframe(self, projectID):
+        EuropePMC_rows = df[df['Source'] == "EuropePMC"]
+
+        PubMed_rows = df[df['Source'] == "PubMed"]
+        
+
+        return accessions_list 
+
+    def PMC_pd_dataframe(self, projectID, accessions_list):
        
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
@@ -57,15 +75,17 @@ class GetPublications:
         # dict_list will be filled with a dictionary of labels and values for each publication found.   
         dict_list = [] 
 
-        # Fetching local metadata file and building the accessions list 
-        experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
-        metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-        accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-        accessions_list = []
-        
-        for column in accessions_columns:
-            accessions = metadata_df[column].unique().tolist()
-            accessions_list.extend(accessions)
+        # Fetching local metadata file and building the accessions list, only if it's None
+        # (so if it's not provided by ENA_Xref_check)
+        if not accessions_list:
+            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+            accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+            accessions_list = []
+            
+            for column in accessions_columns:
+                accessions = metadata_df[column].unique().tolist()
+                accessions_list.extend(accessions)
 
         for queried_accession_id in accessions_list:
             # Temporary counter. Could become a progress bar?

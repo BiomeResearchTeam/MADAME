@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import requests as rq
 
 # os.chdir("/mnt/c/Users/conog/Desktop")
 
@@ -54,4 +55,17 @@ ranges = list(map(int, re.findall(r'\d+', str_list)))
 new_list = ([f'{chr}{i}' for i in range(ranges[0], ranges[1]+1)])
 
 print(new_list)
+
+
+ENA_Xref_url = f"https://www.ebi.ac.uk/ena/xref/rest/tsv/search?accession=PRJNA299404"
+df = pd.read_csv(ENA_Xref_url, sep='\t')
+response = rq.head(ENA_Xref_url, allow_redirects=True)
+if df.empty:
+    print("empty")
+else:
+    print("not empty")
+
+print(df)
+rslt_df = df[df['Source'] == "EuropePMC"]
+print(rslt_df)
 
