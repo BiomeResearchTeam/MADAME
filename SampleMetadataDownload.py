@@ -25,23 +25,24 @@ class SampleMetadataDownload:
             if os.path.getsize(experiments_metadata) == 0:
                 print(f'Metadata file for {projectID} is empty. Skipping.')  # no samples column!
             else:
+                samples_metadata_xml_folder = os.path.join(projectID, "samples-metadata_xml")
                 sample_xml_Directory = Directory("CreateSamplesXMLDirectory")
-                sample_xml_Directory.createDirectory("samples-metadata_xml")
+                sample_xml_Directory.createDirectory(samples_metadata_xml_folder)
                 experiments_metadata_df = pd.read_csv(experiments_metadata, sep='\t')
                 sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
 
                 for sampleID in sample_ids:
                     # Checking the file existence before downloading
-                    if os.path.isfile(os.path.join('samples-metadata_xml', f'{sampleID}.xml')):
+                    if os.path.isfile(os.path.join(projectID, 'samples-metadata_xml', f'{sampleID}.xml')):
                         print(f"{sampleID} metadata file already downloaded, skipping. ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project {listOfProjectIDs.index(projectID)+1}/{len(listOfProjectIDs)}")
                         pass
                     else:
                         print(f"Downloading {sampleID} metadata ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project {listOfProjectIDs.index(projectID)+1}/{len(listOfProjectIDs)}")
-                        self.sampleMetadataDownload(sampleID)
+                        self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
                 print(f'✅   Successful download of {projectID} samples metadata!')  
 
 
-    def sampleMetadataDownload(self, sampleID):
+    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder):
     # Download sample metadata file
         s = rq.session()
         retries = Retry(total=5,
@@ -52,6 +53,6 @@ class SampleMetadataDownload:
         url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
         headers = {"User-Agent": generate_user_agent()}
         download = s.get(url, headers=headers, allow_redirects=True)
-        with open((os.path.join('samples-metadata_xml', f'{sampleID}.xml')), 'wb') as file:
+        with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
             file.write(download.content)
 

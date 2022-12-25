@@ -4,8 +4,8 @@ import requests as rq
 from requests.adapters import HTTPAdapter, Retry
 import pandas as pd
 import os
-import time
 from rich.progress import track
+from io import StringIO
 
 # Class for finding publications from sequences' accessions.
 # It returns one .tsv dataframe for each input accession.
@@ -28,8 +28,9 @@ class GetPublications:
             if os.path.isfile(publications_metadata):
                 print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
 
-            else:              
-                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID)  
+            else:
+                accessions_list = self.ENA_Xref_check(projectID)          
+                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list)  
                 
                 if PMC_pd_dataframe.empty:   #DA TESTARE, FUNZIONA???
                     print(f"🔎  Couldn't find any publications for {projectID}")
@@ -41,25 +42,51 @@ class GetPublications:
                     PMC_pd_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
                     print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
                 
-                time.sleep(10)  ##### how many seconds between each project?
             
 
     def ENA_Xref_check(self, projectID):
+        # Given a projectID, checks with the ENA Xref API if the project has any linked publications.
+        # It returns a list of accessions (PubMed primary accessions) which will be used by PMC_pd_dataframe
+        # function. Only if the returned list is empty (no linked publications in ENA Xref API), the 
+        # PMC_pd_dataframe function will search for every accession linked to the project. 
         
+        ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
+        s = rq.session()
+        retries = Retry(total=6,
+                        backoff_factor=0.1,
+                        status_forcelist=[500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
         # Create an empty accessions_list
         accessions_list = []
         # Check projectID with ENA Xref API:
         ENA_Xref_url = f"https://www.ebi.ac.uk/ena/xref/rest/tsv/search?accession={projectID}"
+        # a random user-agent is generated for each query
+        headers = {"User-Agent": generate_user_agent()}
+        response = s.get(ENA_Xref_url, headers=headers)
+        data = StringIO(response.text)
+
         # Read dataframe online:
-        df = pd.read_csv(ENA_Xref_url, sep='\t')
+        df = pd.read_csv(data, sep='\t', keep_default_na=False) #keep_default_na=False is for avoiding pandas adding .0 to numbers
         # If df is empty, return accessions_list as it is (empty)
         if df.empty:
             return accessions_list
 
         EuropePMC_rows = df[df['Source'] == "EuropePMC"]
-
+        if df.empty: 
+            pass
+        else:
+            accessions = EuropePMC_rows['Source secondary accession'].unique().tolist()
+            accessions_list.extend(accessions)
+    
         PubMed_rows = df[df['Source'] == "PubMed"]
+        if df.empty: 
+            pass
+        else:
+            accessions = PubMed_rows['Source primary accession'].unique().tolist()
+            accessions_list.extend(accessions)
         
+        accessions_list = list(dict.fromkeys(accessions_list)) #removing any possible duplicates
 
         return accessions_list 
 
@@ -261,7 +288,7 @@ class GetPublications:
                             # labels.append("PDF_bytes")
                             # data.append(pdf_bytes)
 
-                        # else:
+                        else:
                             data.append("NA")
 
 
@@ -325,10 +352,10 @@ class GetPublications:
                                 # if not is_chunked and content_length_s.isdigit():
                                 #     tgz_bytes = int(content_length_s)
                                 # else:
-                                tgz_bytes = "NA" # spostato
+                                #    tgz_bytes = "NA" 
 
-                                labels.append("TGZpackage_bytes")
-                                data.append(tgz_bytes)
+                                #labels.append("TGZpackage_bytes")
+                                #data.append(tgz_bytes)
 
                         else:
                             data.append("NA")

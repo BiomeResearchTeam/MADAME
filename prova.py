@@ -85,19 +85,19 @@ def main():
         ########
         #setDirectory.setMADAMEdirectory("/mnt/c/Users/conog/Desktop/hospital_microbiome")
 
-        os.chdir("/mnt/c/Users/conog/Desktop/hospital_microbiome")
+        os.chdir("/mnt/p/hospital_microbiome")
         
-        print("⬇️   Downloading available project and experiments metadata...")
-        MetadataDownload = Exp_Proj_MetadataDownload("MetadataDownload")
-        MetadataDownload.runDownloadMetadata(listOfProjectIDs)
+        # print("⬇️   Downloading available project and experiments metadata...")
+        # MetadataDownload = Exp_Proj_MetadataDownload("MetadataDownload")
+        # MetadataDownload.runDownloadMetadata(listOfProjectIDs)
 
         # SampleMetaDownload = SampleMetadataDownload("download")
         # SampleMetaDownload.runDownloadMetadata(listOfProjectIDs)
 
-        print("------------------------")
-        print("✨   trying metadata parsing...\n")
-        MetadataParsing = SampleMetadataParser("MetadataParsing")
-        MetadataParsing.runParseMetadata(listOfProjectIDs)
+        # print("------------------------")
+        # print("✨   trying metadata parsing...\n")
+        # MetadataParsing = SampleMetadataParser("MetadataParsing")
+        # MetadataParsing.runParseMetadata(listOfProjectIDs)
 
 #         print("------------------------")
 #         print("✨   trying some functions of Project.py!\n")
@@ -116,10 +116,10 @@ def main():
 #         print(f"📝 project title: {first.getProjectTitle(projectID)}")
 #         print(f"📝 project description: {first.getProjectDescription(projectID)}")
 
-#         print("------------------------")
-#         print("✨   trying to get publications!\n")
-#         getpublications = GetPublications("getpublications")
-#         getpublications.runGetPublications(listOfProjectIDs)
+        print("------------------------")
+        print("✨   trying to get publications!\n")
+        getpublications = GetPublications("getpublications")
+        getpublications.runGetPublications(listOfProjectIDs)
         
         
 
