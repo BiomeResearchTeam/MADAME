@@ -9,6 +9,7 @@ from Utilities import Directory
 from SampleMetadataParser import SampleMetadataParser
 from Project import Project
 from GetPublications import GetPublications
+from SequencesDownload import SequencesDownload
 
 
 def main():
@@ -76,6 +77,7 @@ def main():
         listOfProjectIDs = ["PRJNA689547","PRJNA747635","PRJNA750471","ERP130386","ERP124721","PRJNA631351","PRJNA631347", "PRJNA631348", "PRJNA631491","PRJNA672813","PRJNA737285","PRJNA728360","PRJEB40938","PRJEB31632","PRJNA604445","PRJNA575544","PRJNA610453","PRJNA541082","PRJNA545293","ERP105802","ERP016116","PRJEB13117","PRJNA376580","PRJNA369713","SRX1092351","PRJNA299404","PRJNA287928","PRJNA256117","PRJNA167667",    "PRJNA376580","PRJNA544954","PRJEB35979",      "PRJEB11484"]
 
 
+
         print("------------------------")
         print("✨   trying metadata download (project + experiments)\n")
 
@@ -116,10 +118,16 @@ def main():
 #         print(f"📝 project title: {first.getProjectTitle(projectID)}")
 #         print(f"📝 project description: {first.getProjectDescription(projectID)}")
 
+        # print("------------------------")
+        # print("✨   trying to get publications!\n")
+        # getpublications = GetPublications("getpublications")
+        # getpublications.runGetPublications(listOfProjectIDs)
+
         print("------------------------")
-        print("✨   trying to get publications!\n")
-        getpublications = GetPublications("getpublications")
-        getpublications.runGetPublications(listOfProjectIDs)
+        print("✨   downloading..\n")
+        sequencesdownload = SequencesDownload("download")
+        sequencesdownload.runDownloadData(listOfProjectIDs, "fastq")
+
         
         
 

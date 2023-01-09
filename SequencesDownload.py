@@ -1,7 +1,7 @@
 import subprocess
 import os
 from Project import Project
-
+from rich.progress import track
 
 class SequencesDownload:
 
@@ -16,8 +16,9 @@ class SequencesDownload:
 
     # Check file_type availability (not every project has both sra and fastq files available)
         files_availability = Project("files_availability")
-        for projectID in listOfProjectIDs:
-            if files_availability.getAvailableRuns(projectID, file_type):
+        for projectID in track(listOfProjectIDs, description="📥Downloading..."):
+            available_files = files_availability.getAvailableRuns(projectID, file_type)
+            if available_files:
                 print(f'Downloading {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}')
                 self.enaBrowserTools(projectID, file_type)
             else:
@@ -26,6 +27,7 @@ class SequencesDownload:
 
     def enaBrowserTools(self, projectID, file_type):
         # Accepted file_types: {submitted,fastq,sra}
+
 
         subprocess.run(f'enaGroupGet -f {file_type} {projectID} -d {projectID}', shell=True, capture_output=True, text=True)
 
