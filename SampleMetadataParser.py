@@ -2,6 +2,7 @@ import os
 import pandas as pd
 import xml.etree.ElementTree as ET
 from rich.progress import track
+from Utilities import Color
 
 # Class for parsing sample metadata (from xml to tsv) using ElementTree.
 
@@ -11,26 +12,28 @@ class SampleMetadataParser:
         self.name = name
     
     
-    def runParseMetadata(self, listOfProjectIDs):
+    def runParseMetadata(self, listOfProjectIDs, user_session):
     # For each projectID in listOfProjectIDs, enters the project folder,
     # runs the parser on samples-metadata_xml's files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
-        for projectID in track(listOfProjectIDs, description="📑 Parsing samples metadata..."):
+        for projectID in track(listOfProjectIDs, description="Parsing samples metadata files..."):
 
             #### aggiungere altre info sul processo?
+            path = os.path.join("Downloads", user_session, projectID)
 
             # Pass if .tsv parsed file already exists
-            if os.path.isfile(os.path.join(projectID, f'{projectID}_parsed-samples-metadata.tsv')):
+            if os.path.isfile(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv')):
                 pass 
 
             else:      
-                self.sampleMetadataParser(projectID)
+                self.sampleMetadataParser(user_session, projectID)
 
-        print("✅   Parsing completed!")
+        print("Parsing was " + Color.BOLD + Color.GREEN + "successfully completed\n" + Color.END)
 
 
-    def sampleMetadataParser(self, projectID):
+    def sampleMetadataParser(self, user_session, projectID):
 
+        path = os.path.join("Downloads", user_session, projectID)
         ##################### CUSTOM PARSER START #####################
 
         def enaSampleIterator(tag_1, tag_2, tag_3=None, mode='value'): 
@@ -97,7 +100,7 @@ class SampleMetadataParser:
         ##################### CUSTOM PARSER END #####################
 
         # Build list of sample xml files, initialize empty dataframe 
-        sample_xml_directory = os.path.join(projectID, "samples-metadata_xml")
+        sample_xml_directory = os.path.join(path, "samples-metadata_xml")
 
         # Exit function if sample_xml_directory doesn't exist
         if not os.path.isdir(sample_xml_directory):
@@ -109,7 +112,7 @@ class SampleMetadataParser:
         # Loops through xml files and parses them, using enaSampleIterator function for convenience.
         # 'labels' will be the first row, shared between metadata files of the same project.
         for xml in xml_files:
-            tree = ET.parse(xml)
+            tree = ET.parse(os.path.join(sample_xml_directory, xml))
             root = tree.getroot()
             labels = []
             data = []
@@ -135,4 +138,6 @@ class SampleMetadataParser:
         df = pd.DataFrame(empty_df)
 
         # Save as parsed-samples-metadata.tsv 
-        df.to_csv(os.path.join(projectID, f"{projectID}_parsed-samples-metadata.tsv"), sep='\t', index=None)
+        df.to_csv(os.path.join(path, f"{projectID}_parsed-samples-metadata.tsv", sep='\t', index=None))
+
+SampleMetadataParser = SampleMetadataParser("SampleMetadataParser") 

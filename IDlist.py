@@ -1,6 +1,9 @@
 import re
+import os
 import sys
 import requests as rq
+import pandas as pd
+from Utilities import Utilities
 
 # Class for getting the ID list from query or user input.
 # It also has methods for printing accessions' details from ENA 
@@ -18,11 +21,14 @@ class GetIDlist:
         self.name = name
     
     
-    def Query(self, logger, user_query, data_type = "projects"):
+    def Query(self, logger, user_session, user_query, data_type = "projects"):
     # Query EBI db. Default data_type is "projects".
     # It can also be set to: "runs", "samples", "studies".
+        path = (os.path.join("Downloads", user_session))
+
         self.user_query = user_query
         self.data_type = data_type
+
 
         # Setting parameters - based on user's input
         if self.data_type == "runs":
@@ -59,13 +65,21 @@ class GetIDlist:
 
         logger.info(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
 
+        Utilities.createDirectory(path)
+        list_of_IDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
+        list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
+
         return listOfProjectIDs
 
 
-    def IDlistFromUserInput(self, logger, user_input):
+    def IDlistFromUserInput(self, logger, user_session, user_input):
+
+        path = (os.path.join("Downloads", user_session))
     # Get ID list from a series of accession codes derived from user input.
     # Accession codes need to be entered separated by comma.
         submitted_list = user_input.split(",")
+
+    ## TO ADD: ACCEPT ACCESSION CODES FROM FILES (CSV, TSV...)
 
         runs = []
         samples = []
@@ -85,14 +99,14 @@ class GetIDlist:
                 # Error message
                 print(f'WARNING - {accession} is not a valid accession code!')
 
-        listOfProjectIDs = {"enaDataGet" : runs, "enaGroupGet" : [samples, studies, projects]}
-        # In this case the output is a dictionary, not a list!
-        # Use keys and indexes to access different accession types:
-        # ["enaDataGet"] ---> runs
-        # ["enaGroupGet"][0] ---> samples
-        # ["enaGroupGet"][1] ---> studies
-        # ["enaGroupGet"][2] ---> projects
+        listOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}
+        
+        Utilities.createDirectory(path)
+        
+        list_of_IDs = pd.DataFrame({"accession_ids":runs+samples+studies+projects})
 
+        list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
+    
         logger.info(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
         
         return listOfProjectIDs
@@ -125,24 +139,24 @@ class GetIDlist:
             results.extend(converted)
         
         # Query ENA db only if accession codes are present, in each list.
-        if listOfProjectIDs["enaDataGet"]:
+        if listOfProjectIDs["runs"]:
             domain = "domain=sra-run&query="
-            accessions = listOfProjectIDs["enaDataGet"]
+            accessions = listOfProjectIDs["runs"]
             text_search()
 
-        if listOfProjectIDs["enaGroupGet"][0]:
+        if listOfProjectIDs["samples"]:
             domain = "domain=sra-sample&query="
-            accessions = listOfProjectIDs["enaGroupGet"][0]
+            accessions = listOfProjectIDs["samples"]
             text_search()
 
-        if listOfProjectIDs["enaGroupGet"][1]:
+        if listOfProjectIDs["studies"]:
             domain = "domain=sra-study&query="
-            accessions = listOfProjectIDs["enaGroupGet"][1]
+            accessions = listOfProjectIDs["studies"]
             text_search()
         
-        if listOfProjectIDs["enaGroupGet"][2]:
+        if listOfProjectIDs["projects"]:
             domain = "domain=project&query="
-            accessions = listOfProjectIDs["enaGroupGet"][2]
+            accessions = listOfProjectIDs["projects"]
             text_search()
         
         joined_results = "\n".join(results)
@@ -150,3 +164,4 @@ class GetIDlist:
 
         return output
     
+GetIDlist = GetIDlist('GetIDlist')

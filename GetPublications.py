@@ -6,6 +6,7 @@ import pandas as pd
 import os
 from rich.progress import track
 from io import StringIO
+from Utilities import Color  #---> RICH
 
 # Class for finding publications from sequences' accessions.
 # It returns one .tsv dataframe for each input accession.
@@ -13,34 +14,36 @@ class GetPublications:
     def __init__(self, name):
         self.name = name 
 
-    def runGetPublications(self, listOfProjectIDs):
+    def runGetPublications(self, listOfProjectIDs, user_session):
     # For each project ID, reads from the already downloaded experiments metadata file and
     # creates a list of all the accessions in it. The list of accessions plus the project ID 
     # are given as input to GetPublicatios.PMC_dataframe, which returns a list of dictionaries
     # after querying each accession. This list of dictionaries, if not empty, is converted to
     # a pandas dataframe and then saved as a .tsv file to the corresponding project directory.
 
-        projects_with_no_publication = []   #### lo utilizziamo?
+        projects_with_no_publication = []   # Is it useful?
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
 
-            publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
+            path = os.path.join("Downloads", user_session, projectID)
+            publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
                 print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
 
             else:
                 accessions_list = self.ENA_Xref_check(projectID)          
-                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list)  
+                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, path)  
                 
-                if PMC_pd_dataframe.empty:   #DA TESTARE, FUNZIONA???
-                    print(f"🔎  Couldn't find any publications for {projectID}")
+                if PMC_pd_dataframe.empty:   
+
+                    print(Color.BOLD + Color.RED +"No publications" + Color.END, f" were found for {projectID}")
                     projects_with_no_publication.append(projectID)
-                    with open(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
-                        file.write("")  #### dovremmo scrivere NA? lasciamo vuoto????
+                    with open(os.path.join(path, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
+                        file.write("")  
 
                 else:
-                    PMC_pd_dataframe.to_csv(os.path.join(projectID, f'{projectID}_publications-metadata.tsv'), sep="\t") 
-                    print(f'✅  Publications metadata saved as {projectID}_publications-metadata.tsv')  
+                    PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f' as {projectID}_publications-metadata.tsv')  
                 
             
 
@@ -90,7 +93,7 @@ class GetPublications:
 
         return accessions_list 
 
-    def PMC_pd_dataframe(self, projectID, accessions_list):
+    def PMC_pd_dataframe(self, projectID, accessions_list, path):
        
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
@@ -105,7 +108,7 @@ class GetPublications:
         # Fetching local metadata file and building the accessions list, only if it's None
         # (so if it's not provided by ENA_Xref_check)
         if not accessions_list:
-            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+            experiments_metadata = os.path.join(path, f'{projectID}_experiments-metadata.tsv')
             metadata_df = pd.read_csv(experiments_metadata, sep='\t')
             accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
             accessions_list = []
@@ -116,7 +119,7 @@ class GetPublications:
 
         for queried_accession_id in accessions_list:
             # Temporary counter. Could become a progress bar?
-            print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}")
+            print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}") #capire come renderlo utile per user (queried accession id è inutile da sapere per uno user)  ----> cambiare output printato a barre di caricamento e cose simili
 
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core"
             # a random user-agent is generated for each query
@@ -197,6 +200,8 @@ class GetPublications:
                         data.append(queried_accession_id)
 
                         # Parse a selected list of fields with EPMC_tree_parser function.
+
+                        # DA DECIDERE COSA TENERE:
                         EPMC_tree_parser('id')
                         EPMC_tree_parser('source')
                         EPMC_tree_parser('pmid')
@@ -274,20 +279,6 @@ class GetPublications:
                         labels.append("PDF")
                         if "pdf" in list_of_links:
                             data.append(list_of_links["pdf"])
-
-                            # # Get PDF size
-                            # response = s.head(list_of_links["pdf"], headers=headers, allow_redirects=True)
-                            # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                            # content_length_s = response.headers.get('content-length')
-
-                            # if not is_chunked and content_length_s.isdigit():
-                            #     pdf_bytes = int(content_length_s)
-                            # else:
-                            #     pdf_bytes = "NA"
-                        
-                            # labels.append("PDF_bytes")
-                            # data.append(pdf_bytes)
-
                         else:
                             data.append("NA")
 
@@ -344,19 +335,6 @@ class GetPublications:
 
                                 data.append(tgz_download_link)
 
-                                # # Get TGZ package size
-                                # response = s.head(tgz_download_link, headers=headers, allow_redirects=True)
-                                # is_chunked = response.headers.get('transfer-encoding', '') == 'chunked'
-                                # content_length_s = response.headers.get('content-length')
-
-                                # if not is_chunked and content_length_s.isdigit():
-                                #     tgz_bytes = int(content_length_s)
-                                # else:
-                                #    tgz_bytes = "NA" 
-
-                                #labels.append("TGZpackage_bytes")
-                                #data.append(tgz_bytes)
-
                         else:
                             data.append("NA")
 
@@ -374,11 +352,11 @@ class GetPublications:
         
         return PMC_pd_dataframe
 
-    def getTextMinedTerms(self, listOfProjectIDs):
+    def getTextMinedTerms(self, listOfProjectIDs, user_session):
 
-        for projectID in listOfProjectIDs:      
+        for projectID in track(listOfProjectIDs, description="Getting text mined terms..."):      
             # Fetching local publications metadata file 
-            publications_metadata = os.path.join(projectID, f'{projectID}_publications-metadata.tsv')
+            publications_metadata = os.path.join("Downloads", user_session, projectID, f'{projectID}_publications-metadata.tsv')
 
             if os.path.isfile(publications_metadata):
                 metadata_df = pd.read_csv(publications_metadata, sep='\t')
@@ -445,8 +423,8 @@ class GetPublications:
                             dict_list.append(dictionary)
 
                         text_mined_terms_dataframe = pd.DataFrame(dict_list)
-                        text_mined_terms_dataframe.to_csv(os.path.join(projectID, f'{projectID}_{article_id}_text-mined-terms.tsv'), sep="\t") 
-                        print(f'✅  Text mined terms saved as {projectID}_{article_id}_text-mined-terms.tsv')  
+                        text_mined_terms_dataframe.to_csv(os.path.join("Downloads", user_session, projectID, f'{projectID}_{article_id}_text-mined-terms.tsv'), sep="\t") 
+                        print(f'Text mined terms saved as {projectID}_{article_id}_text-mined-terms.tsv')  
 
                      
                 else:
@@ -456,32 +434,37 @@ class GetPublications:
                 print(f"{projectID}_publications-metadata.tsv not found. Either {projectID} has no associated publication or you didn't download this file yet.")
             
 
+
+    def mergePublicationsMetadata(self, user_session):
+
+            path = (os.path.join("Downloads", user_session))
+            dataframes = []
+
+            for dir in os.listdir(path):
+                    tsv = f'{dir}_publications-metadata.tsv'
+                    tsv_path = os.path.join(path, dir, tsv)
+                    if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
+                        dataframes.append(pd.read_csv(tsv_path, sep='\t').loc[:, 'project_id':])
+
+            # stop if dataframes list is empty
+            if not dataframes:
+                return
+
+            merged_dataframe = pd.concat(dataframes)
+            merged_dataframe.to_csv(os.path.join(path, f'{user_session}_merged_publications-metadata.tsv'), sep="\t")
+
+            print(f'{user_session}_merged_publications-metadata.tsv' + Color.BOLD + Color.GREEN + 
+                ' successfully created' + Color.END)
+
+            return
+
+
   
     def download_publications(self, listOfProjectIDs):
 
         ######DA SCRIVERE#######
 
         return
-                        
+              
 
-
-
-            
-
-
-
-
-
-
-
-
-
-
-        
-        
-
-
-
-
-
-
+GetPublications = GetPublications('GetPublications')

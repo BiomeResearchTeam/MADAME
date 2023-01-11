@@ -1,9 +1,10 @@
 import os
 import requests as rq
 import pandas as pd
-from Utilities import Directory
+from Utilities import Utilities, Color
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
+from rich.progress import track
 
 # Class for downloading sample metadata.
 
@@ -11,7 +12,7 @@ class SampleMetadataDownload:
     def __init__(self, name):
         self.name = name
 
-    def runDownloadMetadata(self, listOfProjectIDs):
+    def runDownloadMetadata(self, listOfProjectIDs, user_session):
     # For each projectID in listOfProjectIDs, enters the project folder, creates
     # samples-metadata_xml folder, extracts sample ids from previously downloaded experiments metadata,
     # downloads sample metadata (xml) in samples-metadata_xml folder, exits to main dir.
@@ -19,27 +20,26 @@ class SampleMetadataDownload:
         
         for projectID in listOfProjectIDs:  
 
+            path = os.path.join("Downloads", user_session, projectID)
             # Read metadata file and check if it's empty or not
-            experiments_metadata = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+            experiments_metadata = os.path.join(path , f'{projectID}_experiments-metadata.tsv')
 
             if os.path.getsize(experiments_metadata) == 0:
                 print(f'Metadata file for {projectID} is empty. Skipping.')  # no samples column!
             else:
-                samples_metadata_xml_folder = os.path.join(projectID, "samples-metadata_xml")
-                sample_xml_Directory = Directory("CreateSamplesXMLDirectory")
-                sample_xml_Directory.createDirectory(samples_metadata_xml_folder)
+                samples_metadata_xml_folder = os.path.join(path, "samples-metadata_xml")
+                Utilities.createDirectory(samples_metadata_xml_folder)
                 experiments_metadata_df = pd.read_csv(experiments_metadata, sep='\t')
                 sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
 
-                for sampleID in sample_ids:
+                for sampleID in track(sample_ids, description=f"Downloading {projectID} [{listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}] sample metadata: "):
                     # Checking the file existence before downloading
-                    if os.path.isfile(os.path.join(projectID, 'samples-metadata_xml', f'{sampleID}.xml')):
-                        print(f"{sampleID} metadata file already downloaded, skipping. ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project {listOfProjectIDs.index(projectID)+1}/{len(listOfProjectIDs)}")
+                    if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
                         pass
                     else:
-                        print(f"Downloading {sampleID} metadata ({sample_ids.index(sampleID)+1}/{len(sample_ids)}) - project {listOfProjectIDs.index(projectID)+1}/{len(listOfProjectIDs)}")
                         self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
-                print(f'✅   Successful download of {projectID} samples metadata!')  
+                print(f'{projectID} samples metadata files were' + Color.BOLD + Color.GREEN + 
+            ' successfully downloaded\n' + Color.END)  
 
 
     def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder):
@@ -56,3 +56,4 @@ class SampleMetadataDownload:
         with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
             file.write(download.content)
 
+SampleMetadataDownload = SampleMetadataDownload('SampleMetadataDownload')

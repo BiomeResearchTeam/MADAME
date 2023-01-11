@@ -3,7 +3,7 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 import pandas as pd
-from Utilities import Utilities
+from Utilities import Utilities, Color
 
 class Project:
     def __init__(self, projectID):
@@ -26,6 +26,7 @@ class Project:
 
         return self.ProjectAvailability
 
+
     def getAvailableProjects(self, logger, listOfProjectIDs):
     # Input is the full list of project IDs, output is the list of the available projects.
     # This list is needed for all steps after getting a listOfProjectIDs.
@@ -33,21 +34,27 @@ class Project:
         listOfAvailableProjects = []
 
         for projectID in listOfProjectIDs:
-            project = Project(projectID) 
-            if project.getProjectAvailability(projectID) == True:
+            if self.getProjectAvailability(projectID) == True:
                 listOfAvailableProjects.append(projectID)
 
-        logger.info(f"Available projects: {listOfAvailableProjects}")
+        
+        print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableProjects)), 
+        "out of", str(len(listOfProjectIDs)) + Color.END ,"available projects") #sara
+
+        print("Available projects: ", ', '.join(listOfAvailableProjects), "\n")
+
+
 
         return listOfAvailableProjects
 
-    def getProjectBytes(self, projectID, file_type):
+
+    def getProjectBytes(self, user_session, projectID, file_type):
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
         ftp_column = f'{file_type}_ftp'
        
         # Read experiments metadata
-        metadata_file = (os.path.join(f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
+        metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
         df = pd.read_csv(metadata_file, sep='\t')
 
         # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
@@ -71,45 +78,44 @@ class Project:
 
         return bytes
 
-    def getProjectSize(self, projectID, file_type):
+    def getProjectSize(self, user_session, projectID, file_type):
         # Accepted file_types: {submitted,fastq,sra}
-        bytes = self.getProjectBytes(projectID, file_type)
-        convert = Utilities("convert")
-        size = convert.bytes_converter(bytes)
+        bytes = self.getProjectBytes(user_session, projectID, file_type)
+        size = Utilities.bytes_converter(bytes)
 
         return size
 
     
-    def getAllRuns(self, projectID):
+    def getAllRuns(self, user_session, projectID):
 
-        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
+        metadata_file = (os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv'))
         df = pd.read_csv(metadata_file, sep='\t')
         df1 = df['run_accession'].value_counts().to_frame(name = 'value_counts').reset_index()
         all_runs = df1['index'].to_list()
 
         return all_runs
 
-    def getAvailableRuns(self, projectID, file_type):
+    def getAvailableRuns(self, user_session, projectID, file_type): 
         # Accepted file_types: {submitted,fastq,sra}
-        metadata_file = (os.path.join(projectID, f'{projectID}_experiments-metadata.tsv'))
-        df = pd.read_csv(metadata_file, sep='\t')
+        metadata_file = (os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv')) 
+        df = pd.read_csv(metadata_file, sep='\t') 
         df1 = df[df[f'{file_type}_bytes'].notna()]
         df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
         available_runs = df2['run_accession'].to_list()
 
         return available_runs
 
-    def getUnavailableRuns(self, projectID, file_type):
+    def getUnavailableRuns(self, user_session,  projectID, file_type):
         # Accepted file_types: {submitted,fastq,sra}
-        all_runs = self.getAllRuns(projectID)
-        available_runs = self.getAvailableRuns(projectID, file_type)
+        all_runs = self.getAllRuns(user_session, projectID)
+        available_runs = self.getAvailableRuns(user_session, projectID, file_type)
         subtraction = set(all_runs) - set(available_runs)
         unavailable_runs = list(subtraction)
 
         return unavailable_runs
 
-    def getSubmittedFormat(self, projectID):
-        metadata_file = os.path.join(projectID, f'{projectID}_experiments-metadata.tsv')
+    def getSubmittedFormat(self, user_session,  projectID):
+        metadata_file = os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv')
         df = pd.read_csv(metadata_file, sep='\t')
         df1 = df['submitted_format'].value_counts().to_frame(name = 'value_counts').reset_index()
         submitted_format = df1['index'].tolist()
@@ -126,10 +132,10 @@ class Project:
 
         
 
-    def getProjectInfo(self, projectID, field):
+    def getProjectInfo(self, user_session, projectID, field):
         # Utility function for getProjectName, getProjectTitle, getProjectDescription functions.
         
-        tree = ET.parse(os.path.join(projectID, f'{projectID}_project-metadata.xml'))
+        tree = ET.parse(os.path.join("Downloads", user_session, projectID, f'{projectID}_project-metadata.xml'))
         root = tree.getroot()
 
         for children in root.iter("PROJECT"):
@@ -142,21 +148,38 @@ class Project:
 
         return value   
 
-    def getProjectName(self, projectID):
-        projectName = self.getProjectInfo(projectID, "NAME")
+    def getProjectName(self, user_session, projectID):
+        projectName = self.getProjectInfo(user_session, projectID, "NAME")
 
         return projectName
 
-    def getProjectTitle(self, projectID):
-        projectTitle = self.getProjectInfo(projectID, "TITLE")
+    def getProjectTitle(self, user_session, projectID):
+        projectTitle = self.getProjectInfo(user_session, projectID, "TITLE")
         
         return projectTitle
 
-    def getProjectDescription(self, projectID):
-        projectDescription = self.getProjectInfo(projectID, "DESCRIPTION")
+    def getProjectDescription(self, user_session,  projectID):
+        projectDescription = self.getProjectInfo(user_session, projectID, "DESCRIPTION")
         
         return projectDescription
 
-    
-    
+
+    #def listOfProjectIDsTSV(self, listOfProjectIDs): 
+        # import csv
+    # #creato da sara
+        #create tsv containing the ListOfProjectsIDs useful to download sequence in a second moment
+        
+        # for projectID in listOfProjectIDs:
+        #     outdir = f'{projectID}'
+        #     if not os.path.exists(outdir):
+        #         os.mkdir(outdir)
+            
+        #     listOfProjectIDs_path = os.path.join(outdir, f'{projectID}_listOfProjectIDs.tsv')
+        #     with open(listOfProjectIDs_path, 'w') as f_output:
+        #         listOfProjectIDs_tsv = csv.writer(f_output, delimiter='\t')
+        #         listOfProjectIDs_tsv.writerow(listOfProjectIDs)
+        #         print(f'\n{projectID}_listOfProjectIDs.tsv ', Color.BOLD + Color.GREEN + 'created' + Color.END)
+        
+
+Project = Project('Project') 
 
