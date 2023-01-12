@@ -10,7 +10,7 @@ def data_retrievement():
 
     while True:
         #clear() 
-        title = " DATA RETRIVEMENT MODULE "
+        title = " DATA RETRIEVEMENT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nDigit the path to the", Color.BOLD + "'_experiments-metadata.tsv'" + Color.END, "previously created with this tool ")
         

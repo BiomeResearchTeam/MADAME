@@ -39,9 +39,9 @@ def main():
         print(Color.PURPLE + "                                                   #################" + Color.END)
 
         print("\n\n Which module do you want to use? \n")
-        print(" 1 - Metadata retrivement module: metadata search and download")
-        print(" 2 - Data retrivement module: metadata-associated data download")
-        print(" 3 - Pubblication retrivement module: metadata- and data- associated pubblications download")
+        print(" 1 - Metadata retrievement module: metadata search and download")
+        print(" 2 - Data retrievement module: metadata-associated data download")
+        print(" 3 - Publication retrievement module: metadata- and data- associated publications download")
         print("\n --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
         while True:
             module_choice = input(">> Enter your option: ")

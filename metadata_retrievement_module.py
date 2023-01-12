@@ -15,7 +15,7 @@ import os
 def metadata_retrievement():
     while True:
         #clear() 
-        title = " METADATA RETRIVEMENT MODULE "
+        title = " METADATA RETRIEVEMENT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nHow do you want to retrieve metadata? Choose one of the following options: \n ")
         print(" 1 - Doing a query on ENA ")

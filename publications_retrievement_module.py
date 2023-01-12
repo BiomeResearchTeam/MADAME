@@ -9,7 +9,7 @@ def publications_retrievement():
     
     while True:
         #clear() 
-        title = " PUBLICATIONS RETRIVEMENT MODULE "
+        title = " PUBLICATIONS RETRIEVEMENT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nDigit the path to the", Color.BOLD + "'_listOfProjectIDs.tsv'" + Color.END, "previously created with this tool ")
         
