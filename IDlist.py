@@ -3,7 +3,8 @@ import os
 import sys
 import requests as rq
 import pandas as pd
-from Utilities import Utilities
+from Utilities import Utilities, Color
+import time
 
 # Class for getting the ID list from query or user input.
 # It also has methods for printing accessions' details from ENA 
@@ -43,15 +44,7 @@ class GetIDlist:
         elif self.data_type == "projects":
             domain = "domain=project&query="
             pattern = GetIDlist.PROJECTS_PATTERN
-        else:
-            # Error message 
-            print(f'❌   "{self.data_type}" is not a correct data type. Accepted data types are:')
-            print('➡️  runs') 
-            print('➡️  samples')
-            print('➡️  studies')
-            print('➡️  projects')
-            print('Please try again.')
-            sys.exit()
+        
     
         # Query URL assembly
         url = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
@@ -63,13 +56,22 @@ class GetIDlist:
         # Search ID by regex pattern, resulting in listOfProjectIDs
         listOfProjectIDs = re.findall(pattern, self.queryresult)
 
-        logger.info(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
+        #logger.info(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
 
         Utilities.createDirectory(path)
         list_of_IDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
 
         return listOfProjectIDs
+
+
+    def AccessionCodesFromUserInput(self, logger, user_input): #creata da sara
+        
+        user_input = user_input.replace(" ", "")
+        submitted_list = user_input.split(",")
+        listOfAccessionCodes = list(submitted_list)
+
+        return listOfAccessionCodes
 
 
     def IDlistFromUserInput(self, logger, user_session, user_input):
@@ -97,7 +99,8 @@ class GetIDlist:
                 projects.append(accession)
             else: 
                 # Error message
-                print(f'WARNING - {accession} is not a valid accession code!')
+                print(f'\nWARNING - "{accession}" is' + Color.BOLD + Color.RED + 
+                ' not a valid accession code' + Color.END)
 
         listOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}
         
@@ -117,11 +120,14 @@ class GetIDlist:
         total_of_accessions = (len(listOfProjectIDs))
 
         if total_of_accessions == 0:
-            output = print(f"❌   I couldn't find anything for your query: '{self.user_query}'.")
+            output = print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
+            + Color.END, f"for the query: '{self.user_query}'\n")
         else:
-            output = print(f"✔️   For your query '{self.user_query}', I found a total of {total_of_accessions} {self.data_type}:\n{self.queryresult}")
+            output = print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN 
+            + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
 
         return output
+
 
     def IDlistFromUserInputDetails(self, listOfProjectIDs):
     #Prints output for the user-submitted accessions. Has to be called after GetIDlist.IDlistFromUserInput()
@@ -158,10 +164,26 @@ class GetIDlist:
             domain = "domain=project&query="
             accessions = listOfProjectIDs["projects"]
             text_search()
-        
-        joined_results = "\n".join(results)
-        output = print(f"📑   Details of entered accessions:\naccession\tdescription\n{joined_results}")
 
-        return output
+        return results
     
-GetIDlist = GetIDlist('GetIDlist')
+
+    def ShowResults(self, results): 
+        listOfProjectIDs = []
+        for projectID in results:
+            projectID =  re.search("(\w+)", projectID).group()
+            listOfProjectIDs.append(projectID)
+
+        if len(results) == 0:
+            print('Please try again\n')
+            time.sleep(2)
+            
+        else:
+            joined_results = "\n".join(results)
+            output = print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
+            + f"\naccession\tdescription\n{joined_results}") 
+
+        return listOfProjectIDs
+
+
+GetIDlist = GetIDlist('GetIDlist') 

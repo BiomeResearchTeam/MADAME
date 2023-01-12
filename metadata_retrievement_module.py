@@ -11,7 +11,6 @@ import time #sara
 from report_module import report_module
 from os import path
 import os
-from Utilities import Directory
 
 def metadata_retrievement():
     while True:
@@ -49,7 +48,7 @@ def metadata_retrievement():
 
 
 def metadata_retrivement_query():
-    clear()
+    Utilities.clear()
     while True:
         #clear()
         user_query_input = UserQueryENAInput()
@@ -65,7 +64,7 @@ def metadata_retrivement_query():
                 continue
 
             else:
-                listOfProjectIDs = UserDataTypeInput(user_query_input, user_data_type)
+                listOfProjectIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
                 if len(listOfProjectIDs) == 0:
                     print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
@@ -84,7 +83,7 @@ def metadata_retrivement_query():
 
 
 def metadata_retrivement_digit():
-    clear()
+    Utilities.clear()
     while True:
         # clear()
         user_query_input = UserDigitCodesInput()
@@ -107,7 +106,7 @@ def metadata_retrivement_digit():
 
 
 def metadata_retrivement_file():
-    clear()
+    Utilities.clear()
     while True:
         #clear()
         csv_file_input = UserFileCodesInput()
@@ -156,7 +155,7 @@ def metadata_download(listOfAvailableProjects):
             if user_metadata_input == 1:
                 #Project.listOfProjectIDsTSV(listOfAvailableProjects)
                 new_directory = user_directory()
-                Directory.createDirectory(new_directory)
+                #Directory.createDirectory(new_directory)
                 print(Color.BOLD + Color.GREEN + '\nNew folder created.' + Color.END, ' At the end of the download you will find the metadata files right there.\n')
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, new_directory)
                 SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects)
@@ -172,14 +171,6 @@ def metadata_download(listOfAvailableProjects):
             elif user_metadata_input == 2:
                 #Project.listOfProjectIDsTSV(listOfAvailableProjects)
                 new_directory = user_directory()
-                Directory.createDirectory(new_directory)
+                #Directory.createDirectory(new_directory)
                 print(Color.BOLD + Color.GREEN + '\nNew folder created.' + Color.END, ' At the end of the download you will find the metadata files right there.\n')
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, new_directory)
-                
-
-
-
-    
-    
-
-

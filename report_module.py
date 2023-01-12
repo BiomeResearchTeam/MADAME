@@ -1,4 +1,4 @@
-from Log import Color
+from Utilities import Color, Utilities
 
 def report_module():
     title = " REPORT MODULE "

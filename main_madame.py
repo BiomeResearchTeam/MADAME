@@ -12,11 +12,11 @@ import os
 
 def main():
 
-    Utilities.createDirectory("Downloads")
+    #Utilities.createDirectory("Downloads")
 
     while True:
         Utilities.log()
-        #clear()
+        #Utilities.clear()
         print("\n")
         print(Color.PURPLE + "                                                           ##############" + Color.END)
         print(Color.PURPLE + "                                                       #####################" + Color.END)       

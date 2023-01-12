@@ -18,6 +18,7 @@ class Utilities:
             if bytes < mult:
                 return '{0:.2f} {1}'.format(bytes, unit)
 
+
     def append_new_line(self, file_name, text_to_append):
     # Open the file in append & read mode ('a+')
         with open(file_name, "a+") as file_object:
@@ -30,6 +31,7 @@ class Utilities:
             # Append text at the end of file
             file_object.write(text_to_append)
 
+
     def createDirectory(self, new_directory):
     # Creates directory only if it doesn't exist yet
         if os.path.exists(new_directory):
@@ -37,8 +39,8 @@ class Utilities:
         else:
             os.makedirs(new_directory)
 
-    def log():
 
+    def log(self):
         # Delete log if already present
         if (exists('./madame_log.log')):
             os.system('rm ./madame_log.log')
@@ -63,8 +65,7 @@ class Utilities:
         logger.addHandler(f_handler)
 
 
-
-    def clear():
+    def clear(self):
         if platform.system() == "Windows":
             os.system('cls')
         else:
