@@ -24,30 +24,30 @@ def metadata_retrievement():
         print("\n --- If you want to return to the main menu digit: " 
         + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
 
-        metadata_retrivement_choice = input("\n>> Enter your choice: ")
-        if metadata_retrivement_choice in ("main menu", "MAIN MENU", "Main menu"):
+        metadata_retrievement_choice = input("\n>> Enter your choice: ")
+        if metadata_retrievement_choice in ("main menu", "MAIN MENU", "Main menu"):
             return
-        elif metadata_retrivement_choice.isnumeric():
-            metadata_retrivement_choice = int(metadata_retrivement_choice)
-            if metadata_retrivement_choice not in (1,2,3):
+        elif metadata_retrievement_choice.isnumeric():
+            metadata_retrievement_choice = int(metadata_retrievement_choice)
+            if metadata_retrievement_choice not in (1,2,3):
                 print("Error, enter a valid choice!\n")
                 return
             else:
-                if metadata_retrivement_choice == 1:
-                    metadata_retrivement_query()
+                if metadata_retrievement_choice == 1:
+                    metadata_retrievement_query()
                     #report_module()
                     break
 
-                if metadata_retrivement_choice == 2:
-                    metadata_retrivement_digit()
+                if metadata_retrievement_choice == 2:
+                    metadata_retrievement_digit()
                     break
 
-                if metadata_retrivement_choice == 3:
-                    metadata_retrivement_file()
+                if metadata_retrievement_choice == 3:
+                    metadata_retrievement_file()
                     break
 
 
-def metadata_retrivement_query():
+def metadata_retrievement_query():
     Utilities.clear()
     while True:
         #clear()
@@ -82,7 +82,7 @@ def metadata_retrivement_query():
 #         #logger.info('STEP 2: Query on ENA')
 
 
-def metadata_retrivement_digit():
+def metadata_retrievement_digit():
     Utilities.clear()
     while True:
         # clear()
@@ -105,7 +105,7 @@ def metadata_retrivement_digit():
                 #report
 
 
-def metadata_retrivement_file():
+def metadata_retrievement_file():
     Utilities.clear()
     while True:
         #clear()
