@@ -1,0 +1,13 @@
+from rich.tree import Tree
+from rich import print as tprint
+import os.path
+
+
+madame_tree = Tree("MADAME")
+downloads_branch = madame_tree.add("Downloads")
+dirs_branches = [d for d in os.listdir("/mnt/c/Users/conog/Desktop") if os.path.isdir(os.path.join("/mnt/c/Users/conog/Desktop", d)) and not d.startswith(".")]
+for dir in dirs_branches:
+    downloads_branch.add(dir)
+
+tprint(madame_tree)
+

@@ -20,9 +20,12 @@ def UserQueryENAInput():
             "1) skin microbiome ")
     print("2) monkeypox")
     print("\n --- If you want to return to the main menu digit: " 
-            + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")    
-    user_query_input = str(input(">> Digit your query: "))
+            + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")   
+
+    while user_query_input.strip() == '': # preventing empty inputs (giulia)
+        user_query_input = str(input(">> Digit your query: "))
     
+
     return user_query_input
 
 
@@ -113,12 +116,3 @@ def CheckTSV(file_path):
             return file_extension
 
 
-#FOLDER CREATED BY USER INPUT
-
-def user_directory():
-
-    print("\nHow do you want to call the new folder in which the metadata files will be downloaded?")
-    user_folder_name = input(">> Enter your choice: ")
-    new_directory = os.path.join(os.getcwd(),'Downloads', user_folder_name)
-
-    return new_directory
