@@ -65,21 +65,15 @@ class GetIDlist:
         return listOfProjectIDs
 
 
-    def AccessionCodesFromUserInput(self, logger, user_input): #creata da sara
-        
-        user_input = user_input.replace(" ", "")
-        submitted_list = user_input.split(",")
-        listOfAccessionCodes = list(submitted_list)
-
-        return listOfAccessionCodes
-
 
     def IDlistFromUserInput(self, logger, user_session, user_input):
 
         path = (os.path.join("Downloads", user_session))
     # Get ID list from a series of accession codes derived from user input.
     # Accession codes need to be entered separated by comma.
-        submitted_list = user_input.split(",")
+    
+        user_input = user_input.replace(" ", "")
+        submitted_list = list(user_input.split(","))
 
     ## TO ADD: ACCEPT ACCESSION CODES FROM FILES (CSV, TSV...)
 
@@ -87,6 +81,7 @@ class GetIDlist:
         samples = []
         studies = []
         projects = []
+        not_valid = []
        
         for accession in submitted_list:
             if re.match(GetIDlist.RUNS_PATTERN, accession):
@@ -98,21 +93,23 @@ class GetIDlist:
             elif re.match(GetIDlist.PROJECTS_PATTERN, accession):
                 projects.append(accession)
             else: 
-                # Error message
-                print(f'\nWARNING - "{accession}" is' + Color.BOLD + Color.RED + 
-                ' not a valid accession code' + Color.END)
+                not_valid.append(accession)
+                
+        # Error message
+        if not_valid:
+            print(f"\nWARNING - {not_valid} are" + Color.BOLD + Color.RED + " not valid accession codes" + Color.END)
 
-        listOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}
+        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}
         
         Utilities.createDirectory(path)
         
-        list_of_IDs = pd.DataFrame({"accession_ids":runs+samples+studies+projects})
-
+        listOfProjectIDs = runs+samples+studies+projects
+        list_of_IDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
     
-        logger.info(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
+        #logger.info(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
         
-        return listOfProjectIDs
+        return listOfProjectIDs, dictionaryOfProjectIDs
 
     
     def QueryDetails(self, listOfProjectIDs):
@@ -120,16 +117,14 @@ class GetIDlist:
         total_of_accessions = (len(listOfProjectIDs))
 
         if total_of_accessions == 0:
-            output = print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
+            print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
             + Color.END, f"for the query: '{self.user_query}'\n")
         else:
-            output = print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN 
-            + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
+            print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
 
-        return output
+        # add 'return output' so as to save printed details in a nice format for the log
 
-
-    def IDlistFromUserInputDetails(self, listOfProjectIDs):
+    def IDlistFromUserInputDetails(self, dictionaryOfProjectIDs):
     #Prints output for the user-submitted accessions. Has to be called after GetIDlist.IDlistFromUserInput()
         results = []
 
@@ -145,34 +140,25 @@ class GetIDlist:
             results.extend(converted)
         
         # Query ENA db only if accession codes are present, in each list.
-        if listOfProjectIDs["runs"]:
+        if dictionaryOfProjectIDs["runs"]:
             domain = "domain=sra-run&query="
-            accessions = listOfProjectIDs["runs"]
+            accessions = dictionaryOfProjectIDs["runs"]
             text_search()
 
-        if listOfProjectIDs["samples"]:
+        if dictionaryOfProjectIDs["samples"]:
             domain = "domain=sra-sample&query="
-            accessions = listOfProjectIDs["samples"]
+            accessions = dictionaryOfProjectIDs["samples"]
             text_search()
 
-        if listOfProjectIDs["studies"]:
+        if dictionaryOfProjectIDs["studies"]:
             domain = "domain=sra-study&query="
-            accessions = listOfProjectIDs["studies"]
+            accessions = dictionaryOfProjectIDs["studies"]
             text_search()
         
-        if listOfProjectIDs["projects"]:
+        if dictionaryOfProjectIDs["projects"]:
             domain = "domain=project&query="
-            accessions = listOfProjectIDs["projects"]
+            accessions = dictionaryOfProjectIDs["projects"]
             text_search()
-
-        return results
-    
-
-    def ShowResults(self, results): 
-        listOfProjectIDs = []
-        for projectID in results:
-            projectID =  re.search("(\w+)", projectID).group()
-            listOfProjectIDs.append(projectID)
 
         if len(results) == 0:
             print('Please try again\n')
@@ -180,10 +166,10 @@ class GetIDlist:
             
         else:
             joined_results = "\n".join(results)
-            output = print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
-            + f"\naccession\tdescription\n{joined_results}") 
+            print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
+            + f"\naccession\tdescription\n{joined_results}")
 
-        return listOfProjectIDs
+        # add 'return output' so as to save printed details in a nice format for the log
 
 
 GetIDlist = GetIDlist('GetIDlist') 

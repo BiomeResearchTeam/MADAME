@@ -64,8 +64,16 @@ def main():
         if module_choice == 1:            
             new_session()
 
-        if module_choice == 2:
+        existing_sessions = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]
+
+        if module_choice == 2 and existing_sessions:
             existing_session()
+        else: 
+            print("\n Error: " + Color.BOLD + Color.YELLOW + "MADAME/Downloads" + Color.END + " is empty.")
+            press_enter = 'press enter'
+            while press_enter.strip() != '':
+                press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session."))
+            new_session()
 
 # FOLDER CREATED BY USER INPUT
 
@@ -174,14 +182,14 @@ def menu(user_session):
         Utilities.clear()
 
         if module_choice == 1:            
-            metadata_retrievement()
+            metadata_retrievement(user_session)
             #report_module()
 
         if module_choice == 2:
-            data_retrievement()
+            data_retrievement(user_session)
 
         if module_choice == 3:
-            publications_retrievement()
+            publications_retrievement(user_session)
 
 
 

@@ -27,7 +27,7 @@ class Project:
         return self.ProjectAvailability
 
 
-    def getAvailableProjects(self, logger, listOfProjectIDs):
+    def getAvailableProjects(self, listOfProjectIDs):
     # Input is the full list of project IDs, output is the list of the available projects.
     # This list is needed for all steps after getting a listOfProjectIDs.
 

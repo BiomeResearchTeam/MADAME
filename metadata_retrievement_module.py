@@ -12,7 +12,7 @@ from report_module import report_module
 from os import path
 import os
 
-def metadata_retrievement():
+def metadata_retrievement(user_session):
     while True:
         #clear() 
         title = " METADATA RETRIEVEMENT MODULE "
@@ -34,23 +34,23 @@ def metadata_retrievement():
                 return
             else:
                 if metadata_retrievement_choice == 1:
-                    metadata_retrievement_query()
+                    metadata_retrievement_query(user_session)
                     #report_module()
                     break
 
                 if metadata_retrievement_choice == 2:
-                    metadata_retrievement_digit()
+                    metadata_retrievement_digit(user_session)
                     break
 
                 if metadata_retrievement_choice == 3:
-                    metadata_retrievement_file()
+                    metadata_retrievement_file(user_session)
                     break
 
 
-def metadata_retrievement_query():
+def metadata_retrievement_query(user_session):
     Utilities.clear()
     while True:
-        #clear()
+
         user_query_input = UserQueryENAInput()
         
         if user_query_input in ("main menu", "MAIN MENU", "Main menu"):
@@ -72,7 +72,7 @@ def metadata_retrievement_query():
                     continue
                     
                 else:
-                    metadata_download(listOfProjectIDs)
+                    metadata_download(listOfProjectIDs, user_session)
                     time.sleep(3)
                     #report
 
@@ -82,7 +82,7 @@ def metadata_retrievement_query():
 #         #logger.info('STEP 2: Query on ENA')
 
 
-def metadata_retrievement_digit():
+def metadata_retrievement_digit(user_session):
     Utilities.clear()
     while True:
         # clear()
@@ -92,7 +92,7 @@ def metadata_retrievement_digit():
             return
 
         else:
-            listOfProjectIDs = UserDigitCodesIDlist(user_query_input)
+            listOfProjectIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
             if len(listOfProjectIDs) == 0:
                 print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
@@ -100,12 +100,12 @@ def metadata_retrievement_digit():
                 continue
 
             else:  
-                metadata_download(listOfProjectIDs)
+                metadata_download(listOfProjectIDs, user_session)
                 time.sleep(3)
                 #report
 
 
-def metadata_retrievement_file():
+def metadata_retrievement_file(user_session):
     Utilities.clear()
     while True:
         #clear()
@@ -126,12 +126,12 @@ def metadata_retrievement_file():
                     time.sleep(2)
                     continue
                 else: 
-                    metadata_download(listOfProjectIDs)
+                    metadata_download(listOfProjectIDs, user_session)
                     time.sleep(3)
                         #report
         
        
-def metadata_download(listOfAvailableProjects):
+def metadata_download(listOfAvailableProjects, user_session):
     
     title = " DOWNLOAD METADATA "
     print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
@@ -154,23 +154,18 @@ def metadata_download(listOfAvailableProjects):
         else:
             if user_metadata_input == 1:
                 #Project.listOfProjectIDsTSV(listOfAvailableProjects)
-                new_directory = user_directory()
-                #Directory.createDirectory(new_directory)
-                print(Color.BOLD + Color.GREEN + '\nNew folder created.' + Color.END, ' At the end of the download you will find the metadata files right there.\n')
-                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, new_directory)
-                SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects)
-                SampleMetadataParser.runParseMetadata(listOfAvailableProjects)
+                
+                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
+                SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
+                SampleMetadataParser.runParseMetadata(listOfAvailableProjects, user_session)
 
                 print("\nWhat data format do you want to download? fastq, sra, or submitted")
                 user_file_type = input(">> Enter your choice: ")
                 #os.chdir('..') #tornare nella cartella main (che diventerà la cartella con il nome a scelta dello user)
                 #ATTENZIONE NON USARE QUESTO METODO PERCHé SE NON SCARICA NIENTE DI NUOVO NON ENTRA NEANCHE NELLE CARTELLE 
                 #E QUINDI ESCE DALLA MASTER
-                SequencesDownload.runDownloadData(listOfAvailableProjects, file_type = user_file_type)
+                SequencesDownload.runDownloadData(user_session, listOfAvailableProjects, file_type = user_file_type)
 
             elif user_metadata_input == 2:
-                #Project.listOfProjectIDsTSV(listOfAvailableProjects)
-                new_directory = user_directory()
-                #Directory.createDirectory(new_directory)
-                print(Color.BOLD + Color.GREEN + '\nNew folder created.' + Color.END, ' At the end of the download you will find the metadata files right there.\n')
-                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, new_directory)
+                
+                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)

@@ -22,6 +22,7 @@ def UserQueryENAInput():
     print("\n --- If you want to return to the main menu digit: " 
             + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")   
 
+    user_query_input = ''
     while user_query_input.strip() == '': # preventing empty inputs (giulia)
         user_query_input = str(input(">> Digit your query: "))
     
@@ -33,7 +34,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
     logger = Utilities.log()
     listOfProjectIDs = GetIDlist.Query(logger, user_session, user_query = user_query_input, data_type = user_data_type)
-    QueryDetails = GetIDlist.QueryDetails(listOfProjectIDs)
+    GetIDlist.QueryDetails(listOfProjectIDs)
     print("\nChecking for their availability...") 
     listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs) 
                 
@@ -54,14 +55,15 @@ def UserDigitCodesInput():
     return user_query_input
 
 
-def UserDigitCodesIDlist(user_query_input):
+def UserDigitCodesIDlist(user_query_input, user_session):
     logger = Utilities.log()
-    listOfProjectIDs = GetIDlist.AccessionCodesFromUserInput(logger, user_input = user_query_input)
-    listOfAccessionCodes = GetIDlist.IDlistFromUserInput(logger, listOfProjectIDs)
-    results = GetIDlist.IDlistFromUserInputDetails(listOfAccessionCodes)
-    listOfProjectIDs = GetIDlist.ShowResults(results) #qui
 
-    return listOfProjectIDs
+    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(logger, user_session, user_input = user_query_input)
+    GetIDlist.IDlistFromUserInputDetails(dictionaryOfProjectIDs)
+    print("\nChecking for their availability...") 
+    listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs) 
+
+    return listOfAvailableProjects
 
 
 #FILE ACCESSION CODES
