@@ -4,17 +4,14 @@ from Project import Project
 from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
 from SampleMetadataDownload import SampleMetadataDownload
 from SampleMetadataParser import SampleMetadataParser
-from GetPublications import GetPublications #modulo 3
-from SequencesDownload import SequencesDownload #modulo 2
 from functions_modules import *
-import time #sara
-from report_module import report_module
+import time 
 from os import path
 import os
 
 def metadata_retrievement(user_session):
     while True:
-        #clear() 
+        Utilities.clear() 
         title = " METADATA RETRIEVEMENT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nHow do you want to retrieve metadata? Choose one of the following options: \n ")
@@ -74,12 +71,6 @@ def metadata_retrievement_query(user_session):
                 else:
                     metadata_download(listOfProjectIDs, user_session)
                     time.sleep(3)
-                    #report
-
-    
-            
-
-#         #logger.info('STEP 2: Query on ENA')
 
 
 def metadata_retrievement_digit(user_session):
@@ -102,13 +93,11 @@ def metadata_retrievement_digit(user_session):
             else:  
                 metadata_download(listOfProjectIDs, user_session)
                 time.sleep(3)
-                #report
 
 
 def metadata_retrievement_file(user_session):
     Utilities.clear()
     while True:
-        #clear()
         csv_file_input = UserFileCodesInput()
         
         if csv_file_input in ("main menu", "MAIN MENU", "Main menu"):
@@ -158,14 +147,17 @@ def metadata_download(listOfAvailableProjects, user_session):
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataParser.runParseMetadata(listOfAvailableProjects, user_session)
-
-                print("\nWhat data format do you want to download? fastq, sra, or submitted")
-                user_file_type = input(">> Enter your choice: ")
-                #os.chdir('..') #tornare nella cartella main (che diventerà la cartella con il nome a scelta dello user)
-                #ATTENZIONE NON USARE QUESTO METODO PERCHé SE NON SCARICA NIENTE DI NUOVO NON ENTRA NEANCHE NELLE CARTELLE 
-                #E QUINDI ESCE DALLA MASTER
-                SequencesDownload.runDownloadData(user_session, listOfAvailableProjects, file_type = user_file_type)
+                final_screen(user_session)
 
             elif user_metadata_input == 2:
                 
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
+                final_screen(user_session)
+
+
+def final_screen(user_session):
+    print("DOWNLOAD METADATA completed!")
+    print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/", Color.BOLD + Color.YELLOW + f" {user_session}" + Color.END)
+    press_enter = 'press enter'
+    while press_enter.strip() != '':
+        press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to return to the main menu"))

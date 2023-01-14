@@ -1,16 +1,14 @@
 from Utilities import Color, Utilities
 from metadata_retrievement_module import metadata_retrievement
-from data_retrievement_module import data_retrievement
 from publications_retrievement_module import publications_retrievement
+from report_generation_module import report_generation
+from data_retrievement_module import data_retrievement
 import os
 from rich.tree import Tree
 from rich import print as tprint
 import os.path
 
-#from report_module import report_module
 
-#/mnt/c/Users/fmgls/Desktop/MADAME/MADAME-master/PRJEB37496/PRJEB37496_experiments-metadata.tsv
-#/mnt/c/Users/fmgls/Desktop/MADAME/MADAME-master/PRJEB37496/PRJEB37496_listOfProjectIDs.tsv
 def madame_logo():
 
     print("\n")
@@ -106,7 +104,7 @@ def new_session():
     
     press_enter = 'press enter'
     while press_enter.strip() != '':
-        press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue."))
+        press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue"))
 
     menu(user_session)
 
@@ -157,8 +155,9 @@ def menu(user_session):
 
         print("\n\n Which module do you want to use? \n")
         print(" 1 - Metadata retrievement module: metadata search and download")
-        print(" 2 - Data retrievement module: metadata-associated data download")
-        print(" 3 - Publication retrievement module: metadata- and data- associated publications download")
+        print(" 2 - Publication retrievement module: metadata- and data- associated publications download")
+        print(" 3 - Report module: explore metadata and publication retrivement outputs")
+        print(" 4 - Data retrievement module: metadata-associated data download")
         print("\n --- Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " ---")
         print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---\n")
         print(" --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
@@ -166,7 +165,7 @@ def menu(user_session):
             module_choice = input(">> Enter your option: ")
             if module_choice.isnumeric():
                 module_choice = int(module_choice)
-                if module_choice not in (1, 2, 3):
+                if module_choice not in (1, 2, 3, 4):
                     print("Error, enter a valid choice!\n")
                     continue
                 break
@@ -186,10 +185,13 @@ def menu(user_session):
             #report_module()
 
         if module_choice == 2:
-            data_retrievement(user_session)
+            publications_retrievement(user_session)
 
         if module_choice == 3:
-            publications_retrievement(user_session)
+            report_generation(user_session)
+
+        if module_choice == 4:  
+            data_retrievement(user_session)
 
 
 
