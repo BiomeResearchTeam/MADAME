@@ -1,6 +1,10 @@
 from Utilities import Color, Utilities
 import os
 from os import path
+import pandas as pd
+import plotly.graph_objects as go
+from plotly.offline import plot
+import plotly.express as px
 
 def report_generation(user_session):
     while True:
@@ -29,15 +33,45 @@ def report_generation(user_session):
 
                 if user_report_input == (1):
                     user_session = os.path.join("Downloads", user_session)
-                    merged_experiments = check_file_experiments(user_session)
-                    merged_publications = check_file_publications(user_session)
-                    report(user_session, merged_experiments, merged_publications)
+                    
+                    file_count = check_files(user_session)
+                    if file_count == 0:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder?\n")
+
+                    if file_count == 1:
+                        merged_experiments = check_file_experiments(user_session)
+                        e_df = read_experiments(user_session, merged_experiments)
+
+                    if file_count == 2:
+                        merged_experiments = check_file_experiments(user_session)
+                        e_df = read_experiments(user_session, merged_experiments)
+                        merged_publications = check_file_publications(user_session)
+                        p_df = read_publications(user_session, merged_publications)
+                        report_ep(user_session, e_df, p_df)
+
+                    if file_count > 2:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
+                    
+                    
 
                 if user_report_input == (2):
                     user_report_local_path = user_report_local()
-                    merged_experiments = check_file_experiments(user_report_local_path)
-                    merged_publications = check_file_publications(user_report_local_path)
-                    report(user_report_local_path, merged_experiments, merged_publications)
+                    file_count = check_files(user_report_local_path)
+                    if file_count == 0:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder?\n")
+
+                    if file_count == 1:
+                        merged_experiments = check_file_experiments(user_report_local_path)
+                        e_df = read_experiments(user_report_local_path, merged_experiments)
+
+                    if file_count == 2:
+                        merged_experiments = check_file_experiments(user_report_local_path)
+                        e_df = read_experiments(user_report_local_path, merged_experiments)
+                        merged_publications = check_file_publications(user_report_local_path)
+                        p_df = read_publications(user_report_local_path, merged_publications)
+
+                    if file_count > 2:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
                     
 
 def user_report_local():
@@ -58,18 +92,56 @@ def user_report_local():
             return user_report_local_path
 
 
+def check_files(user_session):
+    count = 0
+    for file in os.listdir(user_session):
+        if file.endswith(("_merged_experiments-metadata.tsv", "_merged_publications-metadata.tsv")):
+            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
+            count += 1   
+    return count
+
+
 def check_file_experiments(user_session):
     for file in os.listdir(user_session):
         if file.endswith("_merged_experiments-metadata.tsv"):
             print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
+            return file
         
 
 def check_file_publications(user_session):
     for file in os.listdir(user_session):
         if file.endswith("_merged_publications-metadata.tsv"):
             print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}\n")
+            return file
 
 
-def report(user_session, merged_experiments, merged_publications):
-    print('report stuff, soon available')
+def read_experiments(user_session, merged_experiments):
+    path = os.path.join(user_session, merged_experiments)
+    e_df = pd.read_csv (path, delimiter='\t')
+    return e_df
+
+
+def read_publications(user_session, merged_publications):
+    path = os.path.join(user_session, merged_publications)
+    p_df = pd.read_csv (path, delimiter='\t')
+    return p_df
+
+
+def report_ep(user_session, e_df, p_df):
+    IDs_number(e_df)
+    sample_number(user_session, e_df)
     return
+
+
+def IDs_number(e_df):
+    IDs_number = e_df['study_accession'].nunique()
+    print(IDs_number)
+    return IDs_number
+
+def sample_number(user_session, e_df):
+    sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
+    sample_number_df = pd.DataFrame(sample_number_series).reset_index()
+    sample_number_df.columns = ['Project', 'Number of samples']
+    fig = px.bar(sample_number_df, x="Project", y="Number of samples") #non va colore...
+    fig.write_image(os.path.join(user_session, "sample_number.png"))
+    

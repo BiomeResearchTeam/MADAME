@@ -77,7 +77,7 @@ def UserFileCodesInput():
             + "main menu" + Color.END + " ---\n")
         
     csv_file_input = input(">> Enter your csv or tsv file path: ")
-    csv_file_input = csv_file_input.strip() #remove possible initial and final empty spaces
+    csv_file_input = csv_file_input.strip()
 
     return csv_file_input
 
