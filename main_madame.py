@@ -116,7 +116,7 @@ def existing_session():
     Utilities.clear()
     madame_logo()
 
-    print("\n --- Which existing session do you want to select?\n")
+    print("\n\n Which existing session do you want to select?\n")
 
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
     

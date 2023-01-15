@@ -32,7 +32,6 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
-                    #report_module()
                     break
 
                 if metadata_retrievement_choice == 2:
