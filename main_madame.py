@@ -85,7 +85,7 @@ def new_session():
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
     
     user_session = ''
-    while user_session.strip() == '': # preventing empty inputs (giulia)
+    while user_session.strip() == '': 
         user_session = str(input(">> Digit the folder name: "))
         if user_session in ("main menu", "MAIN MENU", "Main menu"):
             return
@@ -93,7 +93,7 @@ def new_session():
     while os.path.isdir(os.path.join("Downloads", user_session)):
         print("\n Error: " + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + " folder already exists.")
         user_session = ''
-        while user_session.strip() == '': # preventing empty inputs (giulia)
+        while user_session.strip() == '': 
             user_session = str(input(">> Please digit a different name: ")) 
             if user_session in ("main menu", "MAIN MENU", "Main menu"):
                 return
@@ -158,8 +158,8 @@ def menu(user_session):
         print(" 2 - Publication retrievement module: metadata- and data- associated publications download")
         print(" 3 - Report module: explore metadata and publication retrivement outputs")
         print(" 4 - Data retrievement module: metadata-associated data download")
-        print("\n --- Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " ---")
-        print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---\n")
+        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+        print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---")
         print(" --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
         while True:
             module_choice = input(">> Enter your option: ")
@@ -182,7 +182,6 @@ def menu(user_session):
 
         if module_choice == 1:            
             metadata_retrievement(user_session)
-            #report_module()
 
         if module_choice == 2:
             publications_retrievement(user_session)
