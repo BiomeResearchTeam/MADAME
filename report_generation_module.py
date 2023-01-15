@@ -26,24 +26,21 @@ def report_generation(user_session):
                 return
 
             else:
-                # if user_report_input == (1):
-                #     print()
-                #     print()
-                    # report() 
+
+                if user_report_input == (1):
+                    user_session = os.path.join("Downloads", user_session)
+                    merged_experiments = check_file_experiments(user_session)
+                    merged_publications = check_file_publications(user_session)
+                    report(user_session, merged_experiments, merged_publications)
 
                 if user_report_input == (2):
-                    report_2()
-    
-        
-        
-        
-                    
+                    user_report_local_path = user_report_local()
+                    merged_experiments = check_file_experiments(user_report_local_path)
+                    merged_publications = check_file_publications(user_report_local_path)
+                    report(user_report_local_path, merged_experiments, merged_publications)
                     
 
-def report():
-    return
-
-def report_2():
+def user_report_local():
     Utilities.clear()
     while True:
         print("Enter the path for '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
@@ -58,9 +55,21 @@ def report_2():
                 print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n\n")
                 return
         else:
-            print("peppeppepeee")
+            return user_report_local_path
 
 
+def check_file_experiments(user_session):
+    for file in os.listdir(user_session):
+        if file.endswith("_merged_experiments-metadata.tsv"):
+            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
+        
 
-# user_session = os.getcwd() #per fare prove
-# report_generation(user_session) #per fare prove
+def check_file_publications(user_session):
+    for file in os.listdir(user_session):
+        if file.endswith("_merged_publications-metadata.tsv"):
+            print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}\n")
+
+
+def report(user_session, merged_experiments, merged_publications):
+    print('report stuff, soon available')
+    return
