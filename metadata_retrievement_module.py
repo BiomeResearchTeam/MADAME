@@ -160,7 +160,5 @@ def metadata_download(listOfAvailableProjects, user_session):
 def final_screen(user_session):
     print("DOWNLOAD METADATA completed!")
     print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/", Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
-    press_enter = 'press enter'
-    while press_enter.strip() != '':
-        press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to return to the main menu"))
-        return
+    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to return to the main menu")
+    return

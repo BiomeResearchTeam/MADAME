@@ -68,9 +68,7 @@ def main():
             existing_session()
         else: 
             print("\n Error: " + Color.BOLD + Color.YELLOW + "MADAME/Downloads" + Color.END + " is empty.")
-            press_enter = 'press enter'
-            while press_enter.strip() != '':
-                press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session."))
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session.")
             new_session()
 
 # FOLDER CREATED BY USER INPUT
@@ -102,9 +100,7 @@ def new_session():
     Utilities.createDirectory(os.path.join("Downloads", user_session))
     print("\n Your new folder was succesfully created: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "")
     
-    press_enter = 'press enter'
-    while press_enter.strip() != '':
-        press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue"))
+    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
     menu(user_session)
 
