@@ -205,23 +205,111 @@ def publication_title(user_session, p_df):
 
 
 def scientific_name_pie(user_session, e_df):
-    scientific_name_df = e_df['scientific_name'].value_counts()
-    df = pd.DataFrame(scientific_name_df).reset_index()
-    df.columns = ['Scientific name', 'Counts']
-    fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.sequential.RdBu)
-    fig.write_image(os.path.join(user_session, "scientific_name_pie.png"))
+    col = ['scientific_name']
+    if pd.Series(['scientific_name']).isin(e_df.columns).all():
+        scientific_name_df = e_df['scientific_name'].value_counts()
+        df = pd.DataFrame(scientific_name_df).reset_index()
+        df.columns = ['Scientific name', 'Counts']
+        fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig.write_image(os.path.join(user_session, "scientific_name_pie.png"))
+    else:
+        pass
 
 
 def scientific_name_bar(user_session, e_df):
-    scientific_name_IDs_df = e_df.groupby(['study_accession'])['scientific_name'].value_counts()
-    df_bar = scientific_name_IDs_df.rename('count').reset_index()
-    df_bar.columns = ['Project', 'Scientific name', 'Counts']
-    fig = px.histogram(df_bar, x="Project", y="Counts",
-            color='Scientific name',
-            labels={'Counts':'Counts'},
-            height=400)
-    fig.write_image(os.path.join(user_session, "scientific_name_bar.png"))
+    col = ['scientific_name']
+    if pd.Series(['scientific_name']).isin(e_df.columns).all():
+        scientific_name_IDs_df = e_df.groupby(['study_accession'])['scientific_name'].value_counts()
+        df_bar = scientific_name_IDs_df.rename('count').reset_index()
+        df_bar.columns = ['Project', 'Scientific name', 'Counts']
+        fig = px.histogram(df_bar, x="Project", y="Counts",
+                color='Scientific name',
+                labels={'Counts':'Number of samples'},
+                height=400)
+        fig.write_image(os.path.join(user_session, "scientific_name_bar.png"))
+    else:
+        pass
 
+
+def library_source(user_session, e_df):
+    col = ['library_source']
+    if pd.Series(['library_source']).isin(e_df.columns).all():
+        library_source_df = e_df['library_source'].value_counts()
+        df = pd.DataFrame(library_source_df).reset_index()
+        df.columns = ['Library source', 'Counts']
+        fig = px.pie(df, values='Counts', names='Library source', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig.write_image(os.path.join(user_session, "library_source_pie.png"))
+    else:
+        pass
+
+
+def library_source_bar(user_session, e_df):
+    col = ['library_source']
+    if pd.Series(['library_source']).isin(e_df.columns).all():
+        library_source_IDs_df = e_df.groupby(['study_accession'])['library_source'].value_counts()
+        df_bar = library_source_IDs_df.rename('count').reset_index()
+        df_bar.columns = ['Project', 'Library source', 'Counts']
+        fig = px.histogram(df_bar, x="Project", y="Counts",
+                color='Library source',
+                labels={'Counts':'Number of samples'},
+                height=400)
+        fig.write_image(os.path.join(user_session, "library_source_bar.png"))
+    else:
+        pass
+
+
+def library_strategy_pie(user_session, e_df):
+    col = ['library_strategy']
+    if pd.Series(['library_strategy']).isin(e_df.columns).all():
+        library_strategy_df = e_df['library_strategy'].value_counts()
+        df = pd.DataFrame(library_strategy_df).reset_index()
+        df.columns = ['Library strategy', 'Counts']
+        fig = px.pie(df, values='Counts', names='Library strategy', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig.write_image(os.path.join(user_session, "library_strategy_pie.png"))
+    else:
+        pass
+
+
+def library_strategy_bar(user_session, e_df):
+    col = ['library_strategy']
+    if pd.Series(['library_strategy']).isin(e_df.columns).all():
+        library_strategy_IDs_df = e_df.groupby(['study_accession'])['library_strategy'].value_counts()
+        df_bar = library_strategy_IDs_df.rename('count').reset_index()
+        df_bar.columns = ['Project', 'Library strategy', 'Counts']
+        fig = px.histogram(df_bar, x="Project", y="Counts",
+                color='Library strategy',
+                labels={'Counts':'Number of samples'},
+                height=400)
+        fig.write_image(os.path.join(user_session, "library_strategy_bar.png"))
+    else:
+        pass
+
+
+def instrument_platform_pie(user_session, e_df):
+    col = ['instrument_platform']
+    if pd.Series(['instrument_platform']).isin(e_df.columns).all():
+        instrument_platform_df = e_df['instrument_platform'].value_counts()
+        df = pd.DataFrame(instrument_platform_df).reset_index()
+        df.columns = ['Instrument platform', 'Counts']
+        fig = px.pie(df, values='Counts', names='Instrument platform', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig.write_image(os.path.join(user_session, "instrument_platform_pie.png"))
+    else:
+        pass
+
+
+def instrument_platform_bar(user_session, e_df):
+    col = ['instrument_platform']
+    if pd.Series(['instrument_platform']).isin(e_df.columns).all():
+        instrument_platform_IDs_df = e_df.groupby(['study_accession'])['instrument_platform'].value_counts()
+        df_bar = instrument_platform_IDs_df.rename('count').reset_index()
+        df_bar.columns = ['Project', 'Instrument platform', 'Counts']
+        fig = px.histogram(df_bar, x="Project", y="Counts",
+                color='Instrument platform',
+                labels={'Counts':'Number of samples'},
+                height=400)
+        fig.write_image(os.path.join(user_session, "instrument_platform_bar.png"))
+    else:
+        pass
 
 
 #report
@@ -232,4 +320,10 @@ def report_ep(user_session, e_df, p_df):
     publication_title(user_session, p_df)
     scientific_name_pie(user_session, e_df)
     scientific_name_bar(user_session, e_df)
+    library_source(user_session, e_df)
+    library_source_bar(user_session, e_df)
+    library_strategy_pie(user_session, e_df)
+    library_strategy_bar(user_session, e_df)
+    instrument_platform_pie(user_session, e_df)
+    instrument_platform_bar(user_session, e_df)
     
