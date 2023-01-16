@@ -189,12 +189,39 @@ def IDs_dates(user_session, e_df):
         fig.write_image(os.path.join(user_session, "years_update.png"))
 
     else:
-        print('qui')
         pass
         
 
 def publication_title(user_session, p_df):
-    return
+    p_list_project = p_df.input_accession_id.values.tolist()
+    p_list_title = p_df.title.values.tolist()
+    d = {
+        'Project': p_list_project,
+        'Publication title': p_list_title
+        }
+    df = pd.DataFrame(data=d)
+    file_name = os.path.join(user_session,'Publication_title.xlsx')
+    df.to_excel(file_name)
+
+
+def scientific_name_pie(user_session, e_df):
+    scientific_name_df = e_df['scientific_name'].value_counts()
+    df = pd.DataFrame(scientific_name_df).reset_index()
+    df.columns = ['Scientific name', 'Counts']
+    fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.sequential.RdBu)
+    fig.write_image(os.path.join(user_session, "scientific_name_pie.png"))
+
+
+def scientific_name_bar(user_session, e_df):
+    scientific_name_IDs_df = e_df.groupby(['study_accession'])['scientific_name'].value_counts()
+    df_bar = scientific_name_IDs_df.rename('count').reset_index()
+    df_bar.columns = ['Project', 'Scientific name', 'Counts']
+    fig = px.histogram(df_bar, x="Project", y="Counts",
+            color='Scientific name',
+            labels={'Counts':'Counts'},
+            height=400)
+    fig.write_image(os.path.join(user_session, "scientific_name_bar.png"))
+
 
 
 #report
@@ -203,4 +230,6 @@ def report_ep(user_session, e_df, p_df):
     sample_number(user_session, e_df)
     IDs_dates(user_session, e_df)
     publication_title(user_session, p_df)
-    return
+    scientific_name_pie(user_session, e_df)
+    scientific_name_bar(user_session, e_df)
+    
