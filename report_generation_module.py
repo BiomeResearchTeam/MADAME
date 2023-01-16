@@ -150,26 +150,33 @@ def IDs_dates(user_session, e_df):
         e_df['first_public_year'] = e_df['first_public'].dt.year #select only year
         e_df['last_updated_year'] = e_df['last_updated'].dt.year
         collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
+        collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
+        print(collapsed_e_df)
         collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
         collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
-        collapsed_e_dict_f = collapsed_e_df_f.set_index('study_accession')['first_public_year'].to_dict() #convert into dictionary
-        collapsed_e_dict_l = collapsed_e_df_l.set_index('study_accession')['last_updated_year'].to_dict()
-        print(collapsed_e_dict_f)
-        print(collapsed_e_dict_l)
+        # collapsed_e_dict_f = collapsed_e_df_f.set_index('study_accession')['first_public_year'].to_dict() #convert into dictionary
+        # collapsed_e_dict_l = collapsed_e_df_l.set_index('study_accession')['last_updated_year'].to_dict()
+        collapsed_e_list_f_y = collapsed_e_df_f.study_accession.values.tolist()
+        collapsed_e_list_f_x = collapsed_e_df_f.first_public_year.values.tolist()
+        collapsed_e_list_l_y = collapsed_e_df_l.study_accession.values.tolist()
+        collapsed_e_list_l_x = collapsed_e_df_l.last_updated_year.values.tolist()
+        print(collapsed_e_list_f_y)
+        print(collapsed_e_list_f_x)
+
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=collapsed_e_dict_f.keys(),
-            y=collapsed_e_dict_f.values(),
-            marker=dict(color="crimson", size=12),
+            x=collapsed_e_list_f_x,
+            y=collapsed_e_list_f_y,
+            marker=dict(color="crimson", size=12), #colore da modificare
             mode="markers",
             name="Year of first udate",
         ))
         
         fig.add_trace(go.Scatter(
-            x=collapsed_e_dict_l.keys(),
-            y=collapsed_e_dict_l.values(),
-            marker=dict(color="gold", size=12),
+            x= collapsed_e_list_l_x,
+            y=collapsed_e_list_l_y ,
+            marker=dict(color="gold", size=12), #colore da modificare
             mode="markers",
             name="Year of last update",
         ))
@@ -178,42 +185,12 @@ def IDs_dates(user_session, e_df):
                         xaxis_title="Year",
                         yaxis_title="Projects")
 
+        fig.write_image(os.path.join(user_session, "years_update.png"))
+
     else:
         print('qui')
         pass
         
-        # IDs_dates_f = e_df[['study_accession', 'first_public']]
-        # IDs_dates_f.groupby(['study_accession'])['first_public']
-
-
-# schools = ["Brown", "NYU", "Notre Dame", "Cornell", "Tufts", "Yale",
-#            "Dartmouth", "Chicago", "Columbia", "Duke", "Georgetown",
-#            "Princeton", "U.Penn", "Stanford", "MIT", "Harvard"]
-
-# fig = go.Figure()
-# fig.add_trace(go.Scatter(
-#     x=[72, 67, 73, 80, 76, 79, 84, 78, 86, 93, 94, 90, 92, 96, 94, 112],
-#     y=schools,
-#     marker=dict(color="crimson", size=12),
-#     mode="markers",
-#     name="Women",
-# ))
-
-# fig.add_trace(go.Scatter(
-#     x=[92, 94, 100, 107, 112, 114, 114, 118, 119, 124, 131, 137, 141, 151, 152, 165],
-#     y=schools,
-#     marker=dict(color="gold", size=12),
-#     mode="markers",
-#     name="Men",
-# ))
-
-# fig.update_layout(title="Gender Earnings Disparity",
-#                   xaxis_title="Annual Salary (in thousands)",
-#                   yaxis_title="School")
-
-# fig.show()
-    
-
 
 #report
 def report_ep(user_session, e_df, p_df):
