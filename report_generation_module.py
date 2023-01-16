@@ -117,12 +117,12 @@ def check_file_publications(user_session):
 #open tsv
 def read_experiments(user_session, merged_experiments):
     path = os.path.join(user_session, merged_experiments)
-    e_df = pd.read_csv (path, delimiter='\t')
+    e_df = pd.read_csv (path, delimiter='\t', infer_datetime_format=True)
     return e_df
 
 def read_publications(user_session, merged_publications):
     path = os.path.join(user_session, merged_publications)
-    p_df = pd.read_csv (path, delimiter='\t')
+    p_df = pd.read_csv (path, delimiter='\t', infer_datetime_format=True)
     return p_df
 
 
@@ -140,13 +140,67 @@ def sample_number(user_session, e_df):
     fig = px.bar(sample_number_df, x="Project", y="Number of samples") #non va colore...
     fig.write_image(os.path.join(user_session, "sample_number.png"))
 
+
 def IDs_dates(user_session, e_df):
-    print(e_df)
-    col = e_df('first_public')
-    if col in e_df: #errore chiamare così col
-        IDs_dates_first = e_df.groupby(['study_accession'])['first_public'].count()
-        print(IDs_dates_first)
     
+    cols = ['first_public', 'last_updated']
+    if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
+        e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatyoe
+        e_df['last_updated'] = pd.to_datetime(e_df['last_updated'], errors='coerce', infer_datetime_format=True)
+        e_df['first_public_year'] = e_df['first_public'].dt.year #select only year
+        e_df['last_updated_year'] = e_df['last_updated'].dt.year
+        collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
+        collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
+        collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
+        collapsed_e_dict_f = collapsed_e_df_f.set_index('study_accession')['first_public_year'].to_dict() #convert into dictionary
+        collapsed_e_dict_l = collapsed_e_df_l.set_index('study_accession')['last_updated_year'].to_dict()
+        print(collapsed_e_dict_f)
+        print(collapsed_e_dict_l)
+        
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
+            x=collapsed_e_dict_f.keys(),
+            y=collapsed_e_dict_f.values(),
+            marker=dict(color="crimson", size=12),
+            mode="markers",
+            name="Year of first public"
+        
+    else:
+        print('qui')
+        pass
+        
+        # IDs_dates_f = e_df[['study_accession', 'first_public']]
+        # IDs_dates_f.groupby(['study_accession'])['first_public']
+
+
+# schools = ["Brown", "NYU", "Notre Dame", "Cornell", "Tufts", "Yale",
+#            "Dartmouth", "Chicago", "Columbia", "Duke", "Georgetown",
+#            "Princeton", "U.Penn", "Stanford", "MIT", "Harvard"]
+
+# fig = go.Figure()
+# fig.add_trace(go.Scatter(
+#     x=[72, 67, 73, 80, 76, 79, 84, 78, 86, 93, 94, 90, 92, 96, 94, 112],
+#     y=schools,
+#     marker=dict(color="crimson", size=12),
+#     mode="markers",
+#     name="Women",
+# ))
+
+# fig.add_trace(go.Scatter(
+#     x=[92, 94, 100, 107, 112, 114, 114, 118, 119, 124, 131, 137, 141, 151, 152, 165],
+#     y=schools,
+#     marker=dict(color="gold", size=12),
+#     mode="markers",
+#     name="Men",
+# ))
+
+# fig.update_layout(title="Gender Earnings Disparity",
+#                   xaxis_title="Annual Salary (in thousands)",
+#                   yaxis_title="School")
+
+# fig.show()
+    
+
 
 #report
 def report_ep(user_session, e_df, p_df):
