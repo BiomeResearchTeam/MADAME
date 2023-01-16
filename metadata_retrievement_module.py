@@ -49,7 +49,7 @@ def metadata_retrievement_query(user_session):
 
         user_query_input = UserQueryENAInput()
         
-        if user_query_input in ("back", "BACK", "Back"):
+        if user_query_input in ("main menu", "MAIN MENU", "Main menu"):
             return
 
         else:
@@ -126,10 +126,10 @@ def metadata_download(listOfAvailableProjects, user_session):
     print("\nChoose one of the following options: \n ")
     print(" 1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)")
     print(" 2 - Download Project and Experiment metadata of the available projects")
-    print("\n --- If you want to return to the main metadata menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
+    print("\n --- If you want to return to the METADATA MODULE menu digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
     user_metadata_input = input("\n>> Enter your choice: ")
         
-    if user_metadata_input in ("main menu", "MAIN MENU", "Main menu"):
+    if user_metadata_input in ("back", "BACK", "Back"):
         return
 
     elif user_metadata_input.isnumeric():

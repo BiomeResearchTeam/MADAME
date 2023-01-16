@@ -19,8 +19,8 @@ def UserQueryENAInput():
     print("\nExamples of queries:\n"
             "1) skin microbiome ")
     print("2) monkeypox")
-    print("\n --- If you want to return to the METADATA MODULE menu digit: " 
-            + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")   
+    print("\n --- If you want to return to the main menu digit: " 
+            + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")   
 
     user_query_input = ''
     while user_query_input.strip() == '': # preventing empty inputs (giulia)
