@@ -5,11 +5,12 @@ import csv
 import time 
 from os import path
 import os
+import pandas as pd
 
 def data_retrievement(user_session):
 
     while True:
-        Utilities.clear() 
+        #Utilities.clear() 
         title = " DATA RETRIEVEMENT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:")
@@ -26,57 +27,47 @@ def data_retrievement(user_session):
             print(Color.BOLD + Color.RED + "\nWrong input" + Color.END, "expected a numeric input or <main menu> (without <>)\n\n")
 
         elif user_data_input.isnumeric() == True:
-            user_report_input = int(user_data_input)
+            user_data_input = int(user_data_input)
             if user_data_input not in (1,2):
                 print("Error, enter a valid choice!\n")
                 return
 
             else:
                 if user_data_input == (1):
-                    user_data_input = os.path.join("Downloads", user_session)
-                    file_count = check_files(user_session)
+                    data_user_session = os.path.join("Downloads", user_session)
+                    file_count = check_files(data_user_session)
+                    if file_count == 0:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
 
+                    elif file_count > 1:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
+                    else:
+                        print("\nWhat data format do you want to download? fastq, sra, or submitted")
+                        user_file_type = input(">> Enter your choice: ").strip()
+                        if user_file_type not in ("fastq", "sra", "submitted"):
+                            print(Color.BOLD + Color.RED +"Wrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
+                        else:
+                            merged_experiments = check_file_experiments(data_user_session)
+                            e_df = read_experiments(data_user_session, merged_experiments)
+                            listOfProjectIDs = e_df.study_accession.values.tolist()
+                            SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
+                                    
                 if user_data_input == (2):
                     user_data_local_path = user_data_local()
                     file_count = check_files(user_session)
+                    if file_count == 0:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
 
+                    elif file_count > 1:
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
-
-
-        listOfProjectIDs_abs_path = str(input("\n>> Enter the path to your _listOfProjectIDs.tsv: "))
-
-        if listOfProjectIDs_abs_path in ("main menu", "MAIN MENU", "Main menu"):
-            return
-
-        else: 
-            file_extension = CheckTSV(listOfProjectIDs_abs_path)
-            
-            if file_extension[1] not in ('.tsv'):
-                print(Color.BOLD + Color.RED + "File extension is not .tsv" + Color.END, " Please enter the absolute path of the file (file included)")
-                return
-                
-            else:
-                print("\nWhat data format do you want to download? fastq, sra, or submitted")
-                user_file_type = input(">> Enter your choice: ")
-                user_file_type = user_file_type.strip()
-
-                if user_file_type not in ("fastq", "sra", "submitted"):
-                    print(Color.BOLD + Color.RED +"Wrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
-                    
-                else:
-                    listOfProjectIDs_path = os.sep.join(os.path.normpath(listOfProjectIDs_abs_path).split(os.sep)[-2:])
-                    print(listOfProjectIDs_path)
-                    
-                    with open(listOfProjectIDs_path, 'r') as r:
-                        listOfProjectIDs_reader = csv.reader(r, delimiter='\t')
-                        listOfProjectIDs_list = list(listOfProjectIDs_reader)
-                        listOfProjectIDs = [item for sublist in listOfProjectIDs_list for item in sublist]
-                        SequencesDownload.runDownloadData(listOfProjectIDs, file_type = user_file_type)
-                        time.sleep(2)
-
-
-
+                    else:
+                        merged_experiments = check_file_experiments(user_session)
+                        e_df = read_experiments(user_session, merged_experiments)
+                        listOfProjectIDs = e_df.run_accession.values.tolist()
+                        SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
+                        
 
 def user_data_local():
     Utilities.clear()
@@ -98,15 +89,20 @@ def user_data_local():
 
 
 #check files
-def check_files(user_session):
+def check_files(data_user_session):
     count = 0
-    for file in os.listdir(user_session):
+    for file in os.listdir(data_user_session):
         if file.endswith(("_merged_experiments-metadata.tsv")):
             print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}")
             count += 1   
     return count    
 
-def check_file_experiments(user_session):
-    for file in os.listdir(user_session):
+def check_file_experiments(data_user_session):
+    for file in os.listdir(data_user_session):
         if file.endswith("_merged_experiments-metadata.tsv"):
             return file
+
+def read_experiments(data_user_session, merged_experiments):
+    path = os.path.join(data_user_session, merged_experiments)
+    e_df = pd.read_csv (path, delimiter='\t', infer_datetime_format=True)
+    return e_df
