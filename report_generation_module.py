@@ -6,7 +6,6 @@ import plotly.graph_objects as go
 from plotly.offline import plot
 import plotly.express as px
 
-#commento
 
 def report_generation(user_session):
     while True:
