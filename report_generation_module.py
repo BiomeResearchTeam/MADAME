@@ -157,13 +157,13 @@ def IDs_dates(user_session, e_df):
         print(collapsed_e_dict_f)
         print(collapsed_e_dict_l)
         
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=collapsed_e_dict_f.keys(),
-            y=collapsed_e_dict_f.values(),
-            marker=dict(color="crimson", size=12),
-            mode="markers",
-            name="Year of first public"
+        # fig = go.Figure()
+        # fig.add_trace(go.Scatter(
+        #     x=collapsed_e_dict_f.keys(),
+        #     y=collapsed_e_dict_f.values(),
+        #     marker=dict(color="crimson", size=12),
+        #     mode="markers",
+        #     name="Year of first public"
         
     else:
         print('qui')
