@@ -49,7 +49,7 @@ def metadata_retrievement_query(user_session):
 
         user_query_input = UserQueryENAInput()
         
-        if user_query_input in ("main menu", "MAIN MENU", "Main menu"):
+        if user_query_input in ("back", "BACK", "Back"):
             return
 
         else:

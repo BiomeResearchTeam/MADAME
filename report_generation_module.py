@@ -92,34 +92,33 @@ def user_report_local():
             return user_report_local_path
 
 
+
+#check files
 def check_files(user_session):
     count = 0
     for file in os.listdir(user_session):
         if file.endswith(("_merged_experiments-metadata.tsv", "_merged_publications-metadata.tsv")):
-            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
+            print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}")
             count += 1   
-    return count
-
+    return count    
 
 def check_file_experiments(user_session):
     for file in os.listdir(user_session):
         if file.endswith("_merged_experiments-metadata.tsv"):
-            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
             return file
         
-
 def check_file_publications(user_session):
     for file in os.listdir(user_session):
         if file.endswith("_merged_publications-metadata.tsv"):
-            print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}\n")
             return file
 
 
+
+#open tsv
 def read_experiments(user_session, merged_experiments):
     path = os.path.join(user_session, merged_experiments)
     e_df = pd.read_csv (path, delimiter='\t')
     return e_df
-
 
 def read_publications(user_session, merged_publications):
     path = os.path.join(user_session, merged_publications)
@@ -127,15 +126,11 @@ def read_publications(user_session, merged_publications):
     return p_df
 
 
-def report_ep(user_session, e_df, p_df):
-    IDs_number(e_df)
-    sample_number(user_session, e_df)
-    return
 
-
+#functions for report
 def IDs_number(e_df):
     IDs_number = e_df['study_accession'].nunique()
-    print(IDs_number)
+    print('Number of projects:', IDs_number)
     return IDs_number
 
 def sample_number(user_session, e_df):
@@ -144,4 +139,18 @@ def sample_number(user_session, e_df):
     sample_number_df.columns = ['Project', 'Number of samples']
     fig = px.bar(sample_number_df, x="Project", y="Number of samples") #non va colore...
     fig.write_image(os.path.join(user_session, "sample_number.png"))
+
+def IDs_dates(user_session, e_df):
+    print(e_df)
+    col = e_df('first_public')
+    if col in e_df: #errore chiamare così col
+        IDs_dates_first = e_df.groupby(['study_accession'])['first_public'].count()
+        print(IDs_dates_first)
     
+
+#report
+def report_ep(user_session, e_df, p_df):
+    IDs_number(e_df)
+    sample_number(user_session, e_df)
+    IDs_dates(user_session, e_df)
+    return
