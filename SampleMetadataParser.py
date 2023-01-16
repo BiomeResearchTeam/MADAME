@@ -105,7 +105,7 @@ class SampleMetadataParser:
         # Exit function if sample_xml_directory doesn't exist
         if not os.path.isdir(sample_xml_directory):
             return
-         
+            
         xml_files = os.listdir(sample_xml_directory)
         empty_df = []
 
@@ -136,6 +136,7 @@ class SampleMetadataParser:
 
         # Convert into dataframe
         df = pd.DataFrame(empty_df)
+
 
         # Save as parsed-samples-metadata.tsv 
         df.to_csv(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv'), sep="\t", index=None)
