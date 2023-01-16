@@ -32,14 +32,17 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
+                    final_screen(user_session)
                     break
 
                 if metadata_retrievement_choice == 2:
                     metadata_retrievement_digit(user_session)
+                    final_screen(user_session)
                     break
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
+                    final_screen(user_session)
                     break
 
 
@@ -69,7 +72,8 @@ def metadata_retrievement_query(user_session):
                     
                 else:
                     metadata_download(listOfProjectIDs, user_session)
-                    time.sleep(3)
+                    return
+                    
 
 
 def metadata_retrievement_digit(user_session):
@@ -91,7 +95,7 @@ def metadata_retrievement_digit(user_session):
 
             else:  
                 metadata_download(listOfProjectIDs, user_session)
-                time.sleep(3)
+                return
 
 
 def metadata_retrievement_file(user_session):
@@ -115,8 +119,7 @@ def metadata_retrievement_file(user_session):
                     continue
                 else: 
                     metadata_download(listOfProjectIDs, user_session)
-                    time.sleep(3)
-                        #report
+                    return
         
        
 def metadata_download(listOfAvailableProjects, user_session):
@@ -146,17 +149,18 @@ def metadata_download(listOfAvailableProjects, user_session):
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataParser.runParseMetadata(listOfAvailableProjects, user_session)
-                final_screen(user_session)
+                
 
             elif user_metadata_input == 2:
                 
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
-                final_screen(user_session)
+                #final_screen(user_session)
 
 
 def final_screen(user_session):
     print("DOWNLOAD METADATA completed!")
-    print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/", Color.BOLD + Color.YELLOW + f" {user_session}" + Color.END)
+    print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/", Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
     press_enter = 'press enter'
     while press_enter.strip() != '':
         press_enter = str(input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to return to the main menu"))
+        return

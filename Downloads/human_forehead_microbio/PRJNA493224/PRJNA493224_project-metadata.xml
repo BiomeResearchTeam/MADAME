@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA493224" alias="PRJNA493224" center_name="JCVI" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA493224</PRIMARY_ID>
+          <SECONDARY_ID>SRP173401</SECONDARY_ID>
+          <SUBMITTER_ID namespace="JCVI">PRJNA493224</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>Study of the impact of long-term space travel on the Astronauts’ microbiome</TITLE>
+     <DESCRIPTION>During a space mission, astronauts are constantly exposed to a number of stressors (microgravity, anxiety, various g-forces, cosmic radiation, diet changes, etc.). We hypothesized that long-term exposure to space-associated stressors may lead to changes in the composition of the human microbiome, posing a risk to the health of astronauts. To test this hypothesis, we are conducting a longitudinal study to characterize the changes in the microbiome of the skin (forehead and forearm), nares, tongue and gastrointestinal tract (stool) of astronauts that spend from six to twelve months in the International Space Station (ISS). In addition, this study will collect microbial samples from different surfaces within the ISS to investigate the interaction between microbial communities that inhabit the ISS environment and the astronauts microbiota.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS4142135-SRS4142216</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX5129016-SRX5129097</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR8316312-SRR8316393</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA493224&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA493224&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>493224</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2018-09-28</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

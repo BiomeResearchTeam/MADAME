@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJEB31799" alias="ena-STUDY-Key Laboratory of Environmental and Applied Microbiology, CAS-21-03-2019-09:53:22:386-13" center_name="Key Laboratory of Environmental and Applied Microbiology, CAS">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJEB31799</PRIMARY_ID>
+          <SECONDARY_ID>ERP114401</SECONDARY_ID>
+          <SUBMITTER_ID namespace="Key Laboratory of Environmental and Applied Microbiology, CAS">ena-STUDY-Key Laboratory of Environmental and Applied Microbiology, CAS-21-03-2019-09:53:22:386-13</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>Human skin microbiotas across elevations</NAME>
+     <TITLE>Human skin microbiotas across elevations</TITLE>
+     <DESCRIPTION>Human skin microbiota plays a crucial role in defense against pathogens, and is associated with various skin diseases. High elevation is positively correlated with various extreme environmental conditions (i.e., high ultraviolet radiation), which may exert selection pressure on skin microbiota, and therefore influence human health. Most studies regarding to skin microbial communities focused on low-elevation hosts. Few studies have explored the skin microbiota in high-elevation humans. Here, we investigated diversity, function, assembly and co-occurrence patterns of skin microbiotas from 105 health human subjects across three body sites (forehead, opisthenar and palm) and seven elevational gradients from 501 to 3431 m. Alpha diversity values (i.e., Shannon diversity and observed OTUs) decreased with increasing elevation regardless of body sites, while beta diversity (Jaccard and Bray-Curtis dissimilarities) showed an increasing trend with elevation. Skin microbiotas at high elevation with more than 3110 m had a significant structural or functional separation with those at low elevation with less than 3110 m. Notably, the clustering coefficient, average degree and network density were all lower at the high-elevation than those at the low-elevation, suggesting that high-elevation skin networks were more fragile and less connected. Phylogenetic analysis showed that human skin microbiotas are dominated mainly by stochastic processes (58.4%-74.6%), but skin microbiotas at high elevation harbor more portion of deterministic processes than those at low-elevation, indicating that high elevation may be conducive to the promotion of deterministic processes. Our results reveal that elevation is a significant factor that influences human skin microbiota. Due to the low microbial diversity and high instability of network structure, human skin at high elevation is likely more susceptible to related disease risk.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>ERA1777984</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>ERS3325592-ERS3325696</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>ERX3264715-ERX3264819</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>ERR3237337-ERR3237441</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB31799&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB31799&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2020-01-06</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2019-03-21</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

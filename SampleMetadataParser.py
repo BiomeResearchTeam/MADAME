@@ -138,6 +138,6 @@ class SampleMetadataParser:
         df = pd.DataFrame(empty_df)
 
         # Save as parsed-samples-metadata.tsv 
-        df.to_csv(os.path.join(path, f"{projectID}_parsed-samples-metadata.tsv", sep='\t', index=None))
+        df.to_csv(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv'), sep="\t", index=None)
 
 SampleMetadataParser = SampleMetadataParser("SampleMetadataParser") 

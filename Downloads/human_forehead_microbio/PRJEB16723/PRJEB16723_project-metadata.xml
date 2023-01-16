@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJEB16723" alias="ena-STUDY-Universidade Federal do ABC-23-10-2016-06:39:01:635-30" center_name="Universidade Federal do ABC">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJEB16723</PRIMARY_ID>
+          <SECONDARY_ID>ERP018577</SECONDARY_ID>
+          <SUBMITTER_ID namespace="Universidade Federal do ABC">ena-STUDY-Universidade Federal do ABC-23-10-2016-06:39:01:635-30</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>Human skin bacterial and fungal microbiotas analyses</TITLE>
+     <DESCRIPTION>Using high-throughput 16S rDNA and ITS1 sequencing, we characterized skin bacterial and fungal microbiotas from healthy and dandruff subjects, comparing scalp and forehead (lesional and non-lesional skin sites).</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT>
+               <LOCUS_TAG_PREFIX>BQ5534</LOCUS_TAG_PREFIX>
+          </SEQUENCING_PROJECT>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>ERA740392</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>ERS1421303-ERS1421398</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>ERX1771494-ERX1771589</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>ERR1701206-ERR1701301</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB16723&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB16723&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2016-12-23</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2016-10-23</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

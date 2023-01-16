@@ -194,9 +194,14 @@ def IDs_dates(user_session, e_df):
         pass
         
 
+def publication_title(user_session, p_df):
+    return
+
+
 #report
 def report_ep(user_session, e_df, p_df):
     IDs_number(e_df)
     sample_number(user_session, e_df)
     IDs_dates(user_session, e_df)
+    publication_title(user_session, p_df)
     return
