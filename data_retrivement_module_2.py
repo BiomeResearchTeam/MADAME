@@ -1,8 +1,6 @@
 from Utilities import Color, Utilities
 from SequencesDownload import SequencesDownload
 from functions_modules import CheckTSV
-import csv
-import time 
 from os import path
 import os
 import pandas as pd
@@ -44,18 +42,22 @@ def data_retrievement(user_session):
 
                     else:
                         print("\nWhat data format do you want to download? fastq, sra, or submitted")
-                        user_file_type = input(">> Enter your choice: ").strip()
-                        if user_file_type not in ("fastq", "sra", "submitted"):
+                        user_file_type = input(">> Enter your choice: ").strip().lower()
+                        if user_file_type in ("main menu"):
+                            return
+                        elif user_file_type not in ("fastq", "sra", "submitted", "main menu"):
                             print(Color.BOLD + Color.RED +"Wrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
                         else:
                             merged_experiments = check_file_experiments(data_user_session)
                             e_df = read_experiments(data_user_session, merged_experiments)
-                            listOfProjectIDs = e_df.study_accession.values.tolist()
+                            listOfProjectIDs = e_df["study_accession"].unique().tolist()
                             SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
                                     
                 if user_data_input == (2):
-                    user_data_local_path = user_data_local()
+                    user_data_local(user_session)
                     file_count = check_files(user_session)
+                    
+
                     if file_count == 0:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
 
@@ -65,16 +67,19 @@ def data_retrievement(user_session):
                     else:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
-                        listOfProjectIDs = e_df.run_accession.values.tolist()
+                        listOfProjectIDs = e_df.run_accession.values.tolist()   #unique o no?
                         SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
                         
 
-def user_data_local():
+def user_data_local(user_session):
     Utilities.clear()
     while True:
         print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
         print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_data_local_path = input("\n>> Digit the path: ").strip()
+
+        if user_data_local_path in ("main menu", "MAIN MENU", "Main menu"):
+            data_retrievement(user_session)
                             
         if path.isdir(user_data_local_path) == False:
             if path.isfile(user_data_local_path) == True:
@@ -104,5 +109,5 @@ def check_file_experiments(data_user_session):
 
 def read_experiments(data_user_session, merged_experiments):
     path = os.path.join(data_user_session, merged_experiments)
-    e_df = pd.read_csv (path, delimiter='\t', infer_datetime_format=True)
+    e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
     return e_df

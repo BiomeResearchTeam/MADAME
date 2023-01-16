@@ -154,11 +154,10 @@ def metadata_download(listOfAvailableProjects, user_session):
             elif user_metadata_input == 2:
                 
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
-                #final_screen(user_session)
 
 
 def final_screen(user_session):
     print("DOWNLOAD METADATA completed!")
-    print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/", Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
-    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to return to the main menu")
+    print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
+    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
     return
