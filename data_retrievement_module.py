@@ -6,7 +6,7 @@ import time
 from os import path
 import os
 
-def data_retrievement():
+def data_retrievement(user_session):
 
     while True:
         #clear() 
@@ -45,5 +45,5 @@ def data_retrievement():
                         listOfProjectIDs_reader = csv.reader(r, delimiter='\t')
                         listOfProjectIDs_list = list(listOfProjectIDs_reader)
                         listOfProjectIDs = [item for sublist in listOfProjectIDs_list for item in sublist]
-                        SequencesDownload.runDownloadData(listOfProjectIDs, file_type = user_file_type) #boh dà errori 
+                        SequencesDownload.runDownloadData(listOfProjectIDs, file_type = user_file_type)
                         time.sleep(2)
