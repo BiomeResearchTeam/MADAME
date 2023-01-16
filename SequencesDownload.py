@@ -10,15 +10,15 @@ class SequencesDownload:
         self.name = name
 
     
-    def runDownloadData(self, user_session,  listOfProjectIDs, file_type):
+    def runDownloadData(self, user_session, listOfProjectIDs, file_type):
     # Accepted file_types: {submitted,fastq,sra}
     # It needs enaBrowserTools scripts already installed: 
     # https://github.com/enasequence/enaBrowserTools#installing-and-running-the-scripts
 
     # Check file_type availability (not every project has both sra and fastq files available)
         
-        for projectID in track(listOfProjectIDs, description="📥Downloading..."):
-
+        for projectID in track(listOfProjectIDs, description="Downloading..."):
+            print(projectID)
             if Project.getAvailableRuns(user_session, projectID, file_type):
                 print(f'Downloading {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}')
                 self.enaBrowserTools(user_session, projectID, file_type)
@@ -30,7 +30,7 @@ class SequencesDownload:
         # Accepted file_types: {submitted,fastq,sra}
 
         path = os.path.join("Downloads", user_session, projectID)
-
+        
         subprocess.run(f'enaGroupGet -f {file_type} {projectID} -d {path}', shell=True, capture_output=True, text=True)
 
         ####### da testare con -d path
