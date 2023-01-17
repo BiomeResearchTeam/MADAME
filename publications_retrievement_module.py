@@ -41,6 +41,10 @@ def publications_retrievement(user_session):
                 listOfProjectIDs = e_df["study_accession"].unique().tolist()
                 GetPublications.runGetPublications(listOfProjectIDs, user_session)
 
+                input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
+                
+                return
+
 
 # da strutturare come data retrievement module..
 # checkTSV entra in un loop di file not found    
