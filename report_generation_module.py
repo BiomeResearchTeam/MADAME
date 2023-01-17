@@ -54,7 +54,7 @@ def report_generation(user_session):
                         report_ep(user_session, e_df, p_df)
 
                     if file_count > 2:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
                     
                     
 
@@ -348,8 +348,11 @@ def geography(user_session, e_df, p_df):
     # e_df_sort = e_df.sort_values(by=['input_accession_id'], ascending=True)
 
     p_id_list = p_df['input_accession_id'].tolist()
+    e_df.rename(columns={'secondary_study_accession':'input_accession_id'}, inplace=True)
     print(p_id_list)
-    e_df[e_df.secondary_study_accession.isin(p_id_list)]
+    e_df_filtered = e_df[e_df.input_accession_id.isin(p_id_list)]
+    print(e_df_filtered)
+    collapsed_e_df = e_df.groupby('study_accession')
 
 
     #print(e_df_sort)
@@ -367,8 +370,8 @@ def geography(user_session, e_df, p_df):
     # merge = collapsed_e_df[collapsed_e_df['input_accession_id'].isin(p_df_id['input_accession_id'])]
     # print(merge)
 
-    p_df_id['study_accession'] = p_df_id.merge(e_df, on=['input_accession_id'], how='left')['study_accession']
-    print(p_df_id)
+    # p_df_id['study_accession'] = p_df_id.merge(e_df, on=['input_accession_id'], how='left')['study_accession']
+    # print(p_df_id)
 
     # #merge_e_p_df = e_df_sort[e_df_sort.set_index('secondary_study_accession')].index.isin(p_df_id.set_index(['input_accession_id']).index)
     # print(e_df_sorted)
@@ -378,6 +381,14 @@ def geography(user_session, e_df, p_df):
     # for country in pycountry.countries:
     #     if country.name in text:
     #         print(country.name)
+
+def projects_bytes(user_session, e_df,):
+    collapsed_e_df =  e_df['study_accession'].nunique()
+    IDs = collapsed_e_df.to_list()
+    for id in IDs:
+        return
+
+
 
 
 #report
