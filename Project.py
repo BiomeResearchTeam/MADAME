@@ -48,18 +48,18 @@ class Project:
         return listOfAvailableProjects
 
 
-    def getProjectBytes(self, projectID, file_type, metadata_file = None, user_session = None):
+    def getProjectBytes(self, projectID, metadata_file, file_type):# = 'default', user_session = None):
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
         ftp_column = f'{file_type}_ftp'
        
-        if metadata_file == None:
-            # Read experiments metadata
-            metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
-            df = pd.read_csv(metadata_file, sep='\t')
+        # if metadata_file == 'default':
+        #     # Read experiments metadata
+        #     metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
+        #     df = pd.read_csv(metadata_file, sep='\t')
 
-        else: 
-            df = metadata_file.loc[metadata_file['study_accession'] == projectID]
+        # else: 
+        df = metadata_file.loc[metadata_file['study_accession'] == projectID]
         
         # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
         df1 = df[df[bytes_column].notna()]
@@ -82,9 +82,9 @@ class Project:
 
         return bytes
 
-    def getProjectSize(self, user_session, projectID, file_type):
+    def getProjectSize(self, projectID, metadata_file, file_type):
         # Accepted file_types: {submitted,fastq,sra}
-        bytes = self.getProjectBytes(user_session, projectID, file_type)
+        bytes = self.getProjectBytes(projectID, metadata_file, file_type)
         size = Utilities.bytes_converter(bytes)
 
         return size
