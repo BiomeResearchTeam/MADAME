@@ -8,6 +8,12 @@ import plotly.express as px
 import numpy as np
 from Project import Project
 import pycountry
+import matplotlib.pyplot as plt
+import geopandas as gpd
+from geopy.exc import GeocoderTimedOut
+from geopy.geocoders import Nominatim
+from collections import Counter
+from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
 
 
 def report_generation(user_session):
@@ -339,48 +345,161 @@ def library_layout_bar(user_session, e_df):
     else:
         pass
 
+#WORLD MAP 
+# def findGeocode(country):
+#     geolocator = Nominatim(user_agent="your_app_name")
+#     try:
+#         # Geolocate the center of the country
+#         loc = geolocator.geocode(country)
+#         # And return latitude and longitude
+#         return geolocator.geocode(country)
+    
+#     except GeocoderTimedOut:
+#         # Return missing value
+#         return findGeocode(country) 
 
 def geography(user_session, e_df, p_df):
 
+    country_list = []
     affiliation_list = p_df['affiliation'].tolist()
     #print(affiliation_list)
     for affiliation in affiliation_list:
         for country in pycountry.countries:
             if country.name in affiliation:
-                print(country.name)
+                country_list.append(country.name)
+
+    countries = {}
+    for country in pycountry.countries:
+        countries[country.name] = country.alpha_2
+        codes = [countries.get(country, 'Unknown code') for country in country_list]
+
+    # country_df = pd.DataFrame(list(zip(country_list, countries)),
+    #            columns =['country', 'iso_alpha'])
+
+    # print(country_df)
+
+    # country_df = country_df.groupby(['country', 'iso_alpha']).size()
+    # print(country_df)
+
+    # country_list_unique = [*set(country_list)]
+    
+    input =  country_list
+    c = Counter( input )
+    print( c.items() )
+
+    country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
+    print(country_df)
 
 
-# # From GeoPandas, our world map data
-# worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
-
-# # Creating axes and plotting world map
-# fig, ax = plt.subplots(figsize=(12, 6))
-# worldmap.plot(color="lightgrey", ax=ax)
-
-# # Plotting our Impact Energy data with a color map
-# x = df['Longitude']
-# y = df['Latitude']
-# z = df['Impact Energy [kt]']
-# plt.scatter(x, y, s=20*z, c=z, alpha=0.6, vmin=0, vmax=threshold,
-#             cmap='autumn')
-# plt.colorbar(label='Impact Energy [kt]')
-
-# # Creating axis limits and title
-# plt.xlim([-180, 180])
-# plt.ylim([-90, 90])
-
-# first_year = df["Datetime"].min().strftime("%Y")
-# last_year = df["Datetime"].max().strftime("%Y")
-# plt.title("NASA: Fireballs Reported by Government Sensors\n" +     
-#           str(first_year) + " - " + str(last_year))
-# plt.xlabel("Longitude")
-# plt.ylabel("Latitude")
-# plt.show()
+    def alpha3code(column):
+        CODE=[]
+        for country in column:
+            try:
+                code=pycountry.countries.get(name=country).alpha_3
+            # .alpha_3 means 3-letter country code 
+            # .alpha_2 means 2-letter country code
+                CODE.append(code)
+            except:
+                CODE.append('None')
+        return CODE
+    # create a column for code 
+    
+    df['CODE']=alpha3code(df.Country_Region)
+    df.head(
 
 
 
 
 
+    
+
+    #country_df['iso_alpha'] = codes
+    
+
+    # df = px.data.gapminder().query("year == 2007")
+    # print(df)
+
+    # fig = px.scatter_geo(country_df, locations="country",
+    #     color="count", # which column to use to set the color of markers
+    #     #hover_name="country", # column added to hover information
+    #     size="count", # size of markers
+    #     projection="natural earth")
+
+    # fig.write_image(os.path.join(user_session, "world_map.png"))
+    
+
+
+    # print(country_df)            
+    # longitude = []
+    # latitude = []
+
+    # for country in (country_df["country"]):
+    #     if findGeocode(country) != None:
+    #         loc = findGeocode(country)
+            
+    #         # coordinates returned from 
+    #         # function is stored into
+    #         # two separate list
+    #         latitude.append(loc.latitude)
+    #         longitude.append(loc.longitude)
+       
+    #     # if coordinate for a city not
+    #     # found, insert "NaN" indicating 
+    #     # missing value 
+    #     else:
+    #         latitude.append(np.nan)
+    #         longitude.append(np.nan)
+
+    # country_df["Longitude"] = longitude
+    # country_df["Latitude"] = latitude
+    
+    # print(country_df)
+
+
+
+
+
+    #limits = [(0,2),(3,10),(11,20),(21,50),(50,3000)]
+#     colors = ["royalblue","crimson","lightseagreen","orange","lightgrey"]
+#     cities = []
+#     scale = 5000
+
+#     fig = go.Figure()
+
+#     # for i in range(len(country_list_unique)):
+#     #     lim = country_list[i]
+#     #     #country_df_df_sub = country_df[lim[0]:lim[1]]
+#     fig.add_trace(go.Scattergeo(
+#         locations = country_df['country'],
+#         locationmode = 'country names',
+#             # lon = df_sub['lon'],
+#             # lat = df_sub['lat'],
+#             # text = df_sub['text'],
+#         marker = dict(
+#             size = country_df['count'],
+#             color = country_df['count'],
+#             line_color='rgb(40,40,40)',
+#             line_width=0.5,
+#             sizemode = 'area'
+#             )))
+
+#     fig.update_layout(
+#             title_text = 'Number of publication',
+#             showlegend = True,
+#             geo = dict(
+#                 scope = 'world',
+#                 landcolor = 'rgb(217, 217, 217)',
+#             )
+#         )
+#     fig.write_image(os.path.join(user_session, "world_map.png"))
+# # #fig.show()
+
+    
+
+
+
+
+#PROJECT SIZE & BYTES
 def projects_bytes(user_session, e_df):
     IDs =  e_df['study_accession'].unique().tolist()
     ids_list = []
