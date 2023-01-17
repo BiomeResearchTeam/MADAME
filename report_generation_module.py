@@ -404,8 +404,8 @@ def geography(user_session, e_df, p_df):
         return CODE
     # create a column for code 
     
-    df['CODE']=alpha3code(df.Country_Region)
-    df.head(
+    country_df['CODE']=alpha3code(country_df.Country_Region)
+    df.head()
 
 
 
