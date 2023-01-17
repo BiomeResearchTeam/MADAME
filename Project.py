@@ -164,22 +164,13 @@ class Project:
         return projectDescription
 
 
-    #def listOfProjectIDsTSV(self, listOfProjectIDs): 
-        # import csv
-    # #creato da sara
-        #create tsv containing the ListOfProjectsIDs useful to download sequence in a second moment
-        
-        # for projectID in listOfProjectIDs:
-        #     outdir = f'{projectID}'
-        #     if not os.path.exists(outdir):
-        #         os.mkdir(outdir)
-            
-        #     listOfProjectIDs_path = os.path.join(outdir, f'{projectID}_listOfProjectIDs.tsv')
-        #     with open(listOfProjectIDs_path, 'w') as f_output:
-        #         listOfProjectIDs_tsv = csv.writer(f_output, delimiter='\t')
-        #         listOfProjectIDs_tsv.writerow(listOfProjectIDs)
-        #         print(f'\n{projectID}_listOfProjectIDs.tsv ', Color.BOLD + Color.GREEN + 'created' + Color.END)
-        
+    def listOfAccessionIDsTSV(self, listOfProjectIDs, user_session): 
+        #Creates user_session folder and saves the list of available accession IDs as TSV
+        path = (os.path.join("Downloads", user_session))
+        Utilities.createDirectory(path)
+
+        listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
+        listOfAccessionIDs.to_csv(os.path.join(path, '_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
 Project = Project('Project') 
 

@@ -33,10 +33,15 @@ def UserQueryENAInput():
 def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
     logger = Utilities.log()
-    listOfProjectIDs = GetIDlist.Query(logger, user_session, user_query = user_query_input, data_type = user_data_type)
+    listOfProjectIDs = GetIDlist.Query(logger, user_query = user_query_input, data_type = user_data_type)
     GetIDlist.QueryDetails(listOfProjectIDs)
     print("\nChecking for their availability...") 
-    listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs) 
+    listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)
+    Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
+
+    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "/_listOfAccessionIDs.tsv")
+
+    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
                 
     return listOfAvailableProjects
         
@@ -58,10 +63,15 @@ def UserDigitCodesInput():
 def UserDigitCodesIDlist(user_query_input, user_session):
     logger = Utilities.log()
 
-    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(logger, user_session, user_input = user_query_input)
+    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(logger, user_input = user_query_input)
     GetIDlist.IDlistFromUserInputDetails(dictionaryOfProjectIDs)
     print("\nChecking for their availability...") 
-    listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs) 
+    listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)
+    Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
+
+    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "/_listOfAccessionIDs.tsv")
+
+    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
 
     return listOfAvailableProjects
 

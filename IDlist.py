@@ -22,10 +22,9 @@ class GetIDlist:
         self.name = name
     
     
-    def Query(self, logger, user_session, user_query, data_type = "projects"):
+    def Query(self, logger, user_query, data_type = "projects"):
     # Query EBI db. Default data_type is "projects".
     # It can also be set to: "runs", "samples", "studies".
-        path = (os.path.join("Downloads", user_session))
 
         self.user_query = user_query
         self.data_type = data_type
@@ -58,17 +57,12 @@ class GetIDlist:
 
         #logger.info(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
 
-        Utilities.createDirectory(path)
-        list_of_IDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
-        list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
-
         return listOfProjectIDs
 
 
 
-    def IDlistFromUserInput(self, logger, user_session, user_input):
+    def IDlistFromUserInput(self, logger, user_input):
 
-        path = (os.path.join("Downloads", user_session))
     # Get ID list from a series of accession codes derived from user input.
     # Accession codes need to be entered separated by comma.
     
@@ -99,13 +93,8 @@ class GetIDlist:
         if not_valid:
             print(f"\nWARNING - {not_valid} are" + Color.BOLD + Color.RED + " not valid accession codes" + Color.END)
 
-        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}
-        
-        Utilities.createDirectory(path)
-        
+        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}    
         listOfProjectIDs = runs+samples+studies+projects
-        list_of_IDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
-        list_of_IDs.to_csv(os.path.join(path, '_listOfIDs.tsv'), sep="\t", index=False)
     
         #logger.info(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
         

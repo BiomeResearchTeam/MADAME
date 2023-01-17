@@ -66,7 +66,8 @@ def main():
 
         if module_choice == 2 and existing_sessions:
             existing_session()
-        else: 
+            
+        elif module_choice == 2 and not existing_session: 
             print("\n Error: " + Color.BOLD + Color.YELLOW + "MADAME/Downloads" + Color.END + " is empty.")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session.")
             new_session()
@@ -85,8 +86,9 @@ def new_session():
     user_session = ''
     while user_session.strip() == '': 
         user_session = str(input(">> Digit the folder name: "))
-        if user_session in ("main menu", "MAIN MENU", "Main menu"):
-            return
+    
+    if user_session in ("main menu", "MAIN MENU", "Main menu"):
+        return
 
     while os.path.isdir(os.path.join("Downloads", user_session)):
         print("\n Error: " + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + " folder already exists.")
