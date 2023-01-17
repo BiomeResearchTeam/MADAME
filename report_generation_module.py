@@ -6,6 +6,7 @@ import plotly.graph_objects as go
 from plotly.offline import plot
 import plotly.express as px
 import numpy as np
+from Project import Project
 import pycountry
 
 
@@ -340,54 +341,67 @@ def library_layout_bar(user_session, e_df):
 
 
 def geography(user_session, e_df, p_df):
-    
-    # p_df_id = p_df.sort_values(by=['input_accession_id'], ascending=True)
-    # p_df_id = p_df_id[['input_accession_id', 'affiliation']]
-    # e_df.rename(columns={'secondary_study_accession':'input_accession_id'}, inplace=True)
-    # #print(e_df)
-    # e_df_sort = e_df.sort_values(by=['input_accession_id'], ascending=True)
 
-    p_id_list = p_df['input_accession_id'].tolist()
-    e_df.rename(columns={'secondary_study_accession':'input_accession_id'}, inplace=True)
-    print(p_id_list)
-    e_df_filtered = e_df[e_df.input_accession_id.isin(p_id_list)]
-    print(e_df_filtered)
-    collapsed_e_df = e_df.groupby('study_accession')
+    affiliation_list = p_df['affiliation'].tolist()
+    #print(affiliation_list)
+    for affiliation in affiliation_list:
+        for country in pycountry.countries:
+            if country.name in affiliation:
+                print(country.name)
 
 
-    #print(e_df_sort)
-    # merge_e_p_df = e_df[e_df.set_index('input_accession_id')].index.isin(p_df_id.set_index(['input_accession_id']).index)
-    # print(merge_e_p_df)
+# # From GeoPandas, our world map data
+# worldmap = gpd.read_file(gpd.datasets.get_path("naturalearth_lowres"))
 
-    #joined = p_df_id.join(e_df.set_index(['study_accession']), on=['input_accession_id'], how='right')
-    #print(joined)
+# # Creating axes and plotting world map
+# fig, ax = plt.subplots(figsize=(12, 6))
+# worldmap.plot(color="lightgrey", ax=ax)
 
-    # merge = p_df_id.merge(e_df['input_accession_id'])
-    # print(merge)
+# # Plotting our Impact Energy data with a color map
+# x = df['Longitude']
+# y = df['Latitude']
+# z = df['Impact Energy [kt]']
+# plt.scatter(x, y, s=20*z, c=z, alpha=0.6, vmin=0, vmax=threshold,
+#             cmap='autumn')
+# plt.colorbar(label='Impact Energy [kt]')
 
-    # collapsed_e_df = e_df.groupby('input_accession_id').first().reset_index()
-    # #print(collapsed_e_df)
-    # merge = collapsed_e_df[collapsed_e_df['input_accession_id'].isin(p_df_id['input_accession_id'])]
-    # print(merge)
+# # Creating axis limits and title
+# plt.xlim([-180, 180])
+# plt.ylim([-90, 90])
 
-    # p_df_id['study_accession'] = p_df_id.merge(e_df, on=['input_accession_id'], how='left')['study_accession']
-    # print(p_df_id)
+# first_year = df["Datetime"].min().strftime("%Y")
+# last_year = df["Datetime"].max().strftime("%Y")
+# plt.title("NASA: Fireballs Reported by Government Sensors\n" +     
+#           str(first_year) + " - " + str(last_year))
+# plt.xlabel("Longitude")
+# plt.ylabel("Latitude")
+# plt.show()
 
-    # #merge_e_p_df = e_df_sort[e_df_sort.set_index('secondary_study_accession')].index.isin(p_df_id.set_index(['input_accession_id']).index)
-    # print(e_df_sorted)
 
-    #text = "United States (New York), United Kingdom (London)"
 
-    # for country in pycountry.countries:
-    #     if country.name in text:
-    #         print(country.name)
 
-def projects_bytes(user_session, e_df,):
-    collapsed_e_df =  e_df['study_accession'].nunique()
-    IDs = collapsed_e_df.to_list()
+
+def projects_bytes(user_session, e_df):
+    IDs =  e_df['study_accession'].unique().tolist()
+    ids_list = []
+    bytes_list = []
+    size_list = []
+
     for id in IDs:
-        return
+        bytes = Project.getProjectBytes(id, e_df, file_type = 'fastq')
+        bytes_list.append(bytes)
+        ids_list.append(id)
+    
+    for bytes in bytes_list:
+        size = Utilities.bytes_converter(bytes)
+        size_list.append(size)
 
+    df = pd.DataFrame({'Project': ids_list, 'Size' : size_list, 'Bytes' : bytes_list})
+    file_name = os.path.join(user_session,'Project_size&bytes.xlsx')
+    df.to_excel(file_name)
+
+    fig = px.histogram(df, x="Project", y="Bytes")
+    fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
 
 
 
@@ -408,3 +422,4 @@ def report_ep(user_session, e_df, p_df):
     library_layout_pie(user_session, e_df)
     library_layout_bar(user_session, e_df)
     geography(user_session, e_df, p_df)
+    projects_bytes(user_session, e_df)
