@@ -39,7 +39,7 @@ def main():
         Utilities.clear()
         madame_logo()
 
-        print("\n\n Welcome to MADAME - MetADAta MicrobiomE \n")
+        print("\n\n Choose your working session, it will be created in MADAME/Downloads \n")
         print(" 1 - Create new session")
         print(" 2 - Continue with existing session") #only if downloads isn't empty..
         print("\n --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
