@@ -5,6 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.offline import plot
 import plotly.express as px
+#import geocoder
 
 
 def report_generation(user_session):
@@ -152,7 +153,6 @@ def IDs_dates(user_session, e_df):
         e_df['last_updated_year'] = e_df['last_updated'].dt.year
         collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
         collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
-        print(collapsed_e_df)
         collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
         collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
         # collapsed_e_dict_f = collapsed_e_df_f.set_index('study_accession')['first_public_year'].to_dict() #convert into dictionary
@@ -161,8 +161,6 @@ def IDs_dates(user_session, e_df):
         collapsed_e_list_f_x = collapsed_e_df_f.first_public_year.values.tolist()
         collapsed_e_list_l_y = collapsed_e_df_l.study_accession.values.tolist()
         collapsed_e_list_l_x = collapsed_e_df_l.last_updated_year.values.tolist()
-        print(collapsed_e_list_f_y)
-        print(collapsed_e_list_f_x)
 
         
         fig = go.Figure()
@@ -312,6 +310,35 @@ def instrument_platform_bar(user_session, e_df):
         pass
 
 
+def library_layout_pie(user_session, e_df):
+    col = ['library_layout']
+    if pd.Series(['library_layout']).isin(e_df.columns).all():
+        library_layout_df = e_df['library_layout'].value_counts()
+        df = pd.DataFrame(library_layout_df).reset_index()
+        df.columns = ['Library layout', 'Counts']
+        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig.write_image(os.path.join(user_session, "library_layout_pie.png"))
+    else:
+        pass
+
+
+def library_layout_bar(user_session, e_df):
+    col = ['library_layout']
+    if pd.Series(['library_layout']).isin(e_df.columns).all():
+        library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts()
+        df_bar = library_layout_IDs_df.rename('count').reset_index()
+        df_bar.columns = ['Project', 'Library layout', 'Counts']
+        fig = px.histogram(df_bar, x="Project", y="Counts",
+                color='Library layout',
+                labels={'Counts':'Number of samples'},
+                height=400)
+        fig.write_image(os.path.join(user_session, "library_layout_bar.png"))
+    else:
+        pass
+
+
+
+
 #report
 def report_ep(user_session, e_df, p_df):
     IDs_number(e_df)
@@ -326,4 +353,5 @@ def report_ep(user_session, e_df, p_df):
     library_strategy_bar(user_session, e_df)
     instrument_platform_pie(user_session, e_df)
     instrument_platform_bar(user_session, e_df)
-    
+    library_layout_pie(user_session, e_df)
+    library_layout_bar(user_session, e_df)
