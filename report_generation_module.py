@@ -144,16 +144,16 @@ def IDs_number(e_df):
     print('Number of projects:', IDs_number)
     return IDs_number
 
+
 def sample_number(user_session, e_df):
     sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
     sample_number_df = pd.DataFrame(sample_number_series).reset_index()
     sample_number_df.columns = ['Project', 'Number of samples']
-    fig = px.bar(sample_number_df, x="Project", y="Number of samples") #non va colore...
+    fig = px.bar(sample_number_df, x="Project", y="Number of samples", color_discrete_sequence=px.colors.qualitative.Dark24).update_layout(yaxis_title="Number of samples") 
     fig.write_image(os.path.join(user_session, "sample_number.png"))
 
 
 def IDs_dates(user_session, e_df):
-    
     cols = ['first_public', 'last_updated']
     if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
         e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatyoe
@@ -164,12 +164,10 @@ def IDs_dates(user_session, e_df):
         collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
         collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
         collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
-        # collapsed_e_dict_f = collapsed_e_df_f.set_index('study_accession')['first_public_year'].to_dict() #convert into dictionary
-        # collapsed_e_dict_l = collapsed_e_df_l.set_index('study_accession')['last_updated_year'].to_dict()
-        collapsed_e_list_f_y = collapsed_e_df_f.study_accession.values.tolist()
-        collapsed_e_list_f_x = collapsed_e_df_f.first_public_year.values.tolist()
-        collapsed_e_list_l_y = collapsed_e_df_l.study_accession.values.tolist()
-        collapsed_e_list_l_x = collapsed_e_df_l.last_updated_year.values.tolist()
+        collapsed_e_list_f_x = collapsed_e_df_f.study_accession.values.tolist()
+        collapsed_e_list_f_y = collapsed_e_df_f.first_public_year.values.tolist()
+        collapsed_e_list_l_x = collapsed_e_df_l.study_accession.values.tolist()
+        collapsed_e_list_l_y = collapsed_e_df_l.last_updated_year.values.tolist()
 
         
         fig = go.Figure()
@@ -191,7 +189,8 @@ def IDs_dates(user_session, e_df):
 
         fig.update_layout(title="Years of first and last update",
                         xaxis_title="Year",
-                        yaxis_title="Projects")
+                        yaxis_title="Projects",
+                        barmode='group')##########
 
         fig.write_image(os.path.join(user_session, "years_update.png"))
 
@@ -217,7 +216,7 @@ def scientific_name_pie(user_session, e_df):
         scientific_name_df = e_df['scientific_name'].value_counts()
         df = pd.DataFrame(scientific_name_df).reset_index()
         df.columns = ['Scientific name', 'Counts']
-        fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.qualitative.D3)
         fig.write_image(os.path.join(user_session, "scientific_name_pie.png"))
     else:
         pass
@@ -230,9 +229,8 @@ def scientific_name_bar(user_session, e_df):
         df_bar = scientific_name_IDs_df.rename('count').reset_index()
         df_bar.columns = ['Project', 'Scientific name', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
-                color='Scientific name',
-                labels={'Counts':'Number of samples'},
-                height=400)
+                color='Scientific name', color_discrete_sequence=px.colors.qualitative.D3, 
+                height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "scientific_name_bar.png"))
     else:
         pass
@@ -244,7 +242,7 @@ def library_source(user_session, e_df):
         library_source_df = e_df['library_source'].value_counts()
         df = pd.DataFrame(library_source_df).reset_index()
         df.columns = ['Library source', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library source', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig = px.pie(df, values='Counts', names='Library source', color_discrete_sequence=px.colors.qualitative.D3)
         fig.write_image(os.path.join(user_session, "library_source_pie.png"))
     else:
         pass
@@ -258,8 +256,8 @@ def library_source_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library source', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library source',
-                labels={'Counts':'Number of samples'},
-                height=400)
+                color_discrete_sequence=px.colors.qualitative.D3,
+                height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_source_bar.png"))
     else:
         pass
@@ -271,7 +269,7 @@ def library_strategy_pie(user_session, e_df):
         library_strategy_df = e_df['library_strategy'].value_counts()
         df = pd.DataFrame(library_strategy_df).reset_index()
         df.columns = ['Library strategy', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library strategy', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig = px.pie(df, values='Counts', names='Library strategy', color_discrete_sequence=px.colors.qualitative.D3)
         fig.write_image(os.path.join(user_session, "library_strategy_pie.png"))
     else:
         pass
@@ -285,8 +283,8 @@ def library_strategy_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library strategy', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library strategy',
-                labels={'Counts':'Number of samples'},
-                height=400)
+                color_discrete_sequence=px.colors.qualitative.D3,
+                height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_strategy_bar.png"))
     else:
         pass
@@ -298,7 +296,7 @@ def instrument_platform_pie(user_session, e_df):
         instrument_platform_df = e_df['instrument_platform'].value_counts()
         df = pd.DataFrame(instrument_platform_df).reset_index()
         df.columns = ['Instrument platform', 'Counts']
-        fig = px.pie(df, values='Counts', names='Instrument platform', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig = px.pie(df, values='Counts', names='Instrument platform', color_discrete_sequence=px.colors.qualitative.D3)
         fig.write_image(os.path.join(user_session, "instrument_platform_pie.png"))
     else:
         pass
@@ -312,8 +310,8 @@ def instrument_platform_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Instrument platform', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Instrument platform',
-                labels={'Counts':'Number of samples'},
-                height=400)
+                color_discrete_sequence=px.colors.qualitative.Dark24,
+                height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "instrument_platform_bar.png"))
     else:
         pass
@@ -325,7 +323,7 @@ def library_layout_pie(user_session, e_df):
         library_layout_df = e_df['library_layout'].value_counts()
         df = pd.DataFrame(library_layout_df).reset_index()
         df.columns = ['Library layout', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=px.colors.sequential.RdBu)
+        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=px.colors.qualitative.Dark24)
         fig.write_image(os.path.join(user_session, "library_layout_pie.png"))
     else:
         pass
@@ -339,32 +337,18 @@ def library_layout_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library layout', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library layout',
-                labels={'Counts':'Number of samples'},
-                height=400)
+                color_discrete_sequence=px.colors.qualitative.Dark24,
+                height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_layout_bar.png"))
     else:
         pass
 
 #WORLD MAP 
-# def findGeocode(country):
-#     geolocator = Nominatim(user_agent="your_app_name")
-#     try:
-#         # Geolocate the center of the country
-#         loc = geolocator.geocode(country)
-#         # And return latitude and longitude
-#         return geolocator.geocode(country)
-    
-#     except GeocoderTimedOut:
-#         # Return missing value
-#         return findGeocode(country) 
-
 def alpha3code(column):
         CODE=[]
         for country in column:
             try:
                 code=pycountry.countries.get(name=country).alpha_3
-            # .alpha_3 means 3-letter country code 
-            # .alpha_2 means 2-letter country code
                 CODE.append(code)
             except:
                 CODE.append('None')
@@ -374,7 +358,6 @@ def geography(user_session, e_df, p_df):
 
     country_list = []
     affiliation_list = p_df['affiliation'].tolist()
-    #print(affiliation_list)
     for affiliation in affiliation_list:
         for country in pycountry.countries:
             if country.name in affiliation:
@@ -393,126 +376,33 @@ def geography(user_session, e_df, p_df):
 
     country_df['CODE']=alpha3code(country_df.country) #iso_3
 
-    fig = px.scatter_geo(country_df, locations="CODE",
-                     hover_name="country", size="count",
-                     projection="natural earth")
-    fig.write_image(os.path.join(user_session, "world_map.png"))
-    
-
-    
-
-
-
-    # world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
-    # world.columns=['pop_est', 'continent', 'name', 'CODE', 'gdp_md_est', 'geometry']
-    # merge=pd.merge(world,country_df,on='CODE')
-
-    # merge.plot(column='country', scheme="quantiles",
-    #        figsize=(25, 20),
-    #        legend=True,cmap='coolwarm')
-    # plt.title('2020 Jan-May Confirmed Case Amount in Different Countries',fontsize=25)
-    # # # add countries names and numbers 
-    # # for i in range(0,10):
-    # #     plt.text(float(merge.longitude[i]),float(merge.latitude[i]),"{}\n{}".format(merge.name[i],merge.Confirmed_Cases[i]),size=10)
-    # # plt.show()
-    # plt.write_image(os.path.join(user_session, "world_map.png"))
-
-    
-    # create a column for code 
-    
-    
-
-
-
-
-
-    
-
-    #country_df['iso_alpha'] = codes
-    
-
-    # df = px.data.gapminder().query("year == 2007")
-    # print(df)
-
-    # fig = px.scatter_geo(country_df, locations="country",
-    #     color="count", # which column to use to set the color of markers
-    #     #hover_name="country", # column added to hover information
-    #     size="count", # size of markers
-    #     projection="natural earth")
-
+    # fig = px.scatter_geo(country_df, locations="CODE",
+    #                  hover_name="country", size="count",
+    #                  projection="natural earth")
     # fig.write_image(os.path.join(user_session, "world_map.png"))
-    
 
 
-    # print(country_df)            
-    # longitude = []
-    # latitude = []
+    fig = go.Figure(data=go.Scattergeo(
+        locationmode = 'ISO-3',
+        locations = country_df['CODE'],
+        mode = 'markers',
+        marker_color = country_df['count'],
+        ))
 
-    # for country in (country_df["country"]):
-    #     if findGeocode(country) != None:
-    #         loc = findGeocode(country)
-            
-    #         # coordinates returned from 
-    #         # function is stored into
-    #         # two separate list
-    #         latitude.append(loc.latitude)
-    #         longitude.append(loc.longitude)
-       
-    #     # if coordinate for a city not
-    #     # found, insert "NaN" indicating 
-    #     # missing value 
-    #     else:
-    #         latitude.append(np.nan)
-    #         longitude.append(np.nan)
+    fig.update_layout(
+        title = 'Most trafficked US airports<br>(Hover for airport names)',
+        geo_scope='world',
+        showlegend = True,
+        paper_bgcolor='#E90555',
+        plot_bgcolor='#00798C'
+        
+    )
 
-    # country_df["Longitude"] = longitude
-    # country_df["Latitude"] = latitude
-    
-    # print(country_df)
+    fig.update_geos(showcoastlines=True, coastlinecolor="#E1F4FF",
+        showocean=False, 
+        showland=True, landcolor="#6794DC")
 
-
-
-
-
-    #limits = [(0,2),(3,10),(11,20),(21,50),(50,3000)]
-#     colors = ["royalblue","crimson","lightseagreen","orange","lightgrey"]
-#     cities = []
-#     scale = 5000
-
-#     fig = go.Figure()
-
-#     # for i in range(len(country_list_unique)):
-#     #     lim = country_list[i]
-#     #     #country_df_df_sub = country_df[lim[0]:lim[1]]
-#     fig.add_trace(go.Scattergeo(
-#         locations = country_df['country'],
-#         locationmode = 'country names',
-#             # lon = df_sub['lon'],
-#             # lat = df_sub['lat'],
-#             # text = df_sub['text'],
-#         marker = dict(
-#             size = country_df['count'],
-#             color = country_df['count'],
-#             line_color='rgb(40,40,40)',
-#             line_width=0.5,
-#             sizemode = 'area'
-#             )))
-
-#     fig.update_layout(
-#             title_text = 'Number of publication',
-#             showlegend = True,
-#             geo = dict(
-#                 scope = 'world',
-#                 landcolor = 'rgb(217, 217, 217)',
-#             )
-#         )
-#     fig.write_image(os.path.join(user_session, "world_map.png"))
-# # #fig.show()
-
-    
-
-
-
+    fig.write_image(os.path.join(user_session, "world_map.png"))
 
 #PROJECT SIZE & BYTES
 def projects_bytes(user_session, e_df):
@@ -534,7 +424,7 @@ def projects_bytes(user_session, e_df):
     file_name = os.path.join(user_session,'Project_size&bytes.xlsx')
     df.to_excel(file_name)
 
-    fig = px.histogram(df, x="Project", y="Bytes")
+    fig = px.histogram(df, x="Project", y="Bytes", color_discrete_sequence=px.colors.qualitative.D3).update_layout(yaxis_title="Number of samples")
     fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
 
 
