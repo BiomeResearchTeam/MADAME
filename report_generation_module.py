@@ -358,6 +358,18 @@ def library_layout_bar(user_session, e_df):
 #         # Return missing value
 #         return findGeocode(country) 
 
+def alpha3code(column):
+        CODE=[]
+        for country in column:
+            try:
+                code=pycountry.countries.get(name=country).alpha_3
+            # .alpha_3 means 3-letter country code 
+            # .alpha_2 means 2-letter country code
+                CODE.append(code)
+            except:
+                CODE.append('None')
+        return CODE
+
 def geography(user_session, e_df, p_df):
 
     country_list = []
@@ -372,40 +384,43 @@ def geography(user_session, e_df, p_df):
     for country in pycountry.countries:
         countries[country.name] = country.alpha_2
         codes = [countries.get(country, 'Unknown code') for country in country_list]
-
-    # country_df = pd.DataFrame(list(zip(country_list, countries)),
-    #            columns =['country', 'iso_alpha'])
-
-    # print(country_df)
-
-    # country_df = country_df.groupby(['country', 'iso_alpha']).size()
-    # print(country_df)
-
-    # country_list_unique = [*set(country_list)]
     
     input =  country_list
     c = Counter( input )
     print( c.items() )
 
     country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
-    print(country_df)
+
+    country_df['CODE']=alpha3code(country_df.country) #iso_3
+
+    fig = px.scatter_geo(country_df, locations="CODE",
+                     hover_name="country", size="count",
+                     projection="natural earth")
+    fig.write_image(os.path.join(user_session, "world_map.png"))
+    
+
+    
 
 
-    def alpha3code(column):
-        CODE=[]
-        for country in column:
-            try:
-                code=pycountry.countries.get(name=country).alpha_3
-            # .alpha_3 means 3-letter country code 
-            # .alpha_2 means 2-letter country code
-                CODE.append(code)
-            except:
-                CODE.append('None')
-        return CODE
+
+    # world = gpd.read_file(gpd.datasets.get_path('naturalearth_lowres'))
+    # world.columns=['pop_est', 'continent', 'name', 'CODE', 'gdp_md_est', 'geometry']
+    # merge=pd.merge(world,country_df,on='CODE')
+
+    # merge.plot(column='country', scheme="quantiles",
+    #        figsize=(25, 20),
+    #        legend=True,cmap='coolwarm')
+    # plt.title('2020 Jan-May Confirmed Case Amount in Different Countries',fontsize=25)
+    # # # add countries names and numbers 
+    # # for i in range(0,10):
+    # #     plt.text(float(merge.longitude[i]),float(merge.latitude[i]),"{}\n{}".format(merge.name[i],merge.Confirmed_Cases[i]),size=10)
+    # # plt.show()
+    # plt.write_image(os.path.join(user_session, "world_map.png"))
+
+    
     # create a column for code 
     
-    country_df['CODE']=alpha3code(country_df.Country_Region)
-    df.head()
+    
 
 
 
