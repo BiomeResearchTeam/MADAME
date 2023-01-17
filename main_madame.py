@@ -36,7 +36,7 @@ def main():
 
     while True:
         Utilities.log()
-        #Utilities.clear()
+        Utilities.clear()
         madame_logo()
 
         print("\n\n Welcome to MADAME - MetADAta MicrobiomE \n")
@@ -75,7 +75,7 @@ def main():
 
 def new_session():
 
-    #Utilities.clear()
+    Utilities.clear()
     madame_logo()
 
     print("\n --- How do you want to call the new folder in which the files will be downloaded?\n")
@@ -109,7 +109,7 @@ def new_session():
 
 def existing_session():
 
-    #Utilities.clear()
+    Utilities.clear()
     madame_logo()
 
     print("\n\n Which existing session do you want to select?\n")
@@ -146,7 +146,7 @@ def menu(user_session):
 
     while True:
         Utilities.log()
-        #Utilities.clear()
+        Utilities.clear()
         madame_logo()
 
         print("\n\n Which module do you want to use? \n")
