@@ -48,15 +48,19 @@ class Project:
         return listOfAvailableProjects
 
 
-    def getProjectBytes(self, user_session, projectID, file_type):
+    def getProjectBytes(self, projectID, file_type, metadata_file = None, user_session = None):
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
         ftp_column = f'{file_type}_ftp'
        
-        # Read experiments metadata
-        metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
-        df = pd.read_csv(metadata_file, sep='\t')
+        if metadata_file == None:
+            # Read experiments metadata
+            metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
+            df = pd.read_csv(metadata_file, sep='\t')
 
+        else: 
+            df = metadata_file.loc[metadata_file['study_accession'] == projectID]
+        
         # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
         df1 = df[df[bytes_column].notna()]
 
