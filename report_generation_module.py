@@ -156,9 +156,9 @@ def sample_number(user_session, e_df):
 def IDs_dates(user_session, e_df):
     cols = ['first_public', 'last_updated']
     if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
-        e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatyoe
+        e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatype
         e_df['last_updated'] = pd.to_datetime(e_df['last_updated'], errors='coerce', infer_datetime_format=True)
-        e_df['first_public_year'] = e_df['first_public'].dt.year #select only year
+        e_df['first_public_year'] = e_df['first_public'].dt.year #create a new column with only year
         e_df['last_updated_year'] = e_df['last_updated'].dt.year
         collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
         collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
@@ -169,14 +169,14 @@ def IDs_dates(user_session, e_df):
         collapsed_e_list_l_x = collapsed_e_df_l.study_accession.values.tolist()
         collapsed_e_list_l_y = collapsed_e_df_l.last_updated_year.values.tolist()
 
-        
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=collapsed_e_list_f_x,
             y=collapsed_e_list_f_y,
             marker=dict(color="crimson", size=12), #colore da modificare
             mode="markers",
-            name="Year of first udate",
+            name="Year of first update",
+            opacity=0.5
         ))
         
         fig.add_trace(go.Scatter(
@@ -185,12 +185,14 @@ def IDs_dates(user_session, e_df):
             marker=dict(color="gold", size=12), #colore da modificare
             mode="markers",
             name="Year of last update",
+            opacity=0.5
         ))
 
         fig.update_layout(title="Years of first and last update",
-                        xaxis_title="Year",
-                        yaxis_title="Projects",
-                        barmode='group')##########
+                        xaxis_title="Projects",
+                        yaxis_title="Year")
+        
+        fig.update_yaxes(type="category", categoryorder='category ascending') #make years as categorical and sort them
 
         fig.write_image(os.path.join(user_session, "years_update.png"))
 
@@ -343,8 +345,9 @@ def library_layout_bar(user_session, e_df):
     else:
         pass
 
+
 #WORLD MAP 
-def alpha3code(column):
+def alpha3code(column): #create a list of ISO3 starting from the column of interest
         CODE=[]
         for country in column:
             try:
@@ -354,27 +357,23 @@ def alpha3code(column):
                 CODE.append('None')
         return CODE
 
-def geography(user_session, e_df, p_df):
-
+def geography(user_session, p_df):
     country_list = []
     affiliation_list = p_df['affiliation'].tolist()
     for affiliation in affiliation_list:
-        for country in pycountry.countries:
+        for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
             if country.name in affiliation:
                 country_list.append(country.name)
 
-    countries = {}
-    for country in pycountry.countries:
-        countries[country.name] = country.alpha_2
-        codes = [countries.get(country, 'Unknown code') for country in country_list]
+    # countries = {} #inutile: eliminare?!?!?!
+    # for country in pycountry.countries:
+    #     countries[country.name] = country.alpha_2
+    #     codes = [countries.get(country, 'Unknown code') for country in country_list]
     
     input =  country_list
-    c = Counter( input )
-    print( c.items() )
-
+    c = Counter(input) #counter of countries
     country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
-
-    country_df['CODE']=alpha3code(country_df.country) #iso_3
+    country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
 
     # fig = px.scatter_geo(country_df, locations="CODE",
     #                  hover_name="country", size="count",
@@ -445,5 +444,5 @@ def report_ep(user_session, e_df, p_df):
     instrument_platform_bar(user_session, e_df)
     library_layout_pie(user_session, e_df)
     library_layout_bar(user_session, e_df)
-    geography(user_session, e_df, p_df)
+    geography(user_session, p_df)
     projects_bytes(user_session, e_df)
