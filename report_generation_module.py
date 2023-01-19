@@ -364,44 +364,48 @@ def geography(user_session, p_df):
         for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
             if country.name in affiliation:
                 country_list.append(country.name)
-
-    # countries = {} #inutile: eliminare?!?!?!
-    # for country in pycountry.countries:
-    #     countries[country.name] = country.alpha_2
-    #     codes = [countries.get(country, 'Unknown code') for country in country_list]
     
     input =  country_list
     c = Counter(input) #counter of countries
     country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
     country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
 
-    # fig = px.scatter_geo(country_df, locations="CODE",
-    #                  hover_name="country", size="count",
-    #                  projection="natural earth")
-    # fig.write_image(os.path.join(user_session, "world_map.png"))
+
+    # #PROVA: choropleth
+    # fig = px.choropleth(country_df, locations="CODE",
+    #     color="count", # lifeExp is a column of gapminder
+    #     #hover_name="country", # column to add to hover information
+    #     color_continuous_scale=px.colors.sequential.dense)
+
+    # fig.write_image(os.path.join(user_session, "world_map_choro.png"))
 
 
-    fig = go.Figure(data=go.Scattergeo(
-        locationmode = 'ISO-3',
-        locations = country_df['CODE'],
-        mode = 'markers',
-        marker_color = country_df['count'],
-        ))
+    #ATTENZIONE: FUNZIONA! >> DA CAMBIARE COLORI. BUBBLE PLOT
+    fig = px.scatter_geo(country_df, locations="CODE", color = 'count', size="count", 
+        color_continuous_scale = px.colors.sequential.Plasma, opacity = 0.95)
 
     fig.update_layout(
-        title = 'Most trafficked US airports<br>(Hover for airport names)',
-        geo_scope='world',
-        showlegend = True,
-        paper_bgcolor='#E90555',
-        plot_bgcolor='#00798C'
-        
-    )
+        title = 'Map of publications', title_x=0.5,
+        title_font_size=25,
+        title_font_family='Times New Roman',
+        showlegend = True,)
 
-    fig.update_geos(showcoastlines=True, coastlinecolor="#E1F4FF",
-        showocean=False, 
-        showland=True, landcolor="#6794DC")
+    fig.update_geos(scope='world',
+        visible=False,
+        showcoastlines=True, coastlinecolor="#F6F6F4",
+        showocean=True, oceancolor='#98BAD8',
+        showland=True, landcolor="#F6F6F4", 
+        projection_type = 'natural earth')
+
+    fig.update_traces(marker=dict(
+        line=dict(width=0)))
+
+    fig.update_layout(coloraxis_colorbar=dict(title="Number of publications",
+    thicknessmode="pixels", thickness=20,
+    lenmode="pixels", len=300,))
 
     fig.write_image(os.path.join(user_session, "world_map.png"))
+
 
 #PROJECT SIZE & BYTES
 def projects_bytes(user_session, e_df):
