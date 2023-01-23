@@ -14,6 +14,7 @@ from geopy.exc import GeocoderTimedOut
 from geopy.geocoders import Nominatim
 from collections import Counter
 from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
+from matplotlib import pyplot as plt
 
 
 def report_generation(user_session):
@@ -145,11 +146,11 @@ def IDs_number(e_df):
     return IDs_number
 
 
-def sample_number(user_session, e_df):
+def sample_number(user_session, e_df, color_palette):
     sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
     sample_number_df = pd.DataFrame(sample_number_series).reset_index()
     sample_number_df.columns = ['Project', 'Number of samples']
-    fig = px.bar(sample_number_df, x="Project", y="Number of samples", color_discrete_sequence=px.colors.qualitative.Dark24).update_layout(yaxis_title="Number of samples") 
+    fig = px.bar(sample_number_df, x="Project", y="Number of samples", color_discrete_sequence=color_palette).update_layout(yaxis_title="Number of samples") 
     fig.write_image(os.path.join(user_session, "sample_number.png"))
 
 
@@ -200,7 +201,7 @@ def IDs_dates(user_session, e_df):
         pass
         
 
-def publication_title(user_session, p_df):
+def publication_title(user_session, p_df,color_palette):
     p_list_project = p_df.input_accession_id.values.tolist()
     p_list_title = p_df.title.values.tolist()
     d = {
@@ -212,45 +213,45 @@ def publication_title(user_session, p_df):
     df.to_excel(file_name)
 
 
-def scientific_name_pie(user_session, e_df):
+def scientific_name_pie(user_session, e_df, color_palette):
     col = ['scientific_name']
     if pd.Series(['scientific_name']).isin(e_df.columns).all():
         scientific_name_df = e_df['scientific_name'].value_counts()
         df = pd.DataFrame(scientific_name_df).reset_index()
         df.columns = ['Scientific name', 'Counts']
-        fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=px.colors.qualitative.D3)
+        fig = px.pie(df, values='Counts', names='Scientific name', color_discrete_sequence=color_palette)
         fig.write_image(os.path.join(user_session, "scientific_name_pie.png"))
     else:
         pass
 
 
-def scientific_name_bar(user_session, e_df):
+def scientific_name_bar(user_session, e_df, color_palette):
     col = ['scientific_name']
     if pd.Series(['scientific_name']).isin(e_df.columns).all():
         scientific_name_IDs_df = e_df.groupby(['study_accession'])['scientific_name'].value_counts()
         df_bar = scientific_name_IDs_df.rename('count').reset_index()
         df_bar.columns = ['Project', 'Scientific name', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
-                color='Scientific name', color_discrete_sequence=px.colors.qualitative.D3, 
+                color='Scientific name', color_discrete_sequence=color_palette, 
                 height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "scientific_name_bar.png"))
     else:
         pass
 
 
-def library_source(user_session, e_df):
+def library_source(user_session, e_df, color_palette):
     col = ['library_source']
     if pd.Series(['library_source']).isin(e_df.columns).all():
         library_source_df = e_df['library_source'].value_counts()
         df = pd.DataFrame(library_source_df).reset_index()
         df.columns = ['Library source', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library source', color_discrete_sequence=px.colors.qualitative.D3)
+        fig = px.pie(df, values='Counts', names='Library source', color_discrete_sequence=color_palette)
         fig.write_image(os.path.join(user_session, "library_source_pie.png"))
     else:
         pass
 
 
-def library_source_bar(user_session, e_df):
+def library_source_bar(user_session, e_df, color_palette):
     col = ['library_source']
     if pd.Series(['library_source']).isin(e_df.columns).all():
         library_source_IDs_df = e_df.groupby(['study_accession'])['library_source'].value_counts()
@@ -258,26 +259,26 @@ def library_source_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library source', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library source',
-                color_discrete_sequence=px.colors.qualitative.D3,
+                color_discrete_sequence=color_palette,
                 height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_source_bar.png"))
     else:
         pass
 
 
-def library_strategy_pie(user_session, e_df):
+def library_strategy_pie(user_session, e_df, color_palette):
     col = ['library_strategy']
     if pd.Series(['library_strategy']).isin(e_df.columns).all():
         library_strategy_df = e_df['library_strategy'].value_counts()
         df = pd.DataFrame(library_strategy_df).reset_index()
         df.columns = ['Library strategy', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library strategy', color_discrete_sequence=px.colors.qualitative.D3)
+        fig = px.pie(df, values='Counts', names='Library strategy', color_discrete_sequence=color_palette)
         fig.write_image(os.path.join(user_session, "library_strategy_pie.png"))
     else:
         pass
 
 
-def library_strategy_bar(user_session, e_df):
+def library_strategy_bar(user_session, e_df, color_palette):
     col = ['library_strategy']
     if pd.Series(['library_strategy']).isin(e_df.columns).all():
         library_strategy_IDs_df = e_df.groupby(['study_accession'])['library_strategy'].value_counts()
@@ -285,26 +286,26 @@ def library_strategy_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library strategy', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library strategy',
-                color_discrete_sequence=px.colors.qualitative.D3,
+                color_discrete_sequence=color_palette,
                 height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_strategy_bar.png"))
     else:
         pass
 
 
-def instrument_platform_pie(user_session, e_df):
+def instrument_platform_pie(user_session, e_df, color_palette):#, color_palette): #
     col = ['instrument_platform']
     if pd.Series(['instrument_platform']).isin(e_df.columns).all():
         instrument_platform_df = e_df['instrument_platform'].value_counts()
         df = pd.DataFrame(instrument_platform_df).reset_index()
         df.columns = ['Instrument platform', 'Counts']
-        fig = px.pie(df, values='Counts', names='Instrument platform', color_discrete_sequence=px.colors.qualitative.D3)
+        fig = px.pie(df, values='Counts', names='Instrument platform', color_discrete_sequence=color_palette) #
         fig.write_image(os.path.join(user_session, "instrument_platform_pie.png"))
     else:
         pass
 
 
-def instrument_platform_bar(user_session, e_df):
+def instrument_platform_bar(user_session, e_df, color_palette):
     col = ['instrument_platform']
     if pd.Series(['instrument_platform']).isin(e_df.columns).all():
         instrument_platform_IDs_df = e_df.groupby(['study_accession'])['instrument_platform'].value_counts()
@@ -312,26 +313,37 @@ def instrument_platform_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Instrument platform', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Instrument platform',
-                color_discrete_sequence=px.colors.qualitative.Dark24,
+                color_discrete_sequence=color_palette,
                 height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "instrument_platform_bar.png"))
     else:
         pass
 
 
-def library_layout_pie(user_session, e_df):
+def library_layout_pie(user_session, e_df, color_palette): #QUI
+
+    # n_colors = 25
+    # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
+    # fig = go.Figure()
+    # for i, c in enumerate(colors):
+    #     fig.add_bar(x=[i], y = [15], marker_color = c, showlegend = False, name=c)
+    #     print(i)
+    #     print(c)
+    
+
     col = ['library_layout']
     if pd.Series(['library_layout']).isin(e_df.columns).all():
         library_layout_df = e_df['library_layout'].value_counts()
         df = pd.DataFrame(library_layout_df).reset_index()
         df.columns = ['Library layout', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=px.colors.qualitative.Dark24)
-        fig.write_image(os.path.join(user_session, "library_layout_pie.png"))
+        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=color_palette) 
+        fig.write_image(os.path.join(user_session, "library_layout_pie.png")) 
+
     else:
         pass
 
 
-def library_layout_bar(user_session, e_df):
+def library_layout_bar(user_session, e_df, color_palette):
     col = ['library_layout']
     if pd.Series(['library_layout']).isin(e_df.columns).all():
         library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts()
@@ -339,7 +351,7 @@ def library_layout_bar(user_session, e_df):
         df_bar.columns = ['Project', 'Library layout', 'Counts']
         fig = px.histogram(df_bar, x="Project", y="Counts",
                 color='Library layout',
-                color_discrete_sequence=px.colors.qualitative.Dark24,
+                color_discrete_sequence=color_palette,
                 height=400).update_layout(yaxis_title="Number of samples")
         fig.write_image(os.path.join(user_session, "library_layout_bar.png"))
     else:
@@ -382,13 +394,18 @@ def geography(user_session, p_df):
 
     #ATTENZIONE: FUNZIONA! >> DA CAMBIARE COLORI. BUBBLE PLOT
     fig = px.scatter_geo(country_df, locations="CODE", color = 'count', size="count", 
-        color_continuous_scale = px.colors.sequential.Plasma, opacity = 0.95)
+        color_continuous_scale = px.colors.sequential.haline, opacity = 0.95)
 
     fig.update_layout(
         title = 'Map of publications', title_x=0.5,
         title_font_size=25,
         title_font_family='Times New Roman',
-        showlegend = True,)
+        showlegend = True, 
+        coloraxis_colorbar=dict(title="Number of <br>publications", #start a new line
+        thicknessmode="pixels", thickness=20,
+        lenmode="pixels", len=250))
+
+    fig.update_coloraxes(colorbar_dtick=1) #only integers number separated by 1
 
     fig.update_geos(scope='world',
         visible=False,
@@ -400,15 +417,11 @@ def geography(user_session, p_df):
     fig.update_traces(marker=dict(
         line=dict(width=0)))
 
-    fig.update_layout(coloraxis_colorbar=dict(title="Number of publications",
-    thicknessmode="pixels", thickness=20,
-    lenmode="pixels", len=300,))
-
     fig.write_image(os.path.join(user_session, "world_map.png"))
 
 
 #PROJECT SIZE & BYTES
-def projects_bytes(user_session, e_df):
+def projects_bytes(user_session, e_df, color_palette):
     IDs =  e_df['study_accession'].unique().tolist()
     ids_list = []
     bytes_list = []
@@ -427,26 +440,65 @@ def projects_bytes(user_session, e_df):
     file_name = os.path.join(user_session,'Project_size&bytes.xlsx')
     df.to_excel(file_name)
 
-    fig = px.histogram(df, x="Project", y="Bytes", color_discrete_sequence=px.colors.qualitative.D3).update_layout(yaxis_title="Number of samples")
+    user_readable_bytes = []
+    for byte in bytes_list:
+        user_readable_byte = byte/1024/1024
+        user_readable_bytes.append(user_readable_byte)
+
+    df['User_bites']=user_readable_bytes
+
+    fig = px.histogram(df, x="Project", y="User_bites", color_discrete_sequence=color_palette)
+
+    
+    fig.update_layout(
+        title = 'Project size', title_x=0.5,
+        title_font_size=25,
+        title_font_family='Times New Roman',
+        yaxis_title="Bytes")
+    
+    
     fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
 
+
+    #BUBBLE PLOT
+    fig = px.scatter(df, x='Project', y='User_bites', 
+        size='User_bites', color='User_bites', size_max=100,
+        color_continuous_scale = px.colors.sequential.haline, opacity = 0.95)
+    
+    fig.update_layout(
+        title = 'Size of project', title_x=0.5,
+        title_font_size=25,
+        title_font_family='Times New Roman',
+        yaxis_title="Megabyte",
+        showlegend = True, 
+        coloraxis_colorbar=dict(title="Megabyte",
+        thicknessmode="pixels", thickness=20,
+        lenmode="pixels", len=250))
+
+    fig.write_image(os.path.join(user_session, "projects_size&bytes_bubble.png"))
+    
 
 
 #report
 def report_ep(user_session, e_df, p_df):
+    
+    # n_colors = 25
+    # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
+    color_palette =['rgb(41, 24, 107)', 'rgb(204, 223, 109)', 'rgb(145, 209, 96)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)']
     IDs_number(e_df)
-    sample_number(user_session, e_df)
+    sample_number(user_session, e_df, color_palette)
     IDs_dates(user_session, e_df)
-    publication_title(user_session, p_df)
-    scientific_name_pie(user_session, e_df)
-    scientific_name_bar(user_session, e_df)
-    library_source(user_session, e_df)
-    library_source_bar(user_session, e_df)
-    library_strategy_pie(user_session, e_df)
-    library_strategy_bar(user_session, e_df)
-    instrument_platform_pie(user_session, e_df)
-    instrument_platform_bar(user_session, e_df)
-    library_layout_pie(user_session, e_df)
-    library_layout_bar(user_session, e_df)
+    publication_title(user_session, p_df, color_palette)
+    scientific_name_pie(user_session, e_df, color_palette)
+    scientific_name_bar(user_session, e_df, color_palette)
+    library_source(user_session, e_df, color_palette)
+    library_source_bar(user_session, e_df, color_palette)
+    library_strategy_pie(user_session, e_df, color_palette)
+    library_strategy_bar(user_session, e_df, color_palette)
+    instrument_platform_pie(user_session, e_df, color_palette)
+    instrument_platform_bar(user_session, e_df, color_palette)
+    library_layout_pie(user_session, e_df, color_palette)
+    library_layout_bar(user_session, e_df, color_palette)
     geography(user_session, p_df)
-    projects_bytes(user_session, e_df)
+    projects_bytes(user_session, e_df, color_palette)
+
