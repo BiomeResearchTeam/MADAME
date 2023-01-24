@@ -383,18 +383,18 @@ def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda
         # list_llayout_numbers = pd.factorize(list_llayout)[0]
         # print(list_llayout_numbers)
 
-        c = dict(zip(df_bar['Library layout'].unique(), color_palette_hex))
-        print(c)
-        df_bar['prova'] = df_bar['Library layout'].map(c)
-        print(df_bar)
+        color_dictionary = dict(zip(df_bar['Library layout'].unique(), color_palette_hex)) #associate column values to color
+        # print(c)
+        df_bar['Color'] = df_bar['Library layout'].map(color_dictionary) #create a new column based on the dictionary
+        # print(df_bar)
         
 
         fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
 
-        fig.add_trace(go.Pie(labels=df_pie['Library layout'], values=df_pie['Counts'], hole=0.6, marker_colors= df_pie["Library layout"].map(c)),
+        fig.add_trace(go.Pie(labels=df_pie['Library layout'], values=df_pie['Counts'], hole=0.6, marker_colors= df_pie["Library layout"].map(color_dictionary)),
             row=1, col=1)
         
-        fig.add_trace(go.Bar(x=df_bar["Project"], y = df_bar["Counts"], marker_color = df_bar['prova']),
+        fig.add_trace(go.Bar(x=df_bar["Project"], y = df_bar["Counts"], marker_color = df_bar['Color']),
              row=1, col=2)
         
         fig.update_layout(title_text="Side By Side Subplots")
@@ -581,9 +581,3 @@ def final_screen(user_session):
     # n_colors = 20
     # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
     # print(colors)
-
-    
-    
-    
-
-#'rgb(241, 81, 82)'
