@@ -3,18 +3,17 @@ import os
 from os import path
 import pandas as pd
 import plotly.graph_objects as go
-from plotly.offline import plot
 import plotly.express as px
-import numpy as np
 from Project import Project
 import pycountry
-import matplotlib.pyplot as plt
-import geopandas as gpd
-from geopy.exc import GeocoderTimedOut
-from geopy.geocoders import Nominatim
 from collections import Counter
-from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
-from matplotlib import pyplot as plt
+# import matplotlib.pyplot as plt
+# import geopandas as gpd
+# from geopy.exc import GeocoderTimedOut
+# from geopy.geocoders import Nominatim
+# import numpy as np
+# from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
+# from matplotlib import pyplot as plt
 
 
 def report_generation(user_session):
@@ -180,7 +179,7 @@ def IDs_dates(user_session, e_df):
         fig.add_trace(go.Scatter(
             x=collapsed_e_list_f_x,
             y=collapsed_e_list_f_y,
-            marker=dict(color='rgb(41, 24, 107)', size=20), #colore da modificare
+            marker=dict(color='rgb(41, 24, 107)', size=30),
             mode="markers",
             name="Year of first update",
             opacity=0.9
@@ -189,7 +188,7 @@ def IDs_dates(user_session, e_df):
         fig.add_trace(go.Scatter(
             x= collapsed_e_list_l_x,
             y=collapsed_e_list_l_y ,
-            marker=dict(color='rgb(255, 200, 87)', size=20), #colore da modificare #252, 129, 74 255, 200, 87
+            marker=dict(color='rgb(255, 230, 87)', size=30),
             mode="markers",
             name="Year of last update",
             opacity=0.9
