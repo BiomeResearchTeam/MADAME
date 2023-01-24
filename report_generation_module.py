@@ -375,13 +375,6 @@ def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda
         library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts() #SISTEMARE QUESTI DF, SONO RIPETIZIONI
         df_bar = library_layout_IDs_df.rename('count').reset_index()
         df_bar.columns = ['Project', 'Library layout', 'Counts']
-        
-        # list_llayout = list(df_bar['Library layout'])
-        # print(list_llayout)
-        # pd.factorize(list_llayout)
-        # print(pd.factorize(list_llayout))
-        # list_llayout_numbers = pd.factorize(list_llayout)[0]
-        # print(list_llayout_numbers)
 
         color_dictionary = dict(zip(df_bar['Library layout'].unique(), color_palette_hex)) #associate column values to color
         # print(c)
@@ -390,16 +383,33 @@ def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda
         
 
         fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
+        
+        library_layout_list = list(df_pie["Library layout"])
+        count_list = list(df_pie['Counts'])
+        
 
-        fig.add_trace(go.Pie(labels=df_pie['Library layout'], values=df_pie['Counts'], hole=0.6, marker_colors= df_pie["Library layout"].map(color_dictionary)),
+        fig.add_trace(go.Pie(labels=library_layout_list, values=count_list, hole=0.6, 
+        marker_colors= df_pie["Library layout"].map(color_dictionary), showlegend=False, 
+        hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>"),
             row=1, col=1)
         
-        fig.add_trace(go.Bar(x=df_bar["Project"], y = df_bar["Counts"], marker_color = df_bar['Color']),
-             row=1, col=2)
+        for c in df_bar['Library layout'].unique(): #to create the legend
+            df_color= df_bar[df_bar['Library layout'] == c]
+            fig.add_trace(go.Bar(x=df_color["Project"], y = df_color["Counts"], marker_color = df_color['Color'], 
+            name= c, showlegend = True),
+            row=1, col=2)
+            
         
-        fig.update_layout(title_text="Side By Side Subplots")
-        fig.write_image(os.path.join(user_session, "Side By Side Subplots.png"))
-        fig.write_html(os.path.join(user_session, "Side By Side Subplots.html"))
+        fig.update_layout(title_text="Library layout", title_x=0.5,
+        title_font_size=40,
+        title_font_family='Times New Roman',
+        xaxis_title="project",
+        yaxis_title="number of samples",  hovermode="x unified") #DA CAMBIARE HOVERMODE
+        fig.update_xaxes(title_font=dict(size=20))
+        fig.update_yaxes(title_font=dict(size=20))
+        #fig.update_traces(mode="markers+lines")
+        fig.write_image(os.path.join(user_session, "Library layout.png"))
+        fig.write_html(os.path.join(user_session, "Library layout.html"))
 
 
 
@@ -561,7 +571,7 @@ def publication_report(user_session, p_df):
         geography(user_session, p_df, f)
     
 def final_screen(user_session):
-    print(Color.BOLD + Color.GREEN + '\nReport was successfully created.' + Color.END,'You can find it here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
+    print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find it here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
 
