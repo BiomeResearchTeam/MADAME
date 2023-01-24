@@ -53,13 +53,16 @@ def report_generation(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
+                        experiment_report(user_session, e_df)
+
 
                     if file_count == 2:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
                         merged_publications = check_file_publications(user_session)
                         p_df = read_publications(user_session, merged_publications)
-                        report_ep(user_session, e_df, p_df)
+                        experiment_report(user_session, e_df)
+                        publication_report(user_session, p_df)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
@@ -75,12 +78,15 @@ def report_generation(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
+                        experiment_report(user_session, e_df)
 
                     if file_count == 2:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
                         merged_publications = check_file_publications(user_report_local_path)
                         p_df = read_publications(user_report_local_path, merged_publications)
+                        experiment_report(user_session, e_df)
+                        publication_report(user_session, p_df)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
@@ -174,19 +180,19 @@ def IDs_dates(user_session, e_df):
         fig.add_trace(go.Scatter(
             x=collapsed_e_list_f_x,
             y=collapsed_e_list_f_y,
-            marker=dict(color="crimson", size=12), #colore da modificare
+            marker=dict(color='rgb(41, 24, 107)', size=20), #colore da modificare
             mode="markers",
             name="Year of first update",
-            opacity=0.5
+            opacity=0.9
         ))
         
         fig.add_trace(go.Scatter(
             x= collapsed_e_list_l_x,
             y=collapsed_e_list_l_y ,
-            marker=dict(color="gold", size=12), #colore da modificare
+            marker=dict(color='rgb(255, 200, 87)', size=20), #colore da modificare #252, 129, 74 255, 200, 87
             mode="markers",
             name="Year of last update",
-            opacity=0.5
+            opacity=0.9
         ))
 
         fig.update_layout(title="Years of first and last update",
@@ -394,7 +400,8 @@ def geography(user_session, p_df):
 
     #ATTENZIONE: FUNZIONA! >> DA CAMBIARE COLORI. BUBBLE PLOT
     fig = px.scatter_geo(country_df, locations="CODE", color = 'count', size="count", 
-        color_continuous_scale = px.colors.sequential.haline, opacity = 0.95)
+        #color_continuous_scale = px.colors.sequential.haline, opacity = 0.95)
+        color_continuous_scale=['rgb(41, 24, 107)', 'rgb(255, 230, 87)'], opacity = 0.95)
 
     fig.update_layout(
         title = 'Map of publications', title_x=0.5,
@@ -479,16 +486,11 @@ def projects_bytes(user_session, e_df, color_palette):
     
 
 
-#report
-def report_ep(user_session, e_df, p_df):
-    
-    # n_colors = 25
-    # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
-    color_palette =['rgb(41, 24, 107)', 'rgb(204, 223, 109)', 'rgb(145, 209, 96)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)']
+def experiment_report(user_session, e_df):
+    color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
     IDs_number(e_df)
     sample_number(user_session, e_df, color_palette)
     IDs_dates(user_session, e_df)
-    publication_title(user_session, p_df, color_palette)
     scientific_name_pie(user_session, e_df, color_palette)
     scientific_name_bar(user_session, e_df, color_palette)
     library_source(user_session, e_df, color_palette)
@@ -499,6 +501,20 @@ def report_ep(user_session, e_df, p_df):
     instrument_platform_bar(user_session, e_df, color_palette)
     library_layout_pie(user_session, e_df, color_palette)
     library_layout_bar(user_session, e_df, color_palette)
-    geography(user_session, p_df)
     projects_bytes(user_session, e_df, color_palette)
 
+#report
+def publication_report(user_session, p_df):
+    color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
+    publication_title(user_session, p_df, color_palette)
+    geography(user_session, p_df)
+    
+    # n_colors = 20
+    # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
+    # print(colors)
+
+    
+    
+    
+
+#'rgb(241, 81, 82)'
