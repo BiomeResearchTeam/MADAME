@@ -4,20 +4,15 @@ from os import path
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
+from plotly.offline import plot
 from Project import Project
 import pycountry
 from collections import Counter
-# import matplotlib.pyplot as plt
-# import geopandas as gpd
-# from geopy.exc import GeocoderTimedOut
-# from geopy.geocoders import Nominatim
-# import numpy as np
-# from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
-# from matplotlib import pyplot as plt
 
 
 def report_generation(user_session):
     while True:
+        Utilities.clear() 
         title = " REPORT MODULE "
         print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         print("\nGenerate a report file about the information present in the downloaded metadata & publications files. \n\nChoose one of the following options:")
@@ -31,28 +26,30 @@ def report_generation(user_session):
             return
 
         elif user_report_input.isnumeric() == False:
-            print(Color.BOLD + Color.RED + "\nWrong input" + Color.END, "expected a numeric input or <main menu> (without <>)\n\n")
+            print(Color.BOLD + Color.RED + "Wrong input" + Color.END, "expected a numeric input or <main menu> (without <>)\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
         elif user_report_input.isnumeric() == True:
             user_report_input = int(user_report_input)
             if user_report_input not in (1,2):
-                print("Error, enter a valid choice!\n")
-                return
+                print(Color.BOLD + Color.RED +"Error" + Color.END,"enter a valid choice!")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
             else:
 
                 if user_report_input == (1):
                     user_session = os.path.join("Downloads", user_session)
-                    print(user_session)
                     
                     file_count = check_files(user_session)
                     if file_count == 0:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder?\n")
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv' and '_merged_publications-metadata.tsv'\n")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
                         experiment_report(user_session, e_df)
+                        final_screen(user_session)
 
 
                     if file_count == 2:
@@ -62,9 +59,11 @@ def report_generation(user_session):
                         p_df = read_publications(user_session, merged_publications)
                         experiment_report(user_session, e_df)
                         publication_report(user_session, p_df)
+                        final_screen(user_session)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
                     
                     
 
@@ -72,12 +71,14 @@ def report_generation(user_session):
                     user_report_local_path = user_report_local()
                     file_count = check_files(user_report_local_path)
                     if file_count == 0:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder?\n")
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv' and '_merged_publications-metadata.tsv'\n")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
                         experiment_report(user_session, e_df)
+                        final_screen(user_session)
 
                     if file_count == 2:
                         merged_experiments = check_file_experiments(user_report_local_path)
@@ -86,24 +87,30 @@ def report_generation(user_session):
                         p_df = read_publications(user_report_local_path, merged_publications)
                         experiment_report(user_session, e_df)
                         publication_report(user_session, p_df)
+                        final_screen(user_session)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
                     
 
 def user_report_local():
     Utilities.clear()
     while True:
-        print("Enter the path for '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
+        title = " REPORT MODULE "
+        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        print("\nEnter the path for '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
         print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_report_local_path = input("\n>> Digit the path: ").strip()
                             
         if path.isdir(user_report_local_path) == False:
             if path.isfile(user_report_local_path) == True:
-                print(Color.BOLD + Color.RED + "Error. " + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files\n\n")
+                print(Color.BOLD + Color.RED + "Error" + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files\n")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
                 return
             else:
-                print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n\n")
+                print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
                 return
         else:
             return user_report_local_path
@@ -482,9 +489,11 @@ def projects_bytes(user_session, e_df, color_palette):
         lenmode="pixels", len=250))
 
     fig.write_image(os.path.join(user_session, "projects_size&bytes_bubble.png"))
+    #plot.plot(fig, filename=os.path.join(user_session, "projects_size&bytes_bubble.html"))
+    fig.write_html(os.path.join(user_session, "projects_size&bytes_bubble.html"))
     
 
-
+#reports
 def experiment_report(user_session, e_df):
     color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
     IDs_number(e_df)
@@ -502,12 +511,16 @@ def experiment_report(user_session, e_df):
     library_layout_bar(user_session, e_df, color_palette)
     projects_bytes(user_session, e_df, color_palette)
 
-#report
 def publication_report(user_session, p_df):
     color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
     publication_title(user_session, p_df, color_palette)
     geography(user_session, p_df)
     
+def final_screen(user_session):
+    print(Color.BOLD + Color.GREEN + '\nReport was successfully created.' + Color.END,'You can find it here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
+    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
+
+
     # n_colors = 20
     # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
     # print(colors)
