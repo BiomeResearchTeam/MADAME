@@ -4,10 +4,10 @@ from os import path
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
-from plotly.offline import plot
 from Project import Project
 import pycountry
 from collections import Counter
+from plotly.subplots import make_subplots #vediamo se serve
 
 
 def report_generation(user_session):
@@ -332,42 +332,75 @@ def instrument_platform_bar(user_session, e_df, color_palette):
         pass
 
 
-def library_layout_pie(user_session, e_df, color_palette): #QUI
+# def library_layout_pie(user_session, e_df, color_palette):     #ACCORPATA IN LIBRARY_LAYOUT SE TUTTO FUNZIONA ELIMINARE
 
-    # n_colors = 25
-    # colors = px.colors.sample_colorscale("turbo", [n/(n_colors -1) for n in range(n_colors)])
-    # fig = go.Figure()
-    # for i, c in enumerate(colors):
-    #     fig.add_bar(x=[i], y = [15], marker_color = c, showlegend = False, name=c)
-    #     print(i)
-    #     print(c)
-    
+#     col = ['library_layout']
+#     if pd.Series(['library_layout']).isin(e_df.columns).all():
+#         library_layout_df = e_df['library_layout'].value_counts()
+#         df = pd.DataFrame(library_layout_df).reset_index()
+#         df.columns = ['Library layout', 'Counts']
+#         fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=color_palette) 
+#         fig.write_image(os.path.join(user_session, "library_layout_pie.png")) 
 
+#     else:
+#         pass
+
+
+# def library_layout_bar(user_session, e_df, color_palette, f):      #ACCORPATA IN LIBRARY_LAYOUT SE TUTTO FUNZIONA ELIMINARE
+#     col = ['library_layout']
+#     if pd.Series(['library_layout']).isin(e_df.columns).all():
+#         library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts()
+#         df_bar = library_layout_IDs_df.rename('count').reset_index()
+#         df_bar.columns = ['Project', 'Library layout', 'Counts']
+#         fig = px.histogram(df_bar, x="Project", y="Counts",
+#                 color='Library layout',
+#                 color_discrete_sequence=color_palette).update_layout(yaxis_title="Number of samples")
+#         fig.write_image(os.path.join(user_session, "library_layout_bar.png"))
+#         fig.write_html(os.path.join(user_session, "library_layout_bar.html"))
+#         # with open('p_graph.html', 'a') as f:
+#         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+#     else:
+#         pass
+
+
+
+def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda, titolo, hoverdata e altri dettagli che non mi vengono in mente ora
     col = ['library_layout']
     if pd.Series(['library_layout']).isin(e_df.columns).all():
         library_layout_df = e_df['library_layout'].value_counts()
-        df = pd.DataFrame(library_layout_df).reset_index()
-        df.columns = ['Library layout', 'Counts']
-        fig = px.pie(df, values='Counts', names='Library layout', color_discrete_sequence=color_palette) 
-        fig.write_image(os.path.join(user_session, "library_layout_pie.png")) 
-
-    else:
-        pass
-
-
-def library_layout_bar(user_session, e_df, color_palette):
-    col = ['library_layout']
-    if pd.Series(['library_layout']).isin(e_df.columns).all():
-        library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts()
+        df_pie = pd.DataFrame(library_layout_df).reset_index()
+        df_pie.columns = ['Library layout', 'Counts']
+        
+        library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts() #SISTEMARE QUESTI DF, SONO RIPETIZIONI
         df_bar = library_layout_IDs_df.rename('count').reset_index()
         df_bar.columns = ['Project', 'Library layout', 'Counts']
-        fig = px.histogram(df_bar, x="Project", y="Counts",
-                color='Library layout',
-                color_discrete_sequence=color_palette,
-                height=400).update_layout(yaxis_title="Number of samples")
-        fig.write_image(os.path.join(user_session, "library_layout_bar.png"))
-    else:
-        pass
+        
+        # list_llayout = list(df_bar['Library layout'])
+        # print(list_llayout)
+        # pd.factorize(list_llayout)
+        # print(pd.factorize(list_llayout))
+        # list_llayout_numbers = pd.factorize(list_llayout)[0]
+        # print(list_llayout_numbers)
+
+        c = dict(zip(df_bar['Library layout'].unique(), color_palette_hex))
+        print(c)
+        df_bar['prova'] = df_bar['Library layout'].map(c)
+        print(df_bar)
+        
+
+        fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
+
+        fig.add_trace(go.Pie(labels=df_pie['Library layout'], values=df_pie['Counts'], hole=0.6, marker_colors= df_pie["Library layout"].map(c)),
+            row=1, col=1)
+        
+        fig.add_trace(go.Bar(x=df_bar["Project"], y = df_bar["Counts"], marker_color = df_bar['prova']),
+             row=1, col=2)
+        
+        fig.update_layout(title_text="Side By Side Subplots")
+        fig.write_image(os.path.join(user_session, "Side By Side Subplots.png"))
+        fig.write_html(os.path.join(user_session, "Side By Side Subplots.html"))
+
 
 
 #WORLD MAP 
@@ -381,7 +414,7 @@ def alpha3code(column): #create a list of ISO3 starting from the column of inter
                 CODE.append('None')
         return CODE
 
-def geography(user_session, p_df):
+def geography(user_session, p_df, f):
     country_list = []
     affiliation_list = p_df['affiliation'].tolist()
     for affiliation in affiliation_list:
@@ -431,10 +464,12 @@ def geography(user_session, p_df):
         line=dict(width=0)))
 
     fig.write_image(os.path.join(user_session, "world_map.png"))
+    # fig.write_html(os.path.join(user_session, "world_map.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
 #PROJECT SIZE & BYTES
-def projects_bytes(user_session, e_df, color_palette):
+def projects_bytes(user_session, e_df, color_palette, f):
     IDs =  e_df['study_accession'].unique().tolist()
     ids_list = []
     bytes_list = []
@@ -471,6 +506,7 @@ def projects_bytes(user_session, e_df, color_palette):
     
     
     fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
+    
 
 
     #BUBBLE PLOT
@@ -489,36 +525,57 @@ def projects_bytes(user_session, e_df, color_palette):
         lenmode="pixels", len=250))
 
     fig.write_image(os.path.join(user_session, "projects_size&bytes_bubble.png"))
-    #plot.plot(fig, filename=os.path.join(user_session, "projects_size&bytes_bubble.html"))
+    
+    # with open('report_graph.html', 'a') as f:
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
     fig.write_html(os.path.join(user_session, "projects_size&bytes_bubble.html"))
     
 
 #reports
 def experiment_report(user_session, e_df):
+    
     color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
-    IDs_number(e_df)
-    sample_number(user_session, e_df, color_palette)
-    IDs_dates(user_session, e_df)
-    scientific_name_pie(user_session, e_df, color_palette)
-    scientific_name_bar(user_session, e_df, color_palette)
-    library_source(user_session, e_df, color_palette)
-    library_source_bar(user_session, e_df, color_palette)
-    library_strategy_pie(user_session, e_df, color_palette)
-    library_strategy_bar(user_session, e_df, color_palette)
-    instrument_platform_pie(user_session, e_df, color_palette)
-    instrument_platform_bar(user_session, e_df, color_palette)
-    library_layout_pie(user_session, e_df, color_palette)
-    library_layout_bar(user_session, e_df, color_palette)
-    projects_bytes(user_session, e_df, color_palette)
+    color_palette_hex =['#29186B', '#FFE657', '#3E9986', '#125C8F', '#91D160']
+    with open(os.path.join(user_session,'report_graph.html'), 'a') as f:
+        IDs_number(e_df)
+        sample_number(user_session, e_df, color_palette)
+        IDs_dates(user_session, e_df)
+        scientific_name_pie(user_session, e_df, color_palette)
+        scientific_name_bar(user_session, e_df, color_palette)
+        library_source(user_session, e_df, color_palette)
+        library_source_bar(user_session, e_df, color_palette)
+        library_strategy_pie(user_session, e_df, color_palette)
+        library_strategy_bar(user_session, e_df, color_palette)
+        instrument_platform_pie(user_session, e_df, color_palette)
+        instrument_platform_bar(user_session, e_df, color_palette)
+        # library_layout_pie(user_session, e_df, color_palette)
+        # library_layout_bar(user_session, e_df, color_palette, f)
+        projects_bytes(user_session, e_df, color_palette, f)
+        library_layout(user_session, e_df, color_palette_hex, f)
 
 def publication_report(user_session, p_df):
-    color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
-    publication_title(user_session, p_df, color_palette)
-    geography(user_session, p_df)
+    with open(os.path.join(user_session,'report_graph.html'), 'a') as f:
+        color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
+        publication_title(user_session, p_df, color_palette)
+        geography(user_session, p_df, f)
     
 def final_screen(user_session):
     print(Color.BOLD + Color.GREEN + '\nReport was successfully created.' + Color.END,'You can find it here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
+
+
+
+# def combine_plotly_figs_to_html(plotly_figs, html_fname, include_plotlyjs='cdn', 
+#                                 separator=None, auto_open=False):
+#     with open(html_fname, 'w') as f:
+#         f.write(plotly_figs[0].to_html(include_plotlyjs=include_plotlyjs))
+#         for fig in plotly_figs[1:]:
+#             if separator:
+#                 f.write(separator)
+#             f.write(fig.to_html(full_html=False, include_plotlyjs=False))
+
+
 
 
     # n_colors = 20
