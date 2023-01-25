@@ -7,7 +7,8 @@ import plotly.express as px
 from Project import Project
 import pycountry
 from collections import Counter
-from plotly.subplots import make_subplots #vediamo se serve
+from plotly.subplots import make_subplots
+import numpy as np
 
 
 def report_generation(user_session):
@@ -365,7 +366,7 @@ def instrument_platform_bar(user_session, e_df, color_palette):
 
 
 
-def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda, titolo, hoverdata e altri dettagli che non mi vengono in mente ora
+def library_layout(user_session, e_df, color_palette_hex, f):
     col = ['library_layout']
     if pd.Series(['library_layout']).isin(e_df.columns).all():
         library_layout_df = e_df['library_layout'].value_counts()
@@ -377,37 +378,30 @@ def library_layout(user_session, e_df, color_palette_hex, f): #sistemare legenda
         df_bar.columns = ['Project', 'Library layout', 'Counts']
 
         color_dictionary = dict(zip(df_bar['Library layout'].unique(), color_palette_hex)) #associate column values to color
-        # print(c)
         df_bar['Color'] = df_bar['Library layout'].map(color_dictionary) #create a new column based on the dictionary
-        # print(df_bar)
         
-
         fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
         
         library_layout_list = list(df_pie["Library layout"])
         count_list = list(df_pie['Counts'])
         
-
-        fig.add_trace(go.Pie(labels=library_layout_list, values=count_list, hole=0.6, 
+        fig.add_trace(go.Pie(labels=df_pie["Library layout"], values=df_pie['Counts'], hole=0.6, 
         marker_colors= df_pie["Library layout"].map(color_dictionary), showlegend=False, 
-        hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>"),
+        hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>", textfont_size=20),
             row=1, col=1)
-        
+
         for c in df_bar['Library layout'].unique(): #to create the legend
-            df_color= df_bar[df_bar['Library layout'] == c]
-            fig.add_trace(go.Bar(x=df_color["Project"], y = df_color["Counts"], marker_color = df_color['Color'], 
-            name= c, showlegend = True),
+            df_color= df_bar[df_bar['Library layout'] == c] #barmode='stack'
+            fig.add_trace(go.Bar(x=df_color["Project"], y = df_color["Counts"], marker_color = df_color['Color'],
+            text = df_color['Library layout'], textposition = "none", name = c, 
+            showlegend = True, hovertemplate = "Layout: %{text} <br>Number of samples: %{y}<extra></extra>"),
             row=1, col=2)
             
         
-        fig.update_layout(title_text="Library layout", title_x=0.5,
-        title_font_size=40,
-        title_font_family='Times New Roman',
-        xaxis_title="project",
-        yaxis_title="number of samples",  hovermode="x unified") #DA CAMBIARE HOVERMODE
-        fig.update_xaxes(title_font=dict(size=20))
-        fig.update_yaxes(title_font=dict(size=20))
-        #fig.update_traces(mode="markers+lines")
+        fig.update_layout(title_text="Library layout", title_x=0.5, title_font = dict(family='Times New Roman', size=40),
+                barmode='stack', legend=dict(title_font_family="Times New Roman", font=dict(size= 20), bordercolor="Gray", borderwidth=1))
+        fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
+        fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
         fig.write_image(os.path.join(user_session, "Library layout.png"))
         fig.write_html(os.path.join(user_session, "Library layout.html"))
 
