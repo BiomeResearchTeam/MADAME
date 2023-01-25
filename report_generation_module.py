@@ -373,7 +373,7 @@ def library_layout(user_session, e_df, color_palette_hex, f):
         df_pie = pd.DataFrame(library_layout_df).reset_index()
         df_pie.columns = ['Library layout', 'Counts']
         
-        library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts() #SISTEMARE QUESTI DF, SONO RIPETIZIONI
+        library_layout_IDs_df = e_df.groupby(['study_accession'])['library_layout'].value_counts()
         df_bar = library_layout_IDs_df.rename('count').reset_index()
         df_bar.columns = ['Project', 'Library layout', 'Counts']
 
@@ -381,9 +381,6 @@ def library_layout(user_session, e_df, color_palette_hex, f):
         df_bar['Color'] = df_bar['Library layout'].map(color_dictionary) #create a new column based on the dictionary
         
         fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
-        
-        library_layout_list = list(df_pie["Library layout"])
-        count_list = list(df_pie['Counts'])
         
         fig.add_trace(go.Pie(labels=df_pie["Library layout"], values=df_pie['Counts'], hole=0.6, 
         marker_colors= df_pie["Library layout"].map(color_dictionary), showlegend=False, 
@@ -397,9 +394,9 @@ def library_layout(user_session, e_df, color_palette_hex, f):
             showlegend = True, hovertemplate = "Layout: %{text} <br>Number of samples: %{y}<extra></extra>"),
             row=1, col=2)
             
-        
         fig.update_layout(title_text="Library layout", title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                barmode='stack', legend=dict(title_font_family="Times New Roman", font=dict(size= 20), bordercolor="Gray", borderwidth=1))
+                barmode='stack', legend_title_text="Library layout<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                bordercolor="lavenderblush", borderwidth=3))
         fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
         fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
         fig.write_image(os.path.join(user_session, "Library layout.png"))
