@@ -58,7 +58,7 @@ def report_generation(user_session):
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
                         report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
-                        final_screen(report_folder)
+                        final_screen(user_session)
 
 
                     if file_count == 2:
@@ -67,7 +67,7 @@ def report_generation(user_session):
                         merged_publications = check_file_publications(user_session)
                         p_df = read_publications(user_session, merged_publications)
                         report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
-                        final_screen(report_folder)
+                        final_screen(user_session)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
@@ -86,7 +86,7 @@ def report_generation(user_session):
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
                         report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
-                        final_screen(report_folder)
+                        final_screen(user_session)
 
                     if file_count == 2:
                         merged_experiments = check_file_experiments(user_report_local_path)
@@ -94,7 +94,7 @@ def report_generation(user_session):
                         merged_publications = check_file_publications(user_report_local_path)
                         p_df = read_publications(user_report_local_path, merged_publications)
                         report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
-                        final_screen(report_folder)
+                        final_screen(user_session)
 
                     if file_count > 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv' & 1 '*_merged_publications-metadata.tsv' ")
@@ -165,36 +165,35 @@ def IDs_number(e_df):
     return IDs_number
 
 
-def sample_number(user_session, e_df, color_palette):
+def sample_number(report_folder, e_df, f):
     sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
     sample_number_df = pd.DataFrame(sample_number_series).reset_index()
     sample_number_df.columns = ['Project', 'Number of samples']
-    fig = px.bar(sample_number_df, x="Project", y="Number of samples", color_discrete_sequence=color_palette).update_layout(yaxis_title="Number of samples") 
-    fig.write_image(os.path.join(user_session, "sample_number.png"))
+    fig = px.bar(sample_number_df, x="Project", y="Number of samples", color="Number of samples", 
+        color_continuous_scale = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+        'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
+        'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
+        'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'])
+    fig.update_layout(title_text='Number of samples', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
+                barmode='stack', legend_title_text="Number of samples<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                bordercolor="lavenderblush", borderwidth=3))
+    fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
+    fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
+    fig.write_image(os.path.join(report_folder, "Sample number.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "Sample number.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         
-
-def publication_title(user_session, p_df,color_palette):
-    p_list_project = p_df.input_accession_id.values.tolist()
-    p_list_title = p_df.title.values.tolist()
-    d = {
-        'Project': p_list_project,
-        'Publication title': p_list_title
-        }
-    df = pd.DataFrame(data=d)
-    file_name = os.path.join(user_session,'Publication_title.xlsx')
-    df.to_excel(file_name)
-
 
 def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
     
     for column in ['scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout']:
         if pd.Series(column).isin(e_df.columns).all():
-            library_layout_df = e_df[column].value_counts()
+            library_layout_df = e_df[column].value_counts() #df for pie
             df_pie = pd.DataFrame(library_layout_df).reset_index()
             column_name = column.capitalize().replace('_', ' ')
             df_pie.columns = [column_name, 'Counts']
             
-            library_layout_IDs_df = e_df.groupby(['study_accession'])[column].value_counts()
+            library_layout_IDs_df = e_df.groupby(['study_accession'])[column].value_counts() #df for bar
             df_bar = library_layout_IDs_df.rename('count').reset_index()
             column_name = column.capitalize().replace('_', ' ')
             df_bar.columns = ['Project', column_name, 'Counts']
@@ -205,20 +204,20 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
             fig = make_subplots(rows=1, cols=2, specs=[[{"type": "pie"}, {"type": "bar"}]])
             
             fig.add_trace(go.Pie(labels=df_pie[column_name], values=df_pie['Counts'], hole=0.6, 
-            marker_colors= df_pie[column_name].map(color_dictionary), showlegend=False, 
-            hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>", textfont_size=20),
+                marker_colors= df_pie[column_name].map(color_dictionary), showlegend=False, 
+                hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>", textfont_size=20),
                 row=1, col=1)
 
             for c in df_bar[column_name].unique(): #to create the legend use loop for
                 df_color= df_bar[df_bar[column_name] == c]
                 fig.add_trace(go.Bar(x=df_color["Project"], y = df_color["Counts"], marker_color = df_color['Color'],
-                text = df_color[column_name], textposition = "none", name = c, 
-                showlegend = True, hovertemplate = "Layout: %{text} <br>Number of samples: %{y}<extra></extra>"),
-                row=1, col=2)
+                    text = df_color[column_name], textposition = "none", name = c, 
+                    showlegend = True, hovertemplate = "Layout: %{text} <br>Number of samples: %{y}<extra></extra>"),
+                    row=1, col=2)
                 
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                    barmode='stack', legend_title_text=f"{column_name}<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
-                    bordercolor="lavenderblush", borderwidth=3))
+                barmode='stack', legend_title_text=f"{column_name}<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                bordercolor="lavenderblush", borderwidth=3))
             fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
             fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
             fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
@@ -226,6 +225,65 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
         else:
             print(f'{column_name} column missing')
+
+
+#PROJECT SIZE & BYTES
+def projects_size(report_folder, e_df, f):
+    IDs =  e_df['study_accession'].unique().tolist()
+    ids_list = []
+    bytes_list = []
+    size_list = []
+
+    for id in IDs:
+        bytes = Project.getProjectBytes(id, e_df, file_type = 'fastq')
+        bytes_list.append(bytes)
+        ids_list.append(id)
+    
+    for bytes in bytes_list:
+        size = Utilities.bytes_converter(bytes)
+        size_list.append(size)
+
+    df = pd.DataFrame({'Project': ids_list, 'Size' : size_list, 'Bytes' : bytes_list})
+    file_name = os.path.join(report_folder,'Project_size.xlsx')
+    df.to_excel(file_name)
+
+    user_Megabytes = []
+    for byte in bytes_list:
+        user_bytes = byte/1024/1024
+        user_Megabytes.append(user_bytes)
+
+    df['User_Megabytes']=user_Megabytes
+
+    #HISTOGRAM >> da eliminare se basta bubble
+    # fig = px.histogram(df, x="Project", y="User_bites", color_discrete_sequence=color_palette)
+    # fig.update_layout(
+    #     title = 'Project size', title_x=0.5,
+    #     title_font_size=25,
+    #     title_font_family='Times New Roman',
+    #     yaxis_title="Bytes")
+    # fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
+   
+    #BUBBLE PLOT
+    fig = px.scatter(df, x='Project', y='User_Megabytes', 
+        size='User_Megabytes', color='User_Megabytes', size_max=100,
+        color_continuous_scale = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+        'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
+        'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
+        'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'], opacity = 0.8)
+
+    fig.update_layout(title = 'Project size', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
+        showlegend = True, coloraxis_colorbar=dict(title="Megabyte", 
+        thicknessmode="pixels", thickness=20,
+        lenmode="pixels", len=700)) #nuovo
+    
+    fig.update_coloraxes(colorbar_title_text="Megabyte", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20) #nuovo
+    fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
+    fig.update_yaxes(title_text= "megabytes",title_font=dict(family='Times New Roman', size=25))
+    fig.update_traces(hovertemplate = "Project: %{x} <br>Megabytes: %{y:,.3f}<br><extra></extra>")
+
+    fig.write_image(os.path.join(report_folder, "Projects size.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "Projects size.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
 def IDs_dates(report_folder, e_df, f):
@@ -248,33 +306,38 @@ def IDs_dates(report_folder, e_df, f):
         fig.add_trace(go.Scatter(
             x=collapsed_e_list_f_x,
             y=collapsed_e_list_f_y,
-            marker=dict(color='rgb(41, 24, 107)', size=30),
+            marker=dict(color='rgb(41, 24, 107)', size=40, 
+                line=dict(color='rgb(41, 24, 107)', width=10)),
             mode="markers",
             name="Year of first update",
-            opacity=0.9
+            opacity=0.65,
+            hovertemplate = "<b>First update </b><br>Project: %{x} <br>Year: %{y}<br><extra></extra>"
         ))
         
         fig.add_trace(go.Scatter(
             x= collapsed_e_list_l_x,
-            y=collapsed_e_list_l_y ,
-            marker=dict(color='rgb(255, 230, 87)', size=30),
+            y=collapsed_e_list_l_y,
+            marker=dict(color='rgb(250, 214, 0)', size=40, 
+                line=dict(color='rgb(250, 214, 0)', width=10)),
             mode="markers",
             name="Year of last update",
-            opacity=0.9
+            opacity=0.65,
+            hovertemplate = "<b>Last update </b><br>Project: %{x} <br>Year: %{y}<br><extra></extra>"
         ))
 
-        fig.update_layout(title="Years of first and last update",
-                        xaxis_title="Projects",
-                        yaxis_title="Year")
-        
-        fig.update_yaxes(type="category", categoryorder='category ascending') #make years as categorical and sort them
-
+        fig.update_layout(title_text="Year of first and last update", title_x=0.5, title_font = dict(family='Times New Roman', size=40),
+                    legend_title_text="Updates<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                    bordercolor="lavenderblush", borderwidth=3),
+                    hovermode='x') #to see both hover labels
+        fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
+        fig.update_yaxes(title_text= "year",title_font=dict(family='Times New Roman', size=25),
+            type="category", categoryorder='category ascending') #make years as categorical and sort them
         fig.write_image(os.path.join(report_folder, "Years update.png"), width=1920, height=1080)
         fig.write_html(os.path.join(report_folder, "Years update.html"))
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
     else:
-        pass
+        print('first_public and last_updated columns missing')
 
 
 #WORLD MAP 
@@ -332,110 +395,57 @@ def geography(report_folder, p_df, f):
     fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
     fig.write_html(os.path.join(report_folder, "Map of publications.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-
-#PROJECT SIZE & BYTES
-def projects_bytes(user_session, e_df, color_palette, f):
-    IDs =  e_df['study_accession'].unique().tolist()
-    ids_list = []
-    bytes_list = []
-    size_list = []
-
-    for id in IDs:
-        bytes = Project.getProjectBytes(id, e_df, file_type = 'fastq')
-        bytes_list.append(bytes)
-        ids_list.append(id)
-    
-    for bytes in bytes_list:
-        size = Utilities.bytes_converter(bytes)
-        size_list.append(size)
-
-    df = pd.DataFrame({'Project': ids_list, 'Size' : size_list, 'Bytes' : bytes_list})
-    file_name = os.path.join(user_session,'Project_size&bytes.xlsx')
-    df.to_excel(file_name)
-
-    user_readable_bytes = []
-    for byte in bytes_list:
-        user_readable_byte = byte/1024/1024
-        user_readable_bytes.append(user_readable_byte)
-
-    df['User_bites']=user_readable_bytes
-
-    fig = px.histogram(df, x="Project", y="User_bites", color_discrete_sequence=color_palette)
-
-    
-    fig.update_layout(
-        title = 'Project size', title_x=0.5,
-        title_font_size=25,
-        title_font_family='Times New Roman',
-        yaxis_title="Bytes")
-    
-    
-    fig.write_image(os.path.join(user_session, "projects_size&bytes_bar.png"))
-    
-
-
-    #BUBBLE PLOT
-    fig = px.scatter(df, x='Project', y='User_bites', 
-        size='User_bites', color='User_bites', size_max=100,
-        color_continuous_scale = px.colors.sequential.haline, opacity = 0.95)
-    
-    fig.update_layout(
-        title = 'Size of project', title_x=0.5,
-        title_font_size=25,
-        title_font_family='Times New Roman',
-        yaxis_title="Megabyte",
-        showlegend = True, 
-        coloraxis_colorbar=dict(title="Megabyte",
-        thicknessmode="pixels", thickness=20,
-        lenmode="pixels", len=250))
-
-    fig.write_image(os.path.join(user_session, "projects_size&bytes_bubble.png"))
-    
-    # with open('report_graph.html', 'a') as f:
-    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-    fig.write_html(os.path.join(user_session, "projects_size&bytes_bubble.html"))
     
 
 #reports
 def report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette):
-
-    with open(os.path.join(user_session,'report_graph.html'), 'a') as f:
-        # IDs_number(e_df)
-        # sample_number(user_session, e_df, color_palette)
+    report_html = os.path.join(user_session,f'Report_{os.path.basename(user_session)}.html')
+    
+    # if os.path.exists(report_html):
+    #     os.remove(report_html)
+    with open(report_html, 'w+') as f:
+            # IDs_number(e_df)
+            
+            
+            # scientific_name_pie(user_session, e_df, color_palette)
+            # scientific_name_bar(user_session, e_df, color_palette)
+            # library_source(user_session, e_df, color_palette)
+            # library_source_bar(user_session, e_df, color_palette)
+            # library_strategy_pie(user_session, e_df, color_palette)
+            # library_strategy_bar(user_session, e_df, color_palette)
+            # # instrument_platform_pie(user_session, e_df, color_palette)
+            # # instrument_platform_bar(user_session, e_df, color_palette)
+            # instrument_platform(report_folder, e_df, color_palette_hex, f)
+            # # library_layout_pie(user_session, e_df, color_palette)
+            # # library_layout_bar(user_session, e_df, color_palette, f)
+            # library_layout(report_folder, e_df, color_palette_hex, f)
+            #publication_title(user_session, p_df, color_palette)
         
-        # scientific_name_pie(user_session, e_df, color_palette)
-        # scientific_name_bar(user_session, e_df, color_palette)
-        # library_source(user_session, e_df, color_palette)
-        # library_source_bar(user_session, e_df, color_palette)
-        # library_strategy_pie(user_session, e_df, color_palette)
-        # library_strategy_bar(user_session, e_df, color_palette)
-        # # instrument_platform_pie(user_session, e_df, color_palette)
-        # # instrument_platform_bar(user_session, e_df, color_palette)
-        # instrument_platform(report_folder, e_df, color_palette_hex, f)
-        # # library_layout_pie(user_session, e_df, color_palette)
-        # # library_layout_bar(user_session, e_df, color_palette, f)
-        # library_layout(report_folder, e_df, color_palette_hex, f) #FATTA
-        # projects_bytes(user_session, e_df, color_palette, f)
+        sample_number(report_folder, e_df, f)
         pie_and_bar_charts(report_folder, e_df, color_palette_hex, f)
+        projects_size(report_folder, e_df, f)
         IDs_dates(report_folder, e_df, f)
-        publication_title(user_session, p_df, color_palette)
         geography(report_folder, p_df, f)
     
-def final_screen(report_folder):
-    print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find it here:', Color.BOLD + Color.YELLOW + f'{report_folder}' + Color.END)
+def final_screen(user_session):
+    print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report in HTML format' + Color.END, 
+    'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'{os.path.basename(user_session)}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
 
 
 
-
-######################################################################################DA ELIMINARE###########################################################################################
-
-# n_colors = 20
-# colors = px.colors.sample_colorscale("haline", [n/(n_colors -1) for n in range(n_colors)])
-# print(colors)
+#######################################################################################PUò SERVIRE?############################################################################################
+# def publication_title(user_session, p_df,color_palette):
+#     p_list_project = p_df.input_accession_id.values.tolist()
+#     p_list_title = p_df.title.values.tolist()
+#     d = {
+#         'Project': p_list_project,
+#         'Publication title': p_list_title
+#         }
+#     df = pd.DataFrame(data=d)
+#     file_name = os.path.join(user_session,'Publication_title.xlsx')
+#     df.to_excel(file_name)
 
 ################################################################VECCHIO MATERIALE SOSTITUITO DA PIE_AND_BAR_CHARTS############################################################################
 # def scientific_name_pie(user_session, e_df, color_palette):

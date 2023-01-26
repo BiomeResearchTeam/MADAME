@@ -25,7 +25,7 @@ class GetPublications:
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
 
-            path = os.path.join("Downloads", user_session, projectID)
+            path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
                 print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
@@ -43,7 +43,7 @@ class GetPublications:
 
                 else:
                     PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
-                    print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f' as {projectID}_publications-metadata.tsv')  
+                    print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
                 
             
 
@@ -356,7 +356,7 @@ class GetPublications:
 
         for projectID in track(listOfProjectIDs, description="Getting text mined terms..."):      
             # Fetching local publications metadata file 
-            publications_metadata = os.path.join("Downloads", user_session, projectID, f'{projectID}_publications-metadata.tsv')
+            publications_metadata = os.path.join(user_session, projectID, f'{projectID}_publications-metadata.tsv') #mod da sara: rimosso download
 
             if os.path.isfile(publications_metadata):
                 metadata_df = pd.read_csv(publications_metadata, sep='\t')
@@ -423,7 +423,7 @@ class GetPublications:
                             dict_list.append(dictionary)
 
                         text_mined_terms_dataframe = pd.DataFrame(dict_list)
-                        text_mined_terms_dataframe.to_csv(os.path.join("Downloads", user_session, projectID, f'{projectID}_{article_id}_text-mined-terms.tsv'), sep="\t") 
+                        text_mined_terms_dataframe.to_csv(os.path.join(user_session, projectID, f'{projectID}_{article_id}_text-mined-terms.tsv'), sep="\t") #mod da sara: rimosso download
                         print(f'Text mined terms saved as {projectID}_{article_id}_text-mined-terms.tsv')  
 
                      
@@ -437,7 +437,7 @@ class GetPublications:
 
     def mergePublicationsMetadata(self, user_session):
 
-            path = (os.path.join("Downloads", user_session))
+            path = user_session #mod da sara: rimosso download
             dataframes = []
 
             for dir in os.listdir(path):

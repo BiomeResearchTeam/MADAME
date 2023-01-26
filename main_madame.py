@@ -37,7 +37,7 @@ def main():
     while True:
         Utilities.log()
         Utilities.clear()
-        madame_logo()
+        madame_logo() #/mnt/c/Users/fmgls/Desktop/MADAME/MADAME-master/Downloads/cutaneous_microbiome
 
         print("\n\n Choose your working session, it will be created in MADAME/Downloads \n")
         print(" 1 - Create new session")
