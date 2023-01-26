@@ -437,12 +437,12 @@ class GetPublications:
 
     def mergePublicationsMetadata(self, user_session):
 
-            path = user_session #mod da sara: rimosso download
+            #path = user_session #mod da sara: rimosso download
             dataframes = []
 
-            for dir in os.listdir(path):
+            for dir in os.listdir(user_session): #mod sara: prima era path
                     tsv = f'{dir}_publications-metadata.tsv'
-                    tsv_path = os.path.join(path, dir, tsv)
+                    tsv_path = os.path.join(user_session, dir, tsv) #mod sara: prima era path
                     if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
                         dataframes.append(pd.read_csv(tsv_path, sep='\t').loc[:, 'project_id':])
 
@@ -451,12 +451,13 @@ class GetPublications:
                 return
 
             merged_dataframe = pd.concat(dataframes)
-            merged_dataframe.to_csv(os.path.join(path, f'{user_session}_merged_publications-metadata.tsv'), sep="\t")
+            print(user_session)
+            merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t") #mod sara: prima era path, aggiunto os.path.basaname
 
-            print(f'{user_session}_merged_publications-metadata.tsv' + Color.BOLD + Color.GREEN + 
-                ' successfully created' + Color.END)
+            # print(f'{user_session}_merged_publications-metadata.tsv' + Color.BOLD + Color.GREEN +  #silenziato da sara
+            #     ' successfully created' + Color.END)
 
-            return
+            # return
 
 
   

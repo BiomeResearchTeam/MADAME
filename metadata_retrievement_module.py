@@ -123,7 +123,8 @@ def metadata_retrievement_file(user_session):
         
        
 def metadata_download(listOfAvailableProjects, user_session):
-    
+
+    Utilities.clear()
     title = " DOWNLOAD METADATA "
     print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
     print("\nChoose one of the following options: \n ")
@@ -159,5 +160,5 @@ def metadata_download(listOfAvailableProjects, user_session):
 def final_screen(user_session):
     print("DOWNLOAD METADATA completed!")
     print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
-    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
+    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
     return

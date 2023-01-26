@@ -46,6 +46,8 @@ def publications_retrievement(user_session):
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
                         publications(e_df, user_session)
+                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                        return 
 
                     if file_count >= 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
@@ -63,6 +65,8 @@ def publications_retrievement(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
+                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                        return 
 
                     if file_count >= 2:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
@@ -106,40 +110,16 @@ def check_file_experiments(user_session):
         if file.endswith("_merged_experiments-metadata.tsv"):
             return file
 
-
 #open tsv
 def read_experiments(user_session, merged_experiments):
     path = os.path.join(user_session, merged_experiments)
     e_df = pd.read_csv (path, delimiter='\t', infer_datetime_format=True)
     return e_df
 
-
 def publications(e_df, user_session):
     listOfProjectIDs = e_df["study_accession"].unique().tolist()
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
-    print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{user_session}_merged_publications-metadata.tsv' + Color.END, 
+    GetPublications.mergePublicationsMetadata(user_session)
+    print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
-    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-
-
-
-            # else: 
-            #     #listOfProjectIDs_path = os.sep.join(os.path.normpath(listOfProjectIDs_abs_path).split(os.sep)[-2:])
-            #     #  with open(listOfProjectIDs_path, 'r') as r:
-            #     #     listOfProjectIDs_reader = csv.reader(r, delimiter='\t')
-            #     #     listOfProjectIDs_list = list(listOfProjectIDs_reader)
-            #     #     listOfProjectIDs = [item for sublist in listOfProjectIDs_list for item in sublist]
-            #     #     GetPublications.runGetPublications(listOfProjectIDs)
-                
-            #     # TEMPORANEO, DA SISTEMARE
-            #     e_df = pd.read_csv(listOfProjectIDs_abs_path, delimiter='\t', infer_datetime_format=True)
-            #     listOfProjectIDs = e_df["study_accession"].unique().tolist()
-            #     GetPublications.runGetPublications(listOfProjectIDs, user_session)
-
-            #     input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-                
-            #     return
-
-
-# da strutturare come data retrievement module..
-# checkTSV entra in un loop di file not found    
+     

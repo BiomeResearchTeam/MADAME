@@ -57,7 +57,7 @@ def report_generation(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
-                        report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
+                        report(user_session, report_folder, color_palette_hex ,e_df, p_df = None)
                         final_screen(user_session)
 
 
@@ -66,7 +66,7 @@ def report_generation(user_session):
                         e_df = read_experiments(user_session, merged_experiments)
                         merged_publications = check_file_publications(user_session)
                         p_df = read_publications(user_session, merged_publications)
-                        report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
+                        report(user_session, report_folder, color_palette_hex ,e_df, p_df)
                         final_screen(user_session)
 
                     if file_count > 2:
@@ -85,7 +85,7 @@ def report_generation(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
-                        report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
+                        report(user_session, report_folder, color_palette_hex ,e_df, p_df = None)
                         final_screen(user_session)
 
                     if file_count == 2:
@@ -93,7 +93,7 @@ def report_generation(user_session):
                         e_df = read_experiments(user_report_local_path, merged_experiments)
                         merged_publications = check_file_publications(user_report_local_path)
                         p_df = read_publications(user_report_local_path, merged_publications)
-                        report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette)
+                        report(user_session, report_folder, color_palette_hex ,e_df, p_df)
                         final_screen(user_session)
 
                     if file_count > 2:
@@ -274,7 +274,7 @@ def projects_size(report_folder, e_df, f):
     fig.update_layout(title = 'Project size', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
         showlegend = True, coloraxis_colorbar=dict(title="Megabyte", 
         thicknessmode="pixels", thickness=20,
-        lenmode="pixels", len=700)) #nuovo
+        lenmode="pixels", len=500))
     
     fig.update_coloraxes(colorbar_title_text="Megabyte", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20) #nuovo
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
@@ -352,53 +352,57 @@ def alpha3code(column): #create a list of ISO3 starting from the column of inter
         return CODE
 
 def geography(report_folder, p_df, f):
-    country_list = []
-    affiliation_list = p_df['affiliation'].tolist()
-    for affiliation in affiliation_list:
-        for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-            if country.name in affiliation:
-                country_list.append(country.name)
     
-    input =  country_list
-    c = Counter(input) #counter of countries
-    country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
-    country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
-    country_df.columns = ['Country', 'Count', 'CODE']
-
-    fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
-        color_continuous_scale=['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
-        'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
-        'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
-        'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'], opacity = 0.95, size_max=30,
-        hover_data = {'CODE':False,'Country':True,'Count': True})
+    try:
+        country_list = []
+        affiliation_list = p_df['affiliation'].tolist()
+        for affiliation in affiliation_list:
+            for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+                if country.name in affiliation:
+                    country_list.append(country.name)
         
+        input =  country_list
+        c = Counter(input) #counter of countries
+        country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
+        country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
+        country_df.columns = ['Country', 'Count', 'CODE']
 
-    fig.update_layout(
-        title = 'Map of publications', title_x=0.5,
-        title_font = dict(family='Times New Roman', size=40),
-        showlegend = True, coloraxis_colorbar=dict(title="Number of <br>publications", 
-        thicknessmode="pixels", thickness=20,
-        lenmode="pixels", len=700))
-    
-    fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
-        colorbar_dtick=1) #only integers number separated by 1
+        fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
+            color_continuous_scale=['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+            'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
+            'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
+            'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'], opacity = 0.95, size_max=30,
+            hover_data = {'CODE':False,'Country':True,'Count': True})
+            
 
-    fig.update_geos(scope='world',
-        visible=False,
-        showcoastlines=True, coastlinecolor="#F6F6F4",
-        showocean=True, oceancolor='#98BAD8',
-        showland=True, landcolor="#F6F6F4", 
-        projection_type = 'natural earth')
+        fig.update_layout(
+            title = 'Map of publications', title_x=0.5,
+            title_font = dict(family='Times New Roman', size=40),
+            showlegend = True, coloraxis_colorbar=dict(title="Number of <br>publications", 
+            thicknessmode="pixels", thickness=20,
+            lenmode="pixels", len=500))
+        
+        fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
+            colorbar_dtick=1) #only integers number separated by 1
 
-    fig.update_traces(marker=dict(line=dict(width=0)))
+        fig.update_geos(scope='world',
+            visible=False,
+            showcoastlines=True, coastlinecolor="#F6F6F4",
+            showocean=True, oceancolor='#98BAD8',
+            showland=True, landcolor="#F6F6F4", 
+            projection_type = 'natural earth')
 
-    fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
-    fig.write_html(os.path.join(report_folder, "Map of publications.html"))
-    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        fig.update_traces(marker=dict(line=dict(width=0)))
+
+        fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
+        fig.write_html(os.path.join(report_folder, "Map of publications.html"))
+        f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    except TypeError:
+        print('"*_merged_publications-metadata.tsv" file missing')
     
 
 #reports
-def report(user_session, report_folder, e_df, p_df, color_palette_hex, color_palette):
+def report(user_session, report_folder, color_palette_hex ,e_df, p_df = None):
     report_html = os.path.join(user_session,f'Report_{os.path.basename(user_session)}.html')
     
     # if os.path.exists(report_html):
