@@ -121,7 +121,7 @@ class GetPublications:
             # Temporary counter. Could become a progress bar?
             print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}") #capire come renderlo utile per user (queried accession id è inutile da sapere per uno user)  ----> cambiare output printato a barre di caricamento e cose simili
 
-            query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core"
+            query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core" 
             # a random user-agent is generated for each query
             headers = {"User-Agent": generate_user_agent()}
             response = s.get(query, headers=headers).content
