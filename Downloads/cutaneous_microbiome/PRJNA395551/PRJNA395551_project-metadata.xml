@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA395551" alias="PRJNA395551" center_name="University of Pennsylvania" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA395551</PRIMARY_ID>
+          <SECONDARY_ID>SRP113697</SECONDARY_ID>
+          <SUBMITTER_ID namespace="University of Pennsylvania">PRJNA395551</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>human skin metagenome</NAME>
+     <TITLE>Cutaneous leishmaniasis induces a transmissible dysbiotic skin microbiota that promotes skin inflammation</TITLE>
+     <DESCRIPTION>Skin microbiota can impact allergic and autoimmune responses, wound healing and anti-microbial defense. We investigated the role of skin commensal microbiota in cutaneous leishmaniasis and found that human patients infected with Leishmania braziliensis develop dysbiotic skin microbiota, characterized by increases in the abundance of Staphylococcus and/or Streptococcus. Mice infected with L. major exhibit similar changes depending upon disease severity. Importantly, this dysbiosis is not limited to the lesion site, but is transmissible to normal skin distant from the infection site, and to skin from co-housed naïve mice. This observation allowed us to test whether a pre-existing dysbiotic skin microbiota influences disease, and we found that challenging dysbiotic naïve mice with L. major or testing for contact hypersensitivity results in exacerbated skin inflammatory responses. These findings demonstrate that a dysbiotic skin microbiota is not only a consequence of tissue stress, but also enhances inflammation, which has implications for many inflammatory cutaneous diseases.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS2391046-SRS2391173</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX3043269-SRX3043396</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR5875753-SRR5875880</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA395551&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA395551&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>395551</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2017-07-26</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

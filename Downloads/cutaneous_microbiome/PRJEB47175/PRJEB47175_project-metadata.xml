@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJEB47175" alias="ena-STUDY-Max Planck Institute for Evolutionary Biology, Ploen, Germany-25-08-2021-11:51:39:178-1353" center_name="Max Planck Institute for Evolutionary Biology, Ploen, Germany">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJEB47175</PRIMARY_ID>
+          <SECONDARY_ID>ERP131433</SECONDARY_ID>
+          <SUBMITTER_ID namespace="Max Planck Institute for Evolutionary Biology, Ploen, Germany">ena-STUDY-Max Planck Institute for Evolutionary Biology, Ploen, Germany-25-08-2021-11:51:39:178-1353</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>Skin microbiota analysis in patients with anorexia nervosa and healthy-weight controls reveals microbial indicators of healthy weight and associations with the antimicrobial peptide psoriasin</NAME>
+     <TITLE>Skin microbiota analysis in patients with anorexia nervosa and healthy-weight controls</TITLE>
+     <DESCRIPTION>Anorexia nervosa (AN), a psychiatric condition defined by low body weight for age and height, is associated with numerous dermatological conditions. Yet, clinical observations report that patients with AN do not suffer from infectious skin diseases like those associated with primary malnutrition. Cell-mediated immunity appears to be amplified in AN, however, this proinflammatory state does not sufficiently explain the lower incidence of infections. Antimicrobial peptides (AMPs) are important components of the innate immune system protecting from pathogens and shaping the microbiota. In Drosophila melanogaster starvation precedes increased AMP gene expression. Here, we analyzed skin microbiota in patients with AN and age-matched, healthy-weight controls and investigated the influence of weight gain on microbial community structure. We then correlated features of the skin microbial community with psoriasin and RNase 7, two highly abundant AMPs in human skin, to clarify whether an association between AMPs and skin microbiota exists and whether such a relationship might contribute to the resistance to cutaneous infections observed in AN. We find significant statistical correlations between Shannon diversity and the highly abundant skin AMP psoriasin and bacterial load, respectively. Moreover, we reveal psoriasin significantly associates with Abiotrophia, an indicator for the healthy-weight control group. Additionally, we observe a significant correlation between an individual’s body mass index and Lactobacillus, a microbial indicator of health. Future investigation may help clarify physiological mechanisms that link nutritional intake with skin physiology.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>ERA5916488</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB47175&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB47175&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2022-09-15</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-09-15</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

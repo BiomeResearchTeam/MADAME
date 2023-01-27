@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA541925" alias="PRJNA541925" center_name="Dr. Stanley M Spinola, Microbiology and Immunology, Indiana University School of Medicine" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA541925</PRIMARY_ID>
+          <SECONDARY_ID>SRP197097</SECONDARY_ID>
+          <EXTERNAL_ID namespace="GEO">GSE130901</EXTERNAL_ID>
+          <SUBMITTER_ID namespace="Dr. Stanley M Spinola, Microbiology and Immunology, Indiana University School of Medicine">PRJNA541925</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>Determination of an Interaction Network between an Extracellular Bacterial Pathogen and the Human Host</NAME>
+     <TITLE>Determination of an Interaction Network between an Extracellular Bacterial Pathogen and the Human Host</TITLE>
+     <DESCRIPTION>A major gap in understanding infectious diseases is the lack of information about molecular interaction networks between pathogens and the human host. Haemophilus ducreyi causes the genital ulcer disease chancroid in adults and is a leading cause of cutaneous ulcers in children in the tropics. We developed a model in which human volunteers are infected on the upper arm with H. ducreyi until they develop pustules. To define the H. ducreyi and human interactome, we determined bacterial and host transcriptomic and host metabolomic changes in pustules. We found in vivo H. ducreyi transcripts were distinct from those in the inocula as were host transcripts in pustule and wounded control sites. Many of the upregulated H. ducreyi genes were involved in ascorbic acid and anaerobic metabolism and inorganic ion/nutrient transport. The top 20 significantly expressed human pathways showed that all were involved in immune responses. We generated a bipartite network for interactions between host and bacterial gene transcription; multiple positively correlated networks contained H. ducreyi genes involved in anaerobic metabolism and host genes involved with the immune response. Metabolomic studies showed that pustule and wounded samples had different metabolite compositions; the top ion pathway involved ascorbate and aldarate metabolism, which correlated with the H. ducreyi transcriptional response and upregulation of host genes involved in ascorbic acid recycling. These data show that an interactome exists between H. ducreyi and the human host and suggests that H. ducreyi exploits the metabolic niche created by the host immune response. Overall design: mRNA profiles from four human pustules infected with H. ducreyi from four different volunteers, their four corresponding wound controls, and their four H. ducreyi inocula samples grown to mid-log phase.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>PUBMED</DB>
+                    <ID>31213562</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS4736561-SRS4736572</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX5807090-SRX5807101</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR9029807-SRR9029818</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA541925&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA541925&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>541925</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2019-06-04</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

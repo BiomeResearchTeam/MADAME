@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA532608" alias="PRJNA532608" center_name="Singapore Immunology Network (SIgN), A*STAR" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA532608</PRIMARY_ID>
+          <SECONDARY_ID>SRP192395</SECONDARY_ID>
+          <EXTERNAL_ID namespace="GEO">GSE129738</EXTERNAL_ID>
+          <SUBMITTER_ID namespace="Singapore Immunology Network (SIgN), A*STAR">PRJNA532608</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>A subset of type I conventional dendritic cells control cutaneous bacterial infections through VEGFa-mediated recruitment of neutrophils [bulk RNA-seq]</NAME>
+     <TITLE>A subset of type I conventional dendritic cells control cutaneous bacterial infections through VEGFa-mediated recruitment of neutrophils [bulk RNA-seq]</TITLE>
+     <DESCRIPTION>Skin conventional dendritic cells (cDC) exist as two distinct subsets, cDC1 and cDC2, which maintain the balance of immunity to pathogens and tolerance to self and microbiota. Here we examined the roles of dermal cDC1 and cDC2 during bacterial infection, notably Propionibacterium acnes (P. acnes). cDC1, but not cDC2, regulated the magnitude of the immune response to P. acnes in the murine dermis by controlling neutrophil recruitment to the inflamed site and survival and function therein. Single-cell mRNA sequencing revealed that this regulation relied on secretion of the cytokine VEGFα by a minor subset of activated EpCAM+CD59+Ly6D+ cDC1. Neutrophil recruitment by dermal cDC1 was also observed during S. aureus, BCG or E. coli infection, as well as in a model of bacterial insult in human skin. Thus, skin cDC1 are essential regulators of the innate response in cutaneous immunity, with roles beyond classical antigen presentation. Overall design: Examined the effect of cDC1 (CD103+DC) depletion on neutrophils infiltrating the skin during P. acnes infection.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+          <ORGANISM>
+               <TAXON_ID>10090</TAXON_ID>
+               <SCIENTIFIC_NAME>Mus musculus</SCIENTIFIC_NAME>
+          </ORGANISM>
+     </SUBMISSION_PROJECT>
+     <RELATED_PROJECTS>
+          <RELATED_PROJECT>
+               <PARENT_PROJECT accession="PRJNA532613"/>
+          </RELATED_PROJECT>
+          <RELATED_PROJECT>
+               <PARENT_PROJECT accession="PRJNA9559"/>
+          </RELATED_PROJECT>
+     </RELATED_PROJECTS>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>PUBMED</DB>
+                    <ID>30926233</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS4617788-SRS4617805</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX5676157-SRX5676174</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR8890488-SRR8890505</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA532608&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA532608&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>532608</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2019-04-14</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

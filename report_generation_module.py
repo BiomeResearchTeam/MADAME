@@ -397,8 +397,9 @@ def geography(report_folder, p_df, f):
         fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
         fig.write_html(os.path.join(report_folder, "Map of publications.html"))
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
     except TypeError:
-        print('"*_merged_publications-metadata.tsv" file missing')
+        print('"_merged_publications-metadata.tsv" file missing')
     
 
 #reports

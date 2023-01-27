@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA304155" alias="PRJNA304155" center_name="Alkek Center for Metagenomics and Microbiome Research" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA304155</PRIMARY_ID>
+          <SECONDARY_ID>SRP067274</SECONDARY_ID>
+          <SUBMITTER_ID namespace="Alkek Center for Metagenomics and Microbiome Research">PRJNA304155</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>human skin metagenome</NAME>
+     <TITLE>Gestational age drives development of the preterm cutaneous microbiome in the neonatal period</TITLE>
+     <DESCRIPTION>Development of the skin microbiome in preterm infants in the first 4 weeks of life has not been evaluated. We hypothesized that microbial abundance and diversity of the skin microbiota is a function of gestational age and influenced by clinical variables relevant to the preterm neonate, and compared the skin microbiome between preterm and term infants in the first 4 weeks of life and investigated its determinants in this vulnerable period of life. The microbiome community membership and relative abundance were evaluated by amplification and sequencing the bacterial V3-V5 region of the16S rRNA gene on the 454 GS FLX platform. Therichness, diversity and composition of skin microbial communities increased in direct relationship with gestational age in the first 4 weeks of life. Gestational age-dependent development of the cutaneous microbiome is further influenced by intravenous antibiotic exposure, which decreased community abundance and diversity of bacterial communities. In the preterm neonate, the most abundant phylum was Firmicutes (~ 50%) and the most abundant genus was Staphylococcus. Antibiotic exposure increased abundance of Firmicutes and decreased abundance of Bacteroidetes with increasing duration of exposure. Gestational age, which influences maturity of skin structure and function and determines the environment (neonatal intensive care unit), is the major determinant of the development of the preterm cutaneous microbiome.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+          <ORGANISM>
+               <TAXON_ID>539655</TAXON_ID>
+               <SCIENTIFIC_NAME>human skin metagenome</SCIENTIFIC_NAME>
+          </ORGANISM>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS1204166-SRS1204170</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX1478296-SRX1478300</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR2989871-SRR2989875</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA304155&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA304155&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>304155</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2015-12-02</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

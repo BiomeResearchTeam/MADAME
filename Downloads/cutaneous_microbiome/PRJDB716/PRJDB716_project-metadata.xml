@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJDB716" alias="PRJDB716" center_name="University of California, San Diego" broker_name="DDBJ">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJDB716</PRIMARY_ID>
+          <SECONDARY_ID>DRP000933</SECONDARY_ID>
+          <SUBMITTER_ID namespace="University of California, San Diego">PRJDB716</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>human skin metagenome</NAME>
+     <TITLE>UCSD Skin Microbiome Project</TITLE>
+     <DESCRIPTION>The epithelial surfaces of the human body engage in mutualistic relationships with vast and complex microbial populations. The resident microbiota of the skin is particularly diverse because human skin provides several unique environmental niches that differ in humidity, temperature, pH, antimicrobial peptide composition and lipid content. Previous analyses of the surface microbial composition at different cutaneous sites has established that the capacity to detect microbes is dependent on the specific characteristics of the site sampled and remains relatively stable over time within an individual despite the dramatic changes that often occur in the outside environment. These observations suggest the skin may communicate with microbes at the surface to actively regulate which organisms populate it. Further evidence that communication takes place between surface microbes and deeper host cells comes from data showing that components of the skin commensal microbial community affect the development of the immune system and the physical characteristics of the epidermal barrier. Thus, although it is becoming increasingly accepted that a dynamic interaction takes place between the surface bacteria and the host, it is currently unclear how this can take place if the microbial community resides only on top of a physical barrier devoid of live cells. Below the surface of the stratum corneum there are many cells that are well equipped to detect and respond to microbes. The deep epidermis and dermis is composed of many different specialized cell types that each express unique repertoires of functional pattern-recognition receptors, and these receptors actively respond when exposed to components of microbes in vitro. The influence of surface microbes on cutaneous immune function led us to question the assumption that the skin maintains a complete barrier to bacterial entry, and to hypothesize that that some microbes or their products may penetrate below the stratum corneum and perhaps below the basement membrane of the epidermis. In this study we show that diverse elements of the skin microbiome are present in subcutaneous regions of normal human skin and are therefore directly positioned to influence host behavior.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+          <ORGANISM>
+               <TAXON_ID>539655</TAXON_ID>
+               <SCIENTIFIC_NAME>human skin metagenome</SCIENTIFIC_NAME>
+          </ORGANISM>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>DRS003097-DRS003120</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>DRX002969-DRX002992</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>DRR003662-DRR003685</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJDB716&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJDB716&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>184386</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2013-05-31</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-12</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

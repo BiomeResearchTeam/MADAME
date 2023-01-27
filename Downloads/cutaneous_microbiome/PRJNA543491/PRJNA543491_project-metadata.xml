@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA543491" alias="PRJNA543491" center_name="National Institute of Arthritis and Musculoskeletal and Skin Diseases" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA543491</PRIMARY_ID>
+          <SECONDARY_ID>SRP226826</SECONDARY_ID>
+          <SUBMITTER_ID namespace="National Institute of Arthritis and Musculoskeletal and Skin Diseases">PRJNA543491</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>Skin microbiome from hidradenitis suppurativa patients</NAME>
+     <TITLE>Skin microbiome from hidradenitis suppurativa patients</TITLE>
+     <DESCRIPTION>Hidradenitis Suppurativa (HS) is a prevalent and debilitating inflammatory skin disease. Previous studies have demonstrated skin microbiota perturbations in HS, but how these perturbations relate to disease severity is not understood. We aimed to understand the relationship between clinical disease severity and cutaneous dysbiosis in HS. We recruited 12 adults with physician-confirmed diagnosis of HS and age- and sex-matched healthy adult volunteers (HV). Skin swab samples were collected from predetermined body sites [axilla (Ax), gluteal crease (Gc), inguinal crease (Ic), and inframammary fold (Im)]. DNA was extracted and amplified from the samples, and the V1-V3 hypervariable region of the 16S ribosomal RNA gene was sequenced.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+          <ORGANISM>
+               <TAXON_ID>539655</TAXON_ID>
+               <SCIENTIFIC_NAME>human skin metagenome</SCIENTIFIC_NAME>
+          </ORGANISM>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS5568035-SRS5568117</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX7051175-SRX7051257</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR10341117-SRR10341199</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA543491&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA543491&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>543491</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2019-12-04</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-05-17</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

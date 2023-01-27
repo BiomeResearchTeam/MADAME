@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJEB11661" alias="ena-STUDY-Centre for Molecular and Biomolecular Informatics (Radboudumc Nijmegen)-05-11-2015-10:41:17:578-170" center_name="Centre for Molecular and Biomolecular Informatics (Radboudumc Nijmegen)">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJEB11661</PRIMARY_ID>
+          <SECONDARY_ID>ERP013063</SECONDARY_ID>
+          <SUBMITTER_ID namespace="Centre for Molecular and Biomolecular Informatics (Radboudumc Nijmegen)">ena-STUDY-Centre for Molecular and Biomolecular Informatics (Radboudumc Nijmegen)-05-11-2015-10:41:17:578-170</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>The human skin microbiome in ichthyosis vulgaris</TITLE>
+     <DESCRIPTION>The aim of this study was to investigate the difference in skin microbiome (on the lower leg) between ichthyosis vulgaris (IV) patients and healthy controls. IV patients had homo- or heterozygous filaggrin (FLG) null alleles (loss-of-function mutation), and the additional existence of atopic dermatitis (AD) was diagnosed. Multiplex 454 pyrosequencing of V3 and V4 hyper-variable regions of cutaneous bacterial 16S rRNA was used to define skin microbial communities.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT>
+               <LOCUS_TAG_PREFIX>BN3113</LOCUS_TAG_PREFIX>
+          </SEQUENCING_PROJECT>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>PUBMED</DB>
+                    <ID>27725187</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMISSION</DB>
+                    <ID>ERA530782</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>ERS953958-ERS953984</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>ERX1190129-ERX1190155</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>ERR1110598-ERR1110624</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB11661&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJEB11661&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2015-11-05</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2017-09-08</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

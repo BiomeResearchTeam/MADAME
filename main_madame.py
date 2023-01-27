@@ -69,7 +69,7 @@ def main():
             
         elif module_choice == 2 and not existing_session: 
             print("\n Error: " + Color.BOLD + Color.YELLOW + "MADAME/Downloads" + Color.END + " is empty.")
-            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session.")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to create a new session ")
             new_session()
 
 # FOLDER CREATED BY USER INPUT

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA642893" alias="PRJNA642893" center_name="National Institute of Arthritis and Musculoskeletal and Skin Diseases" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA642893</PRIMARY_ID>
+          <SECONDARY_ID>SRP270928</SECONDARY_ID>
+          <SUBMITTER_ID namespace="National Institute of Arthritis and Musculoskeletal and Skin Diseases">PRJNA642893</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <NAME>human skin metagenome</NAME>
+     <TITLE>Skin microbiome from cutaneous T-cell lymphoma patients and healthy volunteers</TITLE>
+     <DESCRIPTION>Cutaneous T-cell lymphomas (CTCL) are a heterogeneous group of lymphoid malignancies derived from skin-homing T cells. The biology of these malignancies is not fully elucidated, but some microbes have been hypothesized to play roles in malignant T cell transformation in CTCL. Whether the skin microbiome differs between healthy adults and CTCL patients and whether disease stage affects skin microbial communities are not fully understood. To address these questions, we used a shotgun metagenomic sequencing approach to investigate microbial communities at pre-determined, matched skin sites in six CTCL patients (stage IA to IVA1) and ten age- and sex-matched healthy volunteers. DNA was isolated from skin swab samples, and libraries were created for metagenomic sequencing on an Illumina NovaSeq 6000. We observed notable shifts in skin bacterial abundances between CTCL patients and healthy volunteers with increasing trends in the mean relative abundances of Corynebacterium species and decreasing trends in Cutibacterium species on CTCL patient skin.</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SAMPLE</DB>
+                    <ID>SRS6966571-SRS6966591,SRS6966864-SRS6966884,SRS6967072-SRS6967091,SRS7519880-SRS7519884</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-EXPERIMENT</DB>
+                    <ID>SRX8687907-SRX8687927,SRX8688203-SRX8688223,SRX8688411-SRX8688430,SRX9293502-SRX9293506</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-RUN</DB>
+                    <ID>SRR12173144-SRR12173164,SRR12173440-SRR12173460,SRR12173667-SRR12173686,SRR12825864-SRR12825868</ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA642893&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA642893&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>642893</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2021-03-14</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-11-10</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>
