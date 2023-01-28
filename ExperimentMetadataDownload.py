@@ -23,6 +23,8 @@ class Exp_Proj_MetadataDownload:
             self.projectMetadataDownload(projectID, path) 
             self.experimentsMetadataDownload(projectID, path)
         
+        
+        # e se non sono stati scaricati metadati experiment?
         self.mergeExperimentsMetadata(user_session)
 
   

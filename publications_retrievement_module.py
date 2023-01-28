@@ -119,6 +119,7 @@ def read_experiments(user_session, merged_experiments):
 def publications(e_df, user_session):
     listOfProjectIDs = e_df["study_accession"].unique().tolist()
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
+    #e se non è stata trovata nessuna pubblicazione? 
     GetPublications.mergePublicationsMetadata(user_session)
     print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)

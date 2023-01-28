@@ -8,6 +8,7 @@ from rich.progress import track
 from io import StringIO
 from Utilities import Color  #---> RICH
 
+
 # Class for finding publications from sequences' accessions.
 # It returns one .tsv dataframe for each input accession.
 class GetPublications:
@@ -28,7 +29,7 @@ class GetPublications:
             path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
-                print(f'{projectID}_publications-metadata.tsv already exists. Skipping')
+                print(f'{projectID}_publications-metadata.tsv', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
 
             else:
                 accessions_list = self.ENA_Xref_check(projectID)          
@@ -116,10 +117,11 @@ class GetPublications:
             for column in accessions_columns:
                 accessions = metadata_df[column].unique().tolist()
                 accessions_list.extend(accessions)
-
+        
+      
         for queried_accession_id in accessions_list:
-            # Temporary counter. Could become a progress bar?
-            print(f"now querying {queried_accession_id}, id {accessions_list.index(queried_accession_id)+1} out of {len(accessions_list)}") #capire come renderlo utile per user (queried accession id è inutile da sapere per uno user)  ----> cambiare output printato a barre di caricamento e cose simili
+            print(f"{projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})") # come sovrascrivere la precedente linea printata?
+            #capire come renderlo utile per user (queried accession id è inutile da sapere per uno user)  
 
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core" 
             # a random user-agent is generated for each query
@@ -178,7 +180,8 @@ class GetPublications:
                                 value_list = []
                                 for single_value in children.findall(tag_or_XPath):
                                     str = single_value.text
-                                    value_list.append(str)
+                                    if str:
+                                        value_list.append(str)
                                 if value_list:
                                     values = ';'.join(value_list) 
                                     data.append(values)
@@ -342,7 +345,7 @@ class GetPublications:
                         # Build a dictionary from labels and data, append it to dict_list
                         dictionary = dict(zip(labels, data))  
                         dict_list.append(dictionary)
-
+            
 
         if len(dict_list) == 0:
             PMC_pd_dataframe = pd.DataFrame(dict_list) 
