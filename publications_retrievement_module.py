@@ -59,7 +59,7 @@ def publications_retrievement(user_session):
                     user_report_local_path = user_report_local()
                     file_count = check_files(user_report_local_path)
                     if file_count == 0:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv'\n")
+                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file name must end with '_merged_experiments-metadata.tsv'\n")
                         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
                     if file_count == 1:

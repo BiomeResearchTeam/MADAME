@@ -25,14 +25,19 @@ def madame_logo():
     print(Color.PURPLE + "                                                   #################" + Color.END)
 
 
-# prova di spinner
+
+# test doppie barre semplici 
+
+from rich.progress import Progress
 from time import sleep
-from rich.console import Console
 
-console = Console()
+with Progress() as pb:
+    t1 = pb.add_task('inner', total=10)
+    t2 = pb.add_task('outer', total=30)
 
-with console.status("") as status:
-    for x in range(10):
-        status.update(f"[bold green]Working on {x}...")
-        sleep(1)
-
+    for i in range(30):
+        for j in range(10):
+            print(f"Verbose info! {i, j}")
+            sleep(0.1)
+            pb.update(task_id=t1, completed=j + 1)
+        pb.update(task_id=t2, completed=i + 1)
