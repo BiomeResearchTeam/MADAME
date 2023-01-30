@@ -13,8 +13,7 @@ import numpy as np
 
 def report_generation(user_session):
     
-    color_palette =['rgb(41, 24, 107)', 'rgb(255, 230, 87)', 'rgb(62, 153, 134)', 'rgb(18, 92, 143)', 'rgb(145, 209, 96)']
-    color_palette_hex =['#29186B', '#FFE657', '#3E9986', '#125C8F', '#91D160']
+    color_palette_hex = ['#29186B', '#FFE657', 'rgb(145, 209, 96)', 'rgb(97, 189, 115)', 'rgb(71, 165, 130)', 'rgb(56, 140, 135)', 'rgb(39, 117, 137)', 'rgb(18, 92, 143)', 'rgb(22, 62, 155)', 'rgb(42, 30, 138)']
     
     while True:
         Utilities.clear() 
@@ -157,12 +156,66 @@ def read_publications(user_session, merged_publications):
     return p_df
 
 
+#report functions
+def initial_table(report_folder, e_df, p_df, f):
 
-#functions for report
-def IDs_number(e_df):
-    IDs_number = e_df['study_accession'].nunique()
-    print('Number of projects:', IDs_number)
-    return IDs_number
+    first_column = ['Total number of projects', 'Total number of samples', 'Total number of scientific names', 
+        'Total number of library source','Total number of library strategies','Total number of instrument platforms',
+        'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project']
+    second_column = []
+    
+    
+    for column in ['study_accession', 'run_accession','scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout', 'first_public', 'last_updated']:
+        if pd.Series(column).isin(e_df.columns).all():
+            if column == 'run_accession':
+                value = e_df[column].count()
+                second_column.append(value)
+            elif column == 'first_public':
+                e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True)
+                e_df['first_public_year'] = e_df['first_public'].dt.year
+                value_f = e_df['first_public_year'].min()
+                second_column.append(value_f)
+            elif column == 'last_updated':
+                e_df['last_updated'] = pd.to_datetime(e_df['last_updated'],  errors='coerce', infer_datetime_format=True)
+                e_df['last_updated_year'] = e_df['last_updated'].dt.year
+                value_l = e_df['last_updated_year'].max()
+                second_column.append(value_l)
+            else:
+                #f column != ('run_accession', 'first_public', 'last_updated'):
+                value = e_df[column].nunique()
+                second_column.append(value)
+
+    values = [first_column, second_column]
+
+
+    fig = go.Figure(data=[go.Table(
+    columnorder = [1,2],
+    columnwidth = [200,200],
+    header = dict(
+        values = [['DESCRIPTION'],
+                    ['<b></b>']],
+        line_color='#29186B',
+        line_width = 3,
+        fill_color='#29186B',
+        align=['center','center'],
+        font=dict(color='white', family='Times New Roman', size=30),
+        height=40
+    ),
+    cells=dict(
+        values=values,
+        line_color='lavender',
+        line_width = 3,
+        fill_color='white',
+        align=['center', 'center'],
+        font=dict(color='black', family='Times New Roman', size=25),
+        height=35
+        ))
+    ])
+
+    fig.update_layout(title_text='Summary information<br><br><br><br><br><br><br><br>', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
+    fig.write_html(os.path.join(report_folder, "Sample number.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    
 
 
 def sample_number(report_folder, e_df, f):
@@ -175,7 +228,7 @@ def sample_number(report_folder, e_df, f):
         'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
         'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'])
     fig.update_layout(title_text='Number of samples', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                barmode='stack', legend_title_text="Number of samples<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                barmode='stack', legend_title_text="Number of samples<br>", legend=dict(#title_font_family="Times New Roman",#, font=dict(size= 20),
                 bordercolor="lavenderblush", borderwidth=3))
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
     fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
@@ -205,7 +258,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
             
             fig.add_trace(go.Pie(labels=df_pie[column_name], values=df_pie['Counts'], hole=0.6, 
                 marker_colors= df_pie[column_name].map(color_dictionary), showlegend=False, 
-                hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>", textfont_size=20),
+                hovertemplate = "Layout: %{label} <br>Percentage of samples: %{percent}<extra></extra>"),#, textfont_size=20),
                 row=1, col=1)
 
             for c in df_bar[column_name].unique(): #to create the legend use loop for
@@ -216,7 +269,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
                     row=1, col=2)
                 
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                barmode='stack', legend_title_text=f"{column_name}<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                barmode='stack', legend_title_text=f"{column_name}<br>", legend=dict(#title_font_family="Times New Roman",# font=dict(size= 20),
                 bordercolor="lavenderblush", borderwidth=3))
             fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
             fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
@@ -276,7 +329,7 @@ def projects_size(report_folder, e_df, f):
         thicknessmode="pixels", thickness=20,
         lenmode="pixels", len=500))
     
-    fig.update_coloraxes(colorbar_title_text="Megabyte", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20) #nuovo
+    fig.update_coloraxes(colorbar_title_text="Megabyte")#, colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20) #nuovo
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
     fig.update_yaxes(title_text= "megabytes",title_font=dict(family='Times New Roman', size=25))
     fig.update_traces(hovertemplate = "Project: %{x} <br>Megabytes: %{y:,.3f}<br><extra></extra>")
@@ -289,10 +342,10 @@ def projects_size(report_folder, e_df, f):
 def IDs_dates(report_folder, e_df, f):
     cols = ['first_public', 'last_updated']
     if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
-        e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatype
-        e_df['last_updated'] = pd.to_datetime(e_df['last_updated'], errors='coerce', infer_datetime_format=True)
-        e_df['first_public_year'] = e_df['first_public'].dt.year #create a new column with only year
-        e_df['last_updated_year'] = e_df['last_updated'].dt.year
+        # e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True) #convert into datatype
+        # e_df['last_updated'] = pd.to_datetime(e_df['last_updated'], errors='coerce', infer_datetime_format=True)
+        # e_df['first_public_year'] = e_df['first_public'].dt.year #create a new column with only year
+        # e_df['last_updated_year'] = e_df['last_updated'].dt.year
         collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
         collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
         collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
@@ -306,7 +359,7 @@ def IDs_dates(report_folder, e_df, f):
         fig.add_trace(go.Scatter(
             x=collapsed_e_list_f_x,
             y=collapsed_e_list_f_y,
-            marker=dict(color='rgb(41, 24, 107)', size=40, 
+            marker=dict(color='rgb(41, 24, 107)', size=30, 
                 line=dict(color='rgb(41, 24, 107)', width=10)),
             mode="markers",
             name="Year of first update",
@@ -317,7 +370,7 @@ def IDs_dates(report_folder, e_df, f):
         fig.add_trace(go.Scatter(
             x= collapsed_e_list_l_x,
             y=collapsed_e_list_l_y,
-            marker=dict(color='rgb(250, 214, 0)', size=40, 
+            marker=dict(color='rgb(250, 214, 0)', size=30, 
                 line=dict(color='rgb(250, 214, 0)', width=10)),
             mode="markers",
             name="Year of last update",
@@ -326,7 +379,7 @@ def IDs_dates(report_folder, e_df, f):
         ))
 
         fig.update_layout(title_text="Year of first and last update", title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                    legend_title_text="Updates<br>", legend=dict(title_font_family="Times New Roman", font=dict(size= 20),
+                    legend_title_text="Updates<br>", legend=dict(#title_font_family="Times New Roman", #font=dict(size= 20),
                     bordercolor="lavenderblush", borderwidth=3),
                     hovermode='x') #to see both hover labels
         fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
@@ -382,7 +435,7 @@ def geography(report_folder, p_df, f):
             thicknessmode="pixels", thickness=20,
             lenmode="pixels", len=500))
         
-        fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
+        fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", #colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
             colorbar_dtick=1) #only integers number separated by 1
 
         fig.update_geos(scope='world',
@@ -406,26 +459,9 @@ def geography(report_folder, p_df, f):
 def report(user_session, report_folder, color_palette_hex ,e_df, p_df = None):
     report_html = os.path.join(user_session,f'Report_{os.path.basename(user_session)}.html')
     
-    # if os.path.exists(report_html):
-    #     os.remove(report_html)
     with open(report_html, 'w+') as f:
-            # IDs_number(e_df)
-            
-            
-            # scientific_name_pie(user_session, e_df, color_palette)
-            # scientific_name_bar(user_session, e_df, color_palette)
-            # library_source(user_session, e_df, color_palette)
-            # library_source_bar(user_session, e_df, color_palette)
-            # library_strategy_pie(user_session, e_df, color_palette)
-            # library_strategy_bar(user_session, e_df, color_palette)
-            # # instrument_platform_pie(user_session, e_df, color_palette)
-            # # instrument_platform_bar(user_session, e_df, color_palette)
-            # instrument_platform(report_folder, e_df, color_palette_hex, f)
-            # # library_layout_pie(user_session, e_df, color_palette)
-            # # library_layout_bar(user_session, e_df, color_palette, f)
-            # library_layout(report_folder, e_df, color_palette_hex, f)
-            #publication_title(user_session, p_df, color_palette)
-        
+
+        initial_table(report_folder, e_df, p_df, f)
         sample_number(report_folder, e_df, f)
         pie_and_bar_charts(report_folder, e_df, color_palette_hex, f)
         projects_size(report_folder, e_df, f)
