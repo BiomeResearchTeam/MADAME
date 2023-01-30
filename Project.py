@@ -48,19 +48,13 @@ class Project:
         return listOfAvailableProjects
 
 
-    def getProjectBytes(self, projectID, metadata_file, file_type):# = 'default', user_session = None):
+    def getProjectBytes(self, projectID, e_df, file_type): 
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
-        ftp_column = f'{file_type}_ftp'
-       
-        # if metadata_file == 'default':
-        #     # Read experiments metadata
-        #     metadata_file = (os.path.join("Downloads", user_session, f'{projectID}', f'{projectID}_experiments-metadata.tsv'))
-        #     df = pd.read_csv(metadata_file, sep='\t')
+        ftp_column = f'{file_type}_ftp'  
+ 
+        df = e_df.loc[e_df['study_accession'] == projectID]
 
-        # else: 
-        df = metadata_file.loc[metadata_file['study_accession'] == projectID]
-        
         # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
         df1 = df[df[bytes_column].notna()]
 
@@ -82,45 +76,46 @@ class Project:
 
         return bytes
 
-    def getProjectSize(self, projectID, metadata_file, file_type):
-        # Accepted file_types: {submitted,fastq,sra}
-        bytes = self.getProjectBytes(projectID, metadata_file, file_type)
+    def getProjectSize(self, projectID, e_df, file_type):
+
+        bytes = self.getProjectBytes(projectID, e_df, file_type)
         size = Utilities.bytes_converter(bytes)
 
         return size
 
     
-    def getAllRuns(self, user_session, projectID):
+    def getAllRuns(self, projectID, e_df):
 
-        metadata_file = (os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv'))
-        df = pd.read_csv(metadata_file, sep='\t')
-        df1 = df['run_accession'].value_counts().to_frame(name = 'value_counts').reset_index()
-        all_runs = df1['index'].to_list()
+        df = e_df.loc[e_df['study_accession'] == projectID]
+        all_runs = df['run_accession'].unique().tolist()
 
         return all_runs
 
-    def getAvailableRuns(self, user_session, projectID, file_type): 
+    # GET AVAILABLE RUNS FOR A CERTAIN FILE TYPE
+    def getAvailableRuns(self, projectID, e_df, file_type): 
         # Accepted file_types: {submitted,fastq,sra}
-        metadata_file = (os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv')) 
-        df = pd.read_csv(metadata_file, sep='\t') 
+
+        df = e_df.loc[e_df['study_accession'] == projectID]
         df1 = df[df[f'{file_type}_bytes'].notna()]
         df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
-        available_runs = df2['run_accession'].to_list()
+        available_runs = df2['run_accession'].to_list() 
 
         return available_runs
 
-    def getUnavailableRuns(self, user_session,  projectID, file_type):
+    # GET UNAVAILABLE RUNS FOR A CERTAIN FILE TYPE
+    def getUnavailableRuns(self, projectID, e_df, file_type):
         # Accepted file_types: {submitted,fastq,sra}
-        all_runs = self.getAllRuns(user_session, projectID)
-        available_runs = self.getAvailableRuns(user_session, projectID, file_type)
+
+        all_runs = self.getAllRuns(projectID, e_df)
+        available_runs = self.getAvailableRuns(projectID, e_df, file_type)
         subtraction = set(all_runs) - set(available_runs)
         unavailable_runs = list(subtraction)
 
         return unavailable_runs
 
-    def getSubmittedFormat(self, user_session,  projectID):
-        metadata_file = os.path.join("Downloads", user_session, projectID, f'{projectID}_experiments-metadata.tsv')
-        df = pd.read_csv(metadata_file, sep='\t')
+    def getSubmittedFormat(self, projectID, e_df):
+        
+        df = e_df.loc[e_df['study_accession'] == projectID]
         df1 = df['submitted_format'].value_counts().to_frame(name = 'value_counts').reset_index()
         submitted_format = df1['index'].tolist()
         # If there's multiple submitted formats, output will be the list 
@@ -177,4 +172,3 @@ class Project:
         listOfAccessionIDs.to_csv(os.path.join(path, '_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
 Project = Project('Project') 
-

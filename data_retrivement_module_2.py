@@ -50,8 +50,7 @@ def data_retrievement(user_session):
                         else:
                             merged_experiments = check_file_experiments(data_user_session)
                             e_df = read_experiments(data_user_session, merged_experiments)
-                            listOfProjectIDs = e_df["study_accession"].unique().tolist()
-                            SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
+                            SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
                                     
                 if user_data_input == (2):
                     user_data_local(user_session)
@@ -67,8 +66,7 @@ def data_retrievement(user_session):
                     else:
                         merged_experiments = check_file_experiments(user_session)
                         e_df = read_experiments(user_session, merged_experiments)
-                        listOfProjectIDs = e_df.run_accession.values.tolist()   #unique o no?
-                        SequencesDownload.runDownloadData(user_session, listOfProjectIDs, file_type = user_file_type)
+                        SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
                         
 
 def user_data_local(user_session):
