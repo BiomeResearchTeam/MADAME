@@ -116,19 +116,9 @@ class Project:
     def getSubmittedFormat(self, projectID, e_df):
         
         df = e_df.loc[e_df['study_accession'] == projectID]
-        df1 = df['submitted_format'].value_counts().to_frame(name = 'value_counts').reset_index()
-        submitted_format = df1['index'].tolist()
-        # If there's multiple submitted formats, output will be the list 
-        # If not, output will be the only submitted format 
-        if len(submitted_format) == 1:
-            submitted_format = submitted_format[0]
-            return submitted_format
-        elif len(submitted_format) == 0:
-            return None
-        else:
-            return submitted_format
+        submitted_format = df['submitted_format'].unique().tolist()
 
-
+        return submitted_format #list
         
 
     def getProjectInfo(self, user_session, projectID, field):
