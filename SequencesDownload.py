@@ -1,7 +1,7 @@
-import subprocess
 import os
+import subprocess
 from Project import Project
-from rich.progress import track
+#from rich.progress import track
 
 
 class SequencesDownload:
@@ -17,12 +17,11 @@ class SequencesDownload:
 
     # Check file_type availability (not every project has both sra and fastq files available)
         
-        for projectID in track(listOfProjectIDs, description="Downloading..."):
-            print(projectID)
+        #for projectID in track(listOfProjectIDs, description="Downloading..."): ###does not work with stdout and stderr regularlyvprinted
+        for projectID in listOfProjectIDs:
             if Project.getAvailableRuns(user_session, projectID, file_type):
                 print(f'Downloading {projectID}, project {listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}')
                 self.enaBrowserTools(user_session, projectID, file_type)
-                # how to show the output of enaBT??
             else:
                 print(f"ERROR: No available '{file_type}' files for this project.")
 
@@ -31,8 +30,9 @@ class SequencesDownload:
         # Accepted file_types: {submitted,fastq,sra}
 
         path = os.path.join("Downloads", user_session, projectID)
-        
-        subprocess.run(f'enaGroupGet -f {file_type} {projectID} -d {path}', shell=True, capture_output=True, text=True)
+
+        command = f'enaGroupGet -f {file_type} {projectID} -d {path}'
+        subprocess.check_call(command, shell=True, stdout=1, stderr=2)    
 
         ####### da testare con -d path
         
@@ -51,3 +51,7 @@ class SequencesDownload:
 
 
 SequencesDownload = SequencesDownload("SequencesDownload")
+
+
+
+
