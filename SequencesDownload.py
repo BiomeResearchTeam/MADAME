@@ -60,5 +60,5 @@ class SequencesDownload:
 SequencesDownload = SequencesDownload("SequencesDownload")
 
 
-e_df = pd.read_csv("/home/gsoletta/MADAME/Downloads/cutaneous_microbiome/cutaneous_microbiome_merged_experiments-metadata.tsv", delimiter='\t')
-SequencesDownload.runDownloadData("cutaneous_microbiome", e_df, "fastq")
+# e_df = pd.read_csv("/home/gsoletta/MADAME/Downloads/cutaneous_microbiome/cutaneous_microbiome_merged_experiments-metadata.tsv", delimiter='\t')
+# SequencesDownload.runDownloadData("cutaneous_microbiome", e_df, "fastq")
