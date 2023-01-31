@@ -9,6 +9,9 @@ import pycountry
 from collections import Counter
 from plotly.subplots import make_subplots
 import numpy as np
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 
 
 def report_generation(user_session):
@@ -17,8 +20,11 @@ def report_generation(user_session):
     
     while True:
         Utilities.clear() 
-        title = " REPORT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        # title = " REPORT MODULE "
+        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("REPORT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+
         print("\nGenerate a report file about the information present in the downloaded metadata & publications files. \n\nChoose one of the following options:")
         print(" 1 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present in any other location of your computer")
@@ -103,8 +109,11 @@ def report_generation(user_session):
 def user_report_local():
     Utilities.clear()
     while True:
-        title = " REPORT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        # title = " REPORT MODULE "
+        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("REPORT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+        
         print("\nEnter the path for '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
         print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_report_local_path = input("\n>> Digit the path: ").strip()

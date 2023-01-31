@@ -4,13 +4,19 @@ from functions_modules import CheckTSV
 from os import path
 import os
 import pandas as pd
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 
 def data_retrievement(user_session):
 
     while True:
         #Utilities.clear() 
-        title = " DATA RETRIEVEMENT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        #title = " DATA RETRIEVEMENT MODULE "
+        #print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+        
         print("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:")
         print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer")
@@ -62,6 +68,7 @@ def data_retrievement(user_session):
                         e_df = read_experiments(data_user_session, merged_experiments)
                         print()  #riga vuota prima dell'output di enaBT
                         SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
+                        return
                                     
                 if user_data_input == (2):
                     user_data_local(user_session)
@@ -96,6 +103,7 @@ def data_retrievement(user_session):
                         e_df = read_experiments(data_user_session, merged_experiments)
                         print()  #riga vuota prima dell'output di enaBT
                         SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
+                        return
                         
 
 def user_data_local(user_session):

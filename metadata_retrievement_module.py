@@ -7,13 +7,18 @@ from SampleMetadataParser import SampleMetadataParser
 from functions_modules import *
 import time 
 from os import path
-import os
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 
 def metadata_retrievement(user_session):
     while True:
         Utilities.clear() 
-        title = " METADATA RETRIEVEMENT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        # title = " METADATA RETRIEVEMENT MODULE "
+        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("METADATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+
         print("\nHow do you want to retrieve metadata? Choose one of the following options: \n ")
         print(" 1 - Doing a query on ENA ")
         print(" 2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma")
@@ -125,8 +130,11 @@ def metadata_retrievement_file(user_session):
 def metadata_download(listOfAvailableProjects, user_session):
 
     Utilities.clear()
-    title = " DOWNLOAD METADATA "
-    print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    # title = " DOWNLOAD METADATA "
+    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    title = Panel(Text("DOWNLOAD METADATA", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     print("\nChoose one of the following options: \n ")
     print(" 1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)")
     print(" 2 - Download Project and Experiment metadata of the available projects")

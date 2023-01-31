@@ -8,14 +8,19 @@ import time #sara
 import csv
 import os
 from os import path
-
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 
 #QUERY ENA
 
 def UserQueryENAInput():
 
-    title = " QUERY ON ENA "
-    print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    # title = " QUERY ON ENA "
+    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    title = Panel(Text("QUERY ON ENA", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     print("\nExamples of queries:\n"
             "1) skin microbiome ")
     print("2) monkeypox")
@@ -49,8 +54,11 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 #DIGIT ACCESSION CODES
 
 def UserDigitCodesInput():
-    title = " DIGIT LIST OF ACCESSION CODES "
-    print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    # title = " DIGIT LIST OF ACCESSION CODES "
+    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    title = Panel(Text("DIGIT LIST OF ACCESSION CODES", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     print("\n Digit the accession codes you are interested in, separated by comma.")
     print("\nExamples of accession codes:\n", "1) PRJNA689547\n", "2) ERP107880, DRP004449, SRP187334") 
     print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE 
@@ -80,8 +88,11 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
 def UserFileCodesInput():
     
-    title = " INPUT ACCESSION CODES FILE "
-    print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    # title = " INPUT ACCESSION CODES FILE "
+    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
+    title = Panel(Text("INPUT ACCESSION CODES FILE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     print("\n Load a file containing the accession codes you are interested in. File must have .csv or .tsv format.")
     print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE 
             + "main menu" + Color.END + " ---\n")

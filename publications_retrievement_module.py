@@ -4,14 +4,20 @@ from functions_modules import CheckTSV
 import os
 from os import path
 import pandas as pd
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 
 
 def publications_retrievement(user_session):
     
     while True:
         Utilities.clear()  
-        title = " PUBLICATIONS RETRIEVEMENT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        # title = " PUBLICATIONS RETRIEVEMENT MODULE "
+        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+
         print("\nRetrieve the publications that include the projects of your interest. \n\nChoose one of the following options:")
         print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer")
@@ -76,8 +82,11 @@ def publications_retrievement(user_session):
 def user_report_local():
     Utilities.clear()
     while True:
-        title = " PUBLICATIONS RETRIEVEMENT MODULE "
-        print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        # title = " PUBLICATIONS RETRIEVEMENT MODULE "
+        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+        
         print("\nEnter the path for '*_merged_experiments-metadata.tsv' file. \nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.")
         print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_report_local_path = input("\n>> Digit the path: ").strip()

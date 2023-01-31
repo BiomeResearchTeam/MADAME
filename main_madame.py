@@ -5,7 +5,9 @@ from report_generation_module import report_generation
 from data_retrievement_module_2 import data_retrievement
 import os
 from rich.tree import Tree
-from rich import print as tprint
+from rich import print as rich_print
+from rich.panel import Panel
+from rich.text import Text
 import os.path
 
 
@@ -30,7 +32,7 @@ def madame_logo():
     print(Color.PURPLE + "##     ##  ##     ##  ##    ##   ##     ##  " + Color.GREEN + "##     ##  ##" + Color.PURPLE + "######################" + Color.END)
     print(Color.PURPLE + "##     ##  ##     ##  #######    ##     ##  " + Color.GREEN + "##     ##  ########" + Color.PURPLE + "#######**######" + Color.END)
     print(Color.PURPLE + "                                                     ################     ***" + Color.END)
-    print(Color.PURPLE + "                                                   #################" + Color.END)
+    print(Color.PURPLE + "                                                   #################\n" + Color.END)
 
 def main():
 
@@ -39,10 +41,12 @@ def main():
         Utilities.clear()
         madame_logo() #/mnt/c/Users/fmgls/Desktop/MADAME/MADAME-master/Downloads/cutaneous_microbiome
 
-        print("\n\n Choose your working session, it will be created in MADAME/Downloads \n")
+        print("\n Choose your working session, it will be created in MADAME/Downloads \n")
         print(" 1 - Create new session")
         print(" 2 - Continue with existing session") #only if downloads isn't empty..
         print("\n --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
+        rich_print(Panel.fit("[link https://github.com/]:computer: GitHub\n[link https://biome-research-team.mailchimpsites.com/]:dna: Biome Research Team", title="LINKS"))
+        
         while True:
             module_choice = input(">> Enter your option: ")
             if module_choice.isnumeric():
@@ -78,6 +82,8 @@ def new_session():
 
     Utilities.clear()
     madame_logo()
+    title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
 
     print("\n --- How do you want to call the new folder in which the files will be downloaded?\n")
 
@@ -113,8 +119,10 @@ def existing_session():
 
     Utilities.clear()
     madame_logo()
+    title = Panel(Text("CONTINUE WITH EXISTING SESSION", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
 
-    print("\n\n Which existing session do you want to select?\n")
+    print("\n Which existing session do you want to select?\n")
 
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
     
@@ -134,7 +142,7 @@ def existing_session():
         for dir in dirs_branches:
             downloads_branch.add(dir)
 
-        tprint(madame_tree)
+        rich_print(madame_tree)
 
         user_session = ''
         while user_session.strip() == '': # preventing empty inputs (giulia)
@@ -159,6 +167,8 @@ def menu(user_session):
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
         print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---")
         print(" --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
+        rich_print(Panel.fit("[link https://github.com/]:computer: GitHub\n[link https://biome-research-team.mailchimpsites.com/]:dna: Biome Research Team", title="LINKS"))
+
         while True:
             module_choice = input(">> Enter your option: ")
             if module_choice.isnumeric():
