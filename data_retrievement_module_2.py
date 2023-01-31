@@ -42,15 +42,26 @@ def data_retrievement(user_session):
 
                     else:
                         print("\nWhat data format do you want to download? fastq, sra, or submitted")
-                        user_file_type = input(">> Enter your choice: ").strip().lower()
-                        if user_file_type in ("main menu"):
-                            return
-                        elif user_file_type not in ("fastq", "sra", "submitted", "main menu"):
-                            print(Color.BOLD + Color.RED +"Wrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
-                        else:
-                            merged_experiments = check_file_experiments(data_user_session)
-                            e_df = read_experiments(data_user_session, merged_experiments)
-                            SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
+
+                        user_file_type = ''
+                        while user_file_type.strip() == '': # preventing empty inputs (giulia)
+                            user_file_type = str(input(">> Enter your choice: ")).strip().lower()
+                            if user_file_type in ("main menu"):
+                                return
+
+                        while user_file_type not in ("fastq", "sra", "submitted", "main menu"):
+                            print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
+
+                            user_file_type = ''
+                            while user_file_type.strip() == '': # preventing empty inputs (giulia)
+                                user_file_type = str(input(">> Enter your choice: ")).strip().lower()
+                                if user_file_type in ("main menu"):
+                                    return
+
+                        merged_experiments = check_file_experiments(data_user_session)
+                        e_df = read_experiments(data_user_session, merged_experiments)
+                        print()  #riga vuota prima dell'output di enaBT
+                        SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
                                     
                 if user_data_input == (2):
                     user_data_local(user_session)
@@ -64,8 +75,26 @@ def data_retrievement(user_session):
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
                     else:
-                        merged_experiments = check_file_experiments(user_session)
-                        e_df = read_experiments(user_session, merged_experiments)
+                        print("\nWhat data format do you want to download? fastq, sra, or submitted")
+
+                        user_file_type = ''
+                        while user_file_type.strip() == '': # preventing empty inputs (giulia)
+                            user_file_type = str(input(">> Enter your choice: ")).strip().lower()
+                            if user_file_type in ("main menu"):
+                                return
+
+                        while user_file_type not in ("fastq", "sra", "submitted", "main menu"):
+                            print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
+
+                            user_file_type = ''
+                            while user_file_type.strip() == '': # preventing empty inputs (giulia)
+                                user_file_type = str(input(">> Enter your choice: ")).strip().lower()
+                                if user_file_type in ("main menu"):
+                                    return
+
+                        merged_experiments = check_file_experiments(data_user_session)
+                        e_df = read_experiments(data_user_session, merged_experiments)
+                        print()  #riga vuota prima dell'output di enaBT
                         SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
                         
 
@@ -81,10 +110,10 @@ def user_data_local(user_session):
                             
         if path.isdir(user_data_local_path) == False:
             if path.isfile(user_data_local_path) == True:
-                print(Color.BOLD + Color.RED + "Error. " + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
+                print(Color.BOLD + Color.RED + "\nError. " + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
                 return
             else:
-                print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n\n")
+                print(Color.BOLD + Color.RED + "\nFolder not found." + Color.END, " Maybe a typo? Try again\n\n")
                 return
         else:
             return user_data_local_path

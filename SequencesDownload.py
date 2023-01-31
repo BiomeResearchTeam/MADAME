@@ -37,11 +37,24 @@ class SequencesDownload:
                     # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
                     #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
                     for runID in available_runs:
-                        self.enaBT(path, runID, file_type)
-                        # print success message only if the loop didn't finish with an error (how???)
+                        download = self.enaBT(path, runID, file_type)
+
+                        if download == 0:
+                            print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
+                            input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                            return #goes back to data retrievement module
+                    
+                    #####
+                    # INSERIRE QUI UN CHECK SUI FILE SCARICATI (PUO' SUCCEDERE CHE ALCUNI VENGANO SALTATI)
+                    #####
+
+                    print("\nSEQUENCES DOWNLOAD completed!")
+                    print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) # messaggio da modificare ?
+                    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                    return #goes back to data retrievement module - should go back to main menu..
 
                 else:
-                    print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare
+                    print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare ?
 
 
     def enaBT(self, path, runID, file_type):
@@ -49,16 +62,16 @@ class SequencesDownload:
 
         command = f'enaDataGet -f {file_type} {runID} -d {path}'
         try:
-            subprocess.check_call(command, shell=True, stdout=1, stderr=2)
+            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)
             
         except subprocess.CalledProcessError as error:
-            # riprovare il comando di subprocess con lo stesso runID tot volte, e se dà sempre errore solo allora printare l'errore (how???)
-            print("Something went wrong with the download (internet connection, or ENA server overload). Please try again later.") # messaggio da modificare  
-            input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+            # spesso ENA rifiuta la connessione, potremmo riprovare il comando di subprocess con lo stesso runID tot volte, e se dà sempre errore solo allora printare l'errore (how???)     
+            return 0
+            
+
+    def check_files():
 
 
+
+        return
 SequencesDownload = SequencesDownload("SequencesDownload")
-
-
-# e_df = pd.read_csv("/home/gsoletta/MADAME/Downloads/cutaneous_microbiome/cutaneous_microbiome_merged_experiments-metadata.tsv", delimiter='\t')
-# SequencesDownload.runDownloadData("cutaneous_microbiome", e_df, "fastq")

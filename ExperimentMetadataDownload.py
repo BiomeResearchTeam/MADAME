@@ -86,7 +86,7 @@ class Exp_Proj_MetadataDownload:
         merged_dataframe = pd.concat(dataframes)
         merged_dataframe.to_csv(os.path.join(path, f'{user_session}_merged_experiments-metadata.tsv'), sep="\t")
 
-        print(f'{user_session}_merged_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
+        print(f'\n{user_session}_merged_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
             ' successfully created' + Color.END)
 
         return
