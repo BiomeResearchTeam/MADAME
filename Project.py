@@ -3,6 +3,7 @@ import os
 import sys
 import xml.etree.ElementTree as ET
 import pandas as pd
+from rich.progress import track
 from Utilities import Utilities, Color
 
 class Project:
@@ -33,7 +34,7 @@ class Project:
 
         listOfAvailableProjects = []
 
-        for projectID in listOfProjectIDs:
+        for projectID in track(listOfProjectIDs, description= "Checking for availability..."):
             if self.getProjectAvailability(projectID) == True:
                 listOfAvailableProjects.append(projectID)
 

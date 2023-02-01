@@ -42,6 +42,8 @@ def bars():
                 pb.update(task_id=t1, completed=j + 1)
             pb.update(task_id=t2, completed=i + 1)
 
+
+
 def panel():
     from rich import print
     from rich.panel import Panel

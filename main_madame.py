@@ -85,8 +85,6 @@ def new_session():
     title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
-    print("\n --- How do you want to call the new folder in which the files will be downloaded?\n")
-
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
     
     user_session = ''
