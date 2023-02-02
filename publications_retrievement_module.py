@@ -105,9 +105,7 @@ def user_report_local():
 
 #check files
 def check_files(user_session):
-    print(user_session)
     count = 0
-    print(os.listdir(user_session))
     for file in os.listdir(user_session):
         if file.endswith(("_merged_experiments-metadata.tsv")):
             print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}")
@@ -126,7 +124,8 @@ def read_experiments(user_session, merged_experiments):
     return e_df
 
 def publications(e_df, user_session):
-    listOfProjectIDs = e_df["study_accession"].unique().tolist()
+    study_accession = e_df["study_accession"].unique().tolist()
+    listOfProjectIDs = [id for id in study_accession if id is not None]   
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
     #e se non è stata trovata nessuna pubblicazione? 
     GetPublications.mergePublicationsMetadata(user_session)

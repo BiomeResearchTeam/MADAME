@@ -24,8 +24,9 @@ class Exp_Proj_MetadataDownload:
             self.experimentsMetadataDownload(projectID, path)
         
         
-        # e se non sono stati scaricati metadati experiment?
         self.mergeExperimentsMetadata(user_session)
+   
+
 
   
     def projectMetadataDownload(self, projectID, path):
@@ -79,9 +80,11 @@ class Exp_Proj_MetadataDownload:
                 if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
                     dataframes.append(pd.read_csv(tsv_path, sep='\t'))
 
-        # stop if dataframes list is empty
+        # Stop and print message if dataframes list is empty
         if not dataframes:
-            return
+            print(f"\nError: couldn't create {user_session}_merged_experiments-metadata.tsv: " + Color.BOLD + Color.RED + 
+            "no experiments-metadata.tsv file found." + Color.END)   ####messaggio da rivedere
+            return 
 
         merged_dataframe = pd.concat(dataframes)
         merged_dataframe.to_csv(os.path.join(path, f'{user_session}_merged_experiments-metadata.tsv'), sep="\t")
@@ -89,7 +92,6 @@ class Exp_Proj_MetadataDownload:
         print(f'\n{user_session}_merged_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
             ' successfully created' + Color.END)
 
-        return
 
 
 Exp_Proj_MetadataDownload = Exp_Proj_MetadataDownload('Exp_Proj_MetadataDownload')

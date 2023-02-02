@@ -25,7 +25,6 @@ class GetPublications:
         projects_with_no_publication = []   # Is it useful?
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
-
             path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
@@ -451,6 +450,7 @@ class GetPublications:
 
             # stop if dataframes list is empty
             if not dataframes:
+                print(f"\nError: couldn't create {user_session}_merged_publications-metadata.tsv: " + Color.BOLD + Color.RED + "no publications-metadata.tsv file found." + Color.END)   ####messaggio da rivedere
                 return
 
             merged_dataframe = pd.concat(dataframes)
