@@ -171,7 +171,7 @@ def initial_table(report_folder, e_df, p_df, f):
 
     first_column = ['Total number of projects with available metadata', 'Total number of projects with available data', 'Total number of samples', 'Total number of scientific names', 
         'Total number of library source','Total number of library strategies','Total number of instrument platforms',
-        'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project']
+        'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project', 'Total number of countries']
     second_column = []
     
     
@@ -201,6 +201,23 @@ def initial_table(report_folder, e_df, p_df, f):
             else:
                 value = e_df[column].nunique()
                 second_column.append(value)
+
+    for column in ['affiliation']:
+        if pd.Series(column).isin(p_df.columns).all():
+            country_list = []
+            affiliation_list = p_df['affiliation'].tolist()
+            for affiliation in affiliation_list:
+                for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+                    if country.name in affiliation:
+                        country_list.append(country.name)
+            
+            input =  country_list
+            c = Counter(input) #counter of countries
+            country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
+            country_number = country_df['country'].nunique()
+            second_column.append(country_number)
+
+
 
     values = [first_column, second_column]
 
@@ -423,17 +440,41 @@ def alpha3code(column): #create a list of ISO3 starting from the column of inter
 
 def geography(report_folder, p_df, f):
     
+    # for column in ['affiliation']:
+    #     if pd.Series(column).isin(p_df.columns).all():
+    #         p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') # pycountry non riconosce US o USA e quindi non lo include
+            
+            #collapsed_p_df = p_df.groupby(['project_id', 'affiliation']).count()
+
+
+
+
+
     try:
+        p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') #attenzione: sostituire tutti quelli che immaginiamo possano essere scritti in un  modo che pycountry non voglia
+        # qui link: https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
         for affiliation in affiliation_list:
             for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
                 if country.name in affiliation:
                     country_list.append(country.name)
+
+
+        print(country_list)
+        print(p_df['project_id'])
+        p_df['country'] = country_list
+        pd.set_option('display.max_columns', None)
+        pd.set_option('display.max_rows', None)
+        print(p_df)
+
+        collapsed_p_df = p_df.groupby(['project_id', 'country']).count() #CONTINUARE DA QUI: USARE COLLAPSED PER FARE GRAFICO
+
         
         input =  country_list
         c = Counter(input) #counter of countries
         country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
+        country_number = country_df['country'].nunique()
         country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
         country_df.columns = ['Country', 'Count', 'CODE']
 
