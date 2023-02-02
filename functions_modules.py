@@ -43,7 +43,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
     listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
 
-    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "/_listOfAccessionIDs.tsv")
+    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
 
     input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
                 
@@ -76,7 +76,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
     listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
 
-    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "/_listOfAccessionIDs.tsv")
+    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}IDs.tsv")
 
     input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
 

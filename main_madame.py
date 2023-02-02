@@ -8,32 +8,35 @@ from rich.tree import Tree
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+from rich.console import Console
 import os.path
 
 
 def madame_logo():
 
-    print("\n")
-    print(Color.PURPLE + "                                                           ##############" + Color.END)
-    print(Color.PURPLE + "                                                       #####################" + Color.END)       
-    print(Color.PURPLE + "                                                    ##########################" + Color.END)  
-    print(Color.PURPLE + "                                                  #############################" + Color.END) 
-    print(Color.PURPLE + "                                                 ###############################" + Color.END) 
-    print(Color.PURPLE + "                                           ####  ###############################           ╔══════════════════════════════════╗" + Color.END) 
-    print(Color.PURPLE + "                                          ######################################           ║                                  ║" + Color.END) 
-    print(Color.PURPLE + "                                         #######################################           ║        Welcome to " + Color.GREEN + "MADAME" + Color.PURPLE + "!        ║" + Color.END)  
-    print(Color.PURPLE + "                                         ######################################(           ║     ◊ " + Color.UNDERLINE + "M" + Color.END + Color.PURPLE + "et" + Color.UNDERLINE + "ADA" + Color.END + Color.PURPLE + "ta  " + Color.UNDERLINE + "M" + Color.END + Color.PURPLE + "icrobiom" + Color.UNDERLINE + "E" + Color.END + Color.PURPLE + " ◊     ║" + Color.END)  
-    print(Color.PURPLE + "                                         ########################################          ║                                  ║" + Color.END)  
-    print(Color.PURPLE + "##     ##     ###     #######       ###  ###" + Color.GREEN + "##" + Color.PURPLE + "#####" + Color.GREEN + "##" + Color.PURPLE + "##" + Color.GREEN + "########" + Color.PURPLE + "##################          ║ " + Color.ITALIC + "Designed to automate the process ║" + Color.END)  
-    print(Color.PURPLE + "###   ###    ## ##    ##    ##     ## ##  ##" + Color.GREEN + "###" + Color.PURPLE + "###" + Color.GREEN + "###" + Color.PURPLE + "##" + Color.GREEN + "##" + Color.PURPLE + "##########################        ║  " + Color.ITALIC + "of data and metadata retrieval  ║" + Color.END)
-    print(Color.PURPLE + "#### ####   ##   ##   ##     ##   ##   ##  #" + Color.GREEN + "####" + Color.PURPLE + "#" + Color.GREEN + "####" + Color.PURPLE + "##" + Color.GREEN + "##" + Color.PURPLE + "########################          ║                                  ║" + Color.END)
-    print(Color.PURPLE + "## ### ##  ##     ##  ##     ##  ##     ##  " + Color.GREEN + "##" + Color.PURPLE + "#" + Color.GREEN + "###" + Color.PURPLE + "#" + Color.GREEN + "##" + Color.PURPLE + "##" + Color.GREEN + "######" + Color.PURPLE + "###################)          ╚══════════════════════════════════╝" + Color.END)
-    print(Color.PURPLE + "##     ##  #########  ##     ##  #########  " + Color.GREEN + "##" + Color.PURPLE + "#####" + Color.GREEN + "##" + Color.PURPLE + "##" + Color.GREEN + "##" + Color.PURPLE + "######################)" + Color.END)
-    print(Color.PURPLE + "##     ##  ##     ##  ##    ##   ##     ##  " + Color.GREEN + "##     ##  ##" + Color.PURPLE + "######################" + Color.END)
-    print(Color.PURPLE + "##     ##  ##     ##  #######    ##     ##  " + Color.GREEN + "##     ##  ########" + Color.PURPLE + "#######**######" + Color.END)
-    print(Color.PURPLE + "                                                     ################     ***" + Color.END)
-    print(Color.PURPLE + "                                                   #################\n" + Color.END)
+    c = Console()
+    
+    c.print("\n                                                           ##############", style = "magenta")
+    c.print("                                                       #####################", style = "magenta")   
+    c.print("                                                    ##########################", style = "magenta")
+    c.print("                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮", style = "magenta") 
+    c.print("                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │", style = "magenta")
+    c.print("                                           ####  ###############################        │                                 │", style = "magenta")
+    c.print("                                          ######################################        │ [i]Designed to automate the process[/i]│", style = "magenta")
+    c.print("                                         #######################################        │  [i]of data and metadata retrieval[/i] │", style = "magenta") 
+    c.print("                                         ######################################(        │                                 │", style = "magenta")
+    c.print("                                         ########################################       ╰────────────────▼────────────────╯", style = "magenta")  
+    c.print("##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################", style = "magenta")
+    c.print("###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮", style = "magenta")
+    c.print("#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │", style = "magenta")
+    c.print("## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │", style = "magenta")
+    c.print("##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │", style = "magenta")
+    c.print("##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              ╰───────────────────────╯", style = "magenta")
+    c.print("##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######", style = "magenta")
+    c.print("                                                     ################     ***", style = "magenta")
+    c.print("                                                   #################\n", style = "magenta")
 
+    
 def main():
 
     while True:
@@ -45,7 +48,6 @@ def main():
         print(" 1 - Create new session")
         print(" 2 - Continue with existing session") #only if downloads isn't empty..
         print("\n --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
-        rich_print(Panel.fit("[link https://github.com/]:computer: GitHub\n[link https://biome-research-team.mailchimpsites.com/]:dna: Biome Research Team", title="LINKS"))
         
         while True:
             module_choice = input(">> Enter your option: ")
@@ -165,7 +167,6 @@ def menu(user_session):
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
         print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---")
         print(" --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
-        rich_print(Panel.fit("[link https://github.com/]:computer: GitHub\n[link https://biome-research-team.mailchimpsites.com/]:dna: Biome Research Team", title="LINKS"))
 
         while True:
             module_choice = input(">> Enter your option: ")
