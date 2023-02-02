@@ -166,17 +166,26 @@ def read_publications(user_session, merged_publications):
 
 
 #report functions
+#INITIAL TABLE
 def initial_table(report_folder, e_df, p_df, f):
 
-    first_column = ['Total number of projects', 'Total number of samples', 'Total number of scientific names', 
+    first_column = ['Total number of projects with available metadata', 'Total number of projects with available data', 'Total number of samples', 'Total number of scientific names', 
         'Total number of library source','Total number of library strategies','Total number of instrument platforms',
         'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project']
     second_column = []
     
     
-    for column in ['study_accession', 'run_accession','scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout', 'first_public', 'last_updated']:
+    for column in ['study_accession', 'fastq_bytes', 'run_accession','scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout', 'first_public', 'last_updated']:
         if pd.Series(column).isin(e_df.columns).all():
-            if column == 'run_accession':
+            if column == 'fastq_bytes':
+                subset = e_df[['fastq_bytes','submitted_bytes','sra_bytes']]
+                e_df['bytes_availability'] = subset.isna().all(axis=1) #check for empty cells
+                non_available_data_projs = e_df.query("bytes_availability==True")["study_accession"].tolist() #get project corresponding to empty cells
+                non_available_data_projs_norep = [*set(non_available_data_projs)] #remove replicates
+                all_data_projs = e_df['study_accession'].nunique()
+                available_data_projs =  all_data_projs- len(non_available_data_projs_norep)
+                second_column.append(available_data_projs)
+            elif column == 'run_accession':
                 value = e_df[column].count()
                 second_column.append(value)
             elif column == 'first_public':
@@ -190,7 +199,6 @@ def initial_table(report_folder, e_df, p_df, f):
                 value_l = e_df['last_updated_year'].max()
                 second_column.append(value_l)
             else:
-                #f column != ('run_accession', 'first_public', 'last_updated'):
                 value = e_df[column].nunique()
                 second_column.append(value)
 
@@ -356,13 +364,13 @@ def IDs_dates(report_folder, e_df, f):
         # e_df['first_public_year'] = e_df['first_public'].dt.year #create a new column with only year
         # e_df['last_updated_year'] = e_df['last_updated'].dt.year
         collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
-        collapsed_e_df = collapsed_e_df.sort_values(by=['first_public_year'], ascending=True)
-        collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
-        collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
+        collapsed_e_df = collapsed_e_df.sort_values(by=['first_public'], ascending=True)
+        collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public']]
+        collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated']]
         collapsed_e_list_f_x = collapsed_e_df_f.study_accession.values.tolist()
-        collapsed_e_list_f_y = collapsed_e_df_f.first_public_year.values.tolist()
+        collapsed_e_list_f_y = collapsed_e_df_f.first_public.values.tolist()
         collapsed_e_list_l_x = collapsed_e_df_l.study_accession.values.tolist()
-        collapsed_e_list_l_y = collapsed_e_df_l.last_updated_year.values.tolist()
+        collapsed_e_list_l_y = collapsed_e_df_l.last_updated.values.tolist()
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(
