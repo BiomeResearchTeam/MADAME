@@ -37,17 +37,14 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
-                    final_screen(user_session)
                     break
 
                 if metadata_retrievement_choice == 2:
                     metadata_retrievement_digit(user_session)
-                    final_screen(user_session)
                     break
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
-                    final_screen(user_session)
                     break
 
 
@@ -158,11 +155,13 @@ def metadata_download(listOfAvailableProjects, user_session):
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
                 SampleMetadataParser.runParseMetadata(listOfAvailableProjects, user_session)
+                final_screen(user_session)
                 
 
             elif user_metadata_input == 2:
                 
                 Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
+                final_screen(user_session)
 
 
 def final_screen(user_session):
