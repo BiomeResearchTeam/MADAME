@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROJECT_SET>
+<PROJECT accession="PRJNA780434" alias="PRJNA780434" center_name="peking university first hospital" broker_name="NCBI">
+     <IDENTIFIERS>
+          <PRIMARY_ID>PRJNA780434</PRIMARY_ID>
+          <SECONDARY_ID>SRP346114</SECONDARY_ID>
+          <SUBMITTER_ID namespace="peking university first hospital">PRJNA780434</SUBMITTER_ID>
+     </IDENTIFIERS>
+     <TITLE>nail microbiome ITS and 16S</TITLE>
+     <DESCRIPTION>nail microbiome</DESCRIPTION>
+     <SUBMISSION_PROJECT>
+          <SEQUENCING_PROJECT/>
+     </SUBMISSION_PROJECT>
+     <PROJECT_LINKS>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-FASTQ-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA780434&result=read_run&fields=run_accession,fastq_ftp,fastq_md5,fastq_bytes]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+          <PROJECT_LINK>
+               <XREF_LINK>
+                    <DB>ENA-SUBMITTED-FILES</DB>
+                    <ID><![CDATA[https://www.ebi.ac.uk/ena/portal/api/filereport?accession=PRJNA780434&result=read_run&fields=run_accession,submitted_ftp,submitted_md5,submitted_bytes,submitted_format]]></ID>
+               </XREF_LINK>
+          </PROJECT_LINK>
+     </PROJECT_LINKS>
+     <PROJECT_ATTRIBUTES>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-REFSEQ</TAG>
+               <VALUE>N</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>PROJECT-ID</TAG>
+               <VALUE>780434</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>NCBI-PROJECT-TYPE</TAG>
+               <VALUE>SUBMISSION</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-FIRST-PUBLIC</TAG>
+               <VALUE>2021-12-23</VALUE>
+          </PROJECT_ATTRIBUTE>
+          <PROJECT_ATTRIBUTE>
+               <TAG>ENA-LAST-UPDATE</TAG>
+               <VALUE>2022-07-24</VALUE>
+          </PROJECT_ATTRIBUTE>
+     </PROJECT_ATTRIBUTES>
+</PROJECT>
+</PROJECT_SET>

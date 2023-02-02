@@ -160,6 +160,6 @@ class Project:
         Utilities.createDirectory(path)
 
         listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
-        listOfAccessionIDs.to_csv(os.path.join(path, '_listOfAccessionIDs.tsv'), sep="\t", index=False)
+        listOfAccessionIDs.to_csv(os.path.join(path, f'{user_session}_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
 Project = Project('Project') 
