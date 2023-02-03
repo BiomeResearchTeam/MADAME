@@ -28,7 +28,7 @@ class Project:
         return self.ProjectAvailability
 
 
-    def getAvailableProjects(self, listOfProjectIDs):
+    def getAvailableProjects(self, user_session, listOfProjectIDs):
     # Input is the full list of project IDs, output is the list of the available projects.
     # This list is needed for all steps after getting a listOfProjectIDs.
 
@@ -40,11 +40,12 @@ class Project:
 
         
         print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableProjects)), 
-        "out of", str(len(listOfProjectIDs)) + Color.END ,"available projects") #sara
+        "out of", str(len(listOfProjectIDs)) + Color.END ,"available projects")
 
         print("Available projects: ", ', '.join(listOfAvailableProjects), "\n")
 
-
+        logger = Utilities.log("Project", user_session)
+        logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableProjects}")
 
         return listOfAvailableProjects
 
@@ -161,5 +162,8 @@ class Project:
 
         listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         listOfAccessionIDs.to_csv(os.path.join(path, f'{user_session}_listOfAccessionIDs.tsv'), sep="\t", index=False)
+
+        logger = Utilities.log("Project", user_session)
+        logger.debug(f"[LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/{user_session}/{user_session}_listOfAccessionIDs.tsv")
 
 Project = Project('Project') 
