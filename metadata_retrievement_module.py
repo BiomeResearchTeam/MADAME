@@ -38,14 +38,6 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
-<<<<<<< HEAD
-
-                if metadata_retrievement_choice == 2:
-                    metadata_retrievement_digit(user_session)
-
-                if metadata_retrievement_choice == 3:
-                    metadata_retrievement_file(user_session)
-=======
                     
 
                 if metadata_retrievement_choice == 2:
@@ -55,7 +47,6 @@ def metadata_retrievement(user_session):
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
                     
->>>>>>> 6ac9e74c9842a57852fbb9569c84a10aa692ba63
 
 
 def metadata_retrievement_query(user_session):
