@@ -14,7 +14,7 @@ from rich.text import Text
 
 #QUERY ENA
 
-def UserQueryENAInput():
+def UserQueryENAInput(user_session):
 
     # title = " QUERY ON ENA "
     # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
@@ -24,8 +24,9 @@ def UserQueryENAInput():
     print("\nExamples of queries:\n"
             "1) skin microbiome ")
     print("2) monkeypox")
-    print("\n --- If you want to return to the main menu digit: " 
-            + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")   
+    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " 
+            + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")   
 
     user_query_input = ''
     while user_query_input.strip() == '': # preventing empty inputs (giulia)
@@ -52,16 +53,17 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
 #DIGIT ACCESSION CODES
 
-def UserDigitCodesInput():
+def UserDigitCodesInput(user_session):
     # title = " DIGIT LIST OF ACCESSION CODES "
     # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
     title = Panel(Text("DIGIT LIST OF ACCESSION CODES", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
-    print("\n Digit the accession codes you are interested in, separated by comma.")
+    print("\nDigit the accession codes you are interested in, separated by comma.")
     print("\nExamples of accession codes:\n", "1) PRJNA689547\n", "2) ERP107880, DRP004449, SRP187334") 
-    print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE 
-        + "main menu" + Color.END + " ---\n")
+    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
+        + "back" + Color.END + " ---\n")
     user_query_input = str(input(">> Digit your query: "))
     
     return user_query_input
@@ -85,7 +87,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
 #FILE ACCESSION CODES
 
-def UserFileCodesInput():
+def UserFileCodesInput(user_session):
     
     # title = " INPUT ACCESSION CODES FILE "
     # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
@@ -93,8 +95,9 @@ def UserFileCodesInput():
     rich_print(title)
 
     print("\n Load a file containing the accession codes you are interested in. File must have .csv or .tsv format.")
-    print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE 
-            + "main menu" + Color.END + " ---\n")
+    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
+            + "back" + Color.END + " ---\n")
         
     csv_file_input = input(">> Enter your csv or tsv file path: ")
     csv_file_input = csv_file_input.strip()

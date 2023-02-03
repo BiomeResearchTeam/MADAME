@@ -81,7 +81,9 @@ def report_generation(user_session):
                     
 
                 if user_report_input == (2):
-                    user_report_local_path = user_report_local()
+                    user_report_local_path = user_report_local(user_session)
+                    if user_report_local_path == 0:
+                        break
                     file_count = check_files(user_report_local_path)
                     if file_count == 0:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv' and '_merged_publications-metadata.tsv'\n")
@@ -106,7 +108,7 @@ def report_generation(user_session):
                         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     
 
-def user_report_local():
+def user_report_local(user_session):
     Utilities.clear()
     while True:
         # title = " REPORT MODULE "
@@ -115,8 +117,12 @@ def user_report_local():
         rich_print(title)
         
         print("\nEnter the path for '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
-        print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
+        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+        print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_report_local_path = input("\n>> Digit the path: ").strip()
+
+        if user_report_local_path in ("main menu", "MAIN MENU", "Main menu"):
+            return 0
                             
         if path.isdir(user_report_local_path) == False:
             if path.isfile(user_report_local_path) == True:
