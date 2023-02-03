@@ -71,10 +71,11 @@ def data_retrievement(user_session):
                         return
                                     
                 if user_data_input == (2):
-                    user_data_local(user_session)
+                    path = user_data_local(user_session)
+                    if path == 0:
+                        break
                     file_count = check_files(user_session)
                     
-
                     if file_count == 0:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
 
@@ -110,11 +111,12 @@ def user_data_local(user_session):
     Utilities.clear()
     while True:
         print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
-        print("\n --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
+        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+        print("\ --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_data_local_path = input("\n>> Digit the path: ").strip()
 
         if user_data_local_path in ("main menu", "MAIN MENU", "Main menu"):
-            data_retrievement(user_session)
+            return 0
                             
         if path.isdir(user_data_local_path) == False:
             if path.isfile(user_data_local_path) == True:

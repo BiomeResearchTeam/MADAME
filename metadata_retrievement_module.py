@@ -23,7 +23,8 @@ def metadata_retrievement(user_session):
         print(" 1 - Doing a query on ENA ")
         print(" 2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma")
         print(" 3 - Load a file input (tsv or csv) containing list of accession codes, created by the user")
-        print("\n --- If you want to return to the main menu digit: " 
+        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+        print(" --- If you want to return to the main menu digit: " 
         + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
 
         metadata_retrievement_choice = input("\n>> Enter your choice: ")
@@ -37,24 +38,24 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
-                    break
+                    
 
                 if metadata_retrievement_choice == 2:
                     metadata_retrievement_digit(user_session)
-                    break
+                    
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
-                    break
+                    
 
 
 def metadata_retrievement_query(user_session):
     Utilities.clear()
     while True:
 
-        user_query_input = UserQueryENAInput()
+        user_query_input = UserQueryENAInput(user_session)
         
-        if user_query_input in ("main menu", "MAIN MENU", "Main menu"):
+        if user_query_input in ("back", "BACK", "Back"):
             return
 
         else:
@@ -82,9 +83,9 @@ def metadata_retrievement_digit(user_session):
     Utilities.clear()
     while True:
         # clear()
-        user_query_input = UserDigitCodesInput()
+        user_query_input = UserDigitCodesInput(user_session)
 
-        if user_query_input in ("main menu", "MAIN MENU", "Main menu"):
+        if user_query_input in ("back", "BACK", "Back"):
             return
 
         else:
@@ -103,9 +104,9 @@ def metadata_retrievement_digit(user_session):
 def metadata_retrievement_file(user_session):
     Utilities.clear()
     while True:
-        csv_file_input = UserFileCodesInput()
+        csv_file_input = UserFileCodesInput(user_session)
         
-        if csv_file_input in ("main menu", "MAIN MENU", "Main menu"):
+        if csv_file_input in ("back", "BACK", "Back"):
             return
 
         else:
@@ -135,7 +136,8 @@ def metadata_download(listOfAvailableProjects, user_session):
     print("\nChoose one of the following options: \n ")
     print(" 1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)")
     print(" 2 - Download Project and Experiment metadata of the available projects")
-    print("\n --- If you want to return to the METADATA MODULE menu digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
+    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
     user_metadata_input = input("\n>> Enter your choice: ")
         
     if user_metadata_input in ("back", "BACK", "Back"):
