@@ -11,13 +11,13 @@ from rich.text import Text
 from rich.console import Console
 import os.path
 
+user_session = ""
 
 def main():
 
     while True:
-        Utilities.log()
         Utilities.clear()
-        madame_logo() #/mnt/c/Users/fmgls/Desktop/MADAME/MADAME-master/Downloads/cutaneous_microbiome
+        madame_logo() 
 
         print("\n Choose your working session, it will be created in MADAME/Downloads \n")
         print(" 1 - Create new session")
@@ -56,7 +56,7 @@ def main():
 # FOLDER CREATED BY USER INPUT
 
 def new_session():
-
+    
     Utilities.clear()
     madame_logo()
     title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), style = "b magenta")
@@ -83,6 +83,9 @@ def new_session():
     Utilities.createDirectory(os.path.join("Downloads", user_session))
     print("\n Your new folder was succesfully created: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "")
     
+    logger = Utilities.log("main_madame", user_session)
+    logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
+
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
     menu(user_session)
@@ -130,7 +133,6 @@ def existing_session():
 def menu(user_session):
 
     while True:
-        Utilities.log()
         Utilities.clear()
         madame_logo()
 

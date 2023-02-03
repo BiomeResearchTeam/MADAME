@@ -1,6 +1,4 @@
 import re
-import os
-import sys
 import requests as rq
 import pandas as pd
 from Utilities import Utilities, Color
@@ -22,7 +20,7 @@ class GetIDlist:
         self.name = name
     
     
-    def Query(self, user_query, data_type = "projects"):
+    def Query(self, user_session, user_query, data_type = "projects"):
     # Query EBI db. Default data_type is "projects".
     # It can also be set to: "runs", "samples", "studies".
 
@@ -55,7 +53,9 @@ class GetIDlist:
         # Search ID by regex pattern, resulting in listOfProjectIDs
         listOfProjectIDs = re.findall(pattern, self.queryresult)
 
-        #logger.debug(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
+        logger = Utilities.log("IDlist", user_session)
+        logger.debug(f"[QUERY-ON-ENA]: [{user_query}] - [{data_type}]")
+        logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfProjectIDs}")
 
         return listOfProjectIDs
 
@@ -101,15 +101,22 @@ class GetIDlist:
         return listOfProjectIDs, dictionaryOfProjectIDs
 
     
-    def QueryDetails(self, listOfProjectIDs):
+    def QueryDetails(self, user_session, listOfProjectIDs):
     # Prints output for the query search. Has to be called after GetIDlist.Query()
+        
+        logger = Utilities.log("IDlist", user_session)
+        
         total_of_accessions = (len(listOfProjectIDs))
-
+        
         if total_of_accessions == 0:
             print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
             + Color.END, f"for the query: '{self.user_query}'\n")
+            logger.debug(f"[QUERY-DETAILS]: no {self.data_type} found.")
+
         else:
             print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
+            logger.debug(f"[QUERY-DETAILS]: found {total_of_accessions} {self.data_type}.")
+            #print the other details here
 
         # add 'return output' so as to save printed details in a nice format for the log
 

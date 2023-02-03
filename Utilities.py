@@ -39,7 +39,7 @@ class Utilities:
             os.makedirs(new_directory)
 
 
-    def log(self, user_session):
+    def log(self, __name__, user_session):
 
         logger = logging.getLogger(__name__)
 
@@ -59,6 +59,8 @@ class Utilities:
         # Add handlers to the logger
         logger.addHandler(c_handler)
         logger.addHandler(f_handler)
+
+        return logger
 
 
     def clear(self):
