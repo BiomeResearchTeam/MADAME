@@ -37,15 +37,12 @@ def metadata_retrievement(user_session):
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
-                    break
 
                 if metadata_retrievement_choice == 2:
                     metadata_retrievement_digit(user_session)
-                    break
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
-                    break
 
 
 def metadata_retrievement_query(user_session):
