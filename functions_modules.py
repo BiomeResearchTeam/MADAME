@@ -38,8 +38,7 @@ def UserQueryENAInput(user_session):
 
 def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
-    logger = Utilities.log()
-    listOfProjectIDs = GetIDlist.Query(logger, user_query = user_query_input, data_type = user_data_type)
+    listOfProjectIDs = GetIDlist.Query(user_query = user_query_input, data_type = user_data_type)
     GetIDlist.QueryDetails(listOfProjectIDs)
     listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
@@ -70,9 +69,8 @@ def UserDigitCodesInput(user_session):
 
 
 def UserDigitCodesIDlist(user_query_input, user_session):
-    logger = Utilities.log()
 
-    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(logger, user_input = user_query_input)
+    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(user_input = user_query_input)
     GetIDlist.IDlistFromUserInputDetails(dictionaryOfProjectIDs)
     print("\nChecking for their availability...") 
     listOfAvailableProjects = Project.getAvailableProjects(listOfProjectIDs)

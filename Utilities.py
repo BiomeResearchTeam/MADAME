@@ -1,7 +1,6 @@
 import os
 import logging
 import platform
-from os.path import exists
 
 # Utilities classes
 
@@ -40,16 +39,13 @@ class Utilities:
             os.makedirs(new_directory)
 
 
-    def log(self):
-        # Delete log if already present
-        if (exists('./madame_log.log')):
-            os.system('rm ./madame_log.log')
+    def log(self, user_session):
 
         logger = logging.getLogger(__name__)
 
         # Create handlers
         c_handler = logging.StreamHandler()
-        f_handler = logging.FileHandler('./madame_log.log')
+        f_handler = logging.FileHandler(os.path.join('Downloads', user_session, f'{user_session}_log.log'))
         logger.setLevel(logging.DEBUG)
         c_handler.setLevel(logging.INFO) # logger.info for saving to log file and printing nicely (only the message)
         f_handler.setLevel(logging.DEBUG) # logger.debug for ONLY saving log to file - does not print on console

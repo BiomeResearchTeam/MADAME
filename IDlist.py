@@ -22,7 +22,7 @@ class GetIDlist:
         self.name = name
     
     
-    def Query(self, logger, user_query, data_type = "projects"):
+    def Query(self, user_query, data_type = "projects"):
     # Query EBI db. Default data_type is "projects".
     # It can also be set to: "runs", "samples", "studies".
 
@@ -55,13 +55,13 @@ class GetIDlist:
         # Search ID by regex pattern, resulting in listOfProjectIDs
         listOfProjectIDs = re.findall(pattern, self.queryresult)
 
-        #logger.info(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
+        #logger.debug(f"[QUERY-RETRIEVED-IDs]: {', '.join(listOfProjectIDs)}")
 
         return listOfProjectIDs
 
 
 
-    def IDlistFromUserInput(self, logger, user_input):
+    def IDlistFromUserInput(self, user_input):
 
     # Get ID list from a series of accession codes derived from user input.
     # Accession codes need to be entered separated by comma.
@@ -96,7 +96,7 @@ class GetIDlist:
         dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}    
         listOfProjectIDs = runs+samples+studies+projects
     
-        #logger.info(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
+        #logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
         
         return listOfProjectIDs, dictionaryOfProjectIDs
 
