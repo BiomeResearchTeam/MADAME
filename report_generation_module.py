@@ -456,19 +456,25 @@ def geography(report_folder, p_df, f):
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
         for affiliation in affiliation_list:
+            print(affiliation)
             for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
                 if country.name in affiliation:
-                    country_list.append(country.name)
+                    country_list.append(country.name) #punto debole: se non estrae paese da tutte le righe allora lunghezza di lista < della colonna
+                    print(pycountry.countries)
+                    print(country)
+                    print(country.name)
+            # for country not in pycountry.countries:
+                
 
-
-        print(country_list)
-        print(p_df['project_id'])
+        # print(country_list)
+        # print(p_df['project_id'])
         p_df['country'] = country_list
         pd.set_option('display.max_columns', None)
         pd.set_option('display.max_rows', None)
-        print(p_df)
+        # print(p_df)
 
         collapsed_p_df = p_df.groupby(['project_id', 'country']).count() #CONTINUARE DA QUI: USARE COLLAPSED PER FARE GRAFICO
+        print(collapsed_p_df)
 
         
         input =  country_list
