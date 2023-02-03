@@ -12,31 +12,6 @@ from rich.console import Console
 import os.path
 
 
-def madame_logo():
-
-    c = Console()
-    
-    c.print("\n                                                           ##############", style = "magenta")
-    c.print("                                                       #####################", style = "magenta")   
-    c.print("                                                    ##########################", style = "magenta")
-    c.print("                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮", style = "magenta") 
-    c.print("                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │", style = "magenta")
-    c.print("                                           ####  ###############################        │                                 │", style = "magenta")
-    c.print("                                          ######################################        │ [i]Designed to automate the process[/i]│", style = "magenta")
-    c.print("                                         #######################################        │  [i]of data and metadata retrieval[/i] │", style = "magenta") 
-    c.print("                                         ######################################(        │                                 │", style = "magenta")
-    c.print("                                         ########################################       ╰────────────────▼────────────────╯", style = "magenta")  
-    c.print("##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################", style = "magenta")
-    c.print("###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮", style = "magenta")
-    c.print("#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │", style = "magenta")
-    c.print("## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │", style = "magenta")
-    c.print("##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │", style = "magenta")
-    c.print("##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              ╰───────────────────────╯", style = "magenta")
-    c.print("##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######", style = "magenta")
-    c.print("                                                     ################     ***", style = "magenta")
-    c.print("                                                   #################\n", style = "magenta")
-
-    
 def main():
 
     while True:
@@ -198,6 +173,15 @@ def menu(user_session):
 
         if module_choice == 4:  
             data_retrievement(user_session)
+
+
+
+def madame_logo():
+
+    c = Console()
+    c.print("\n                                                           ##############\n                                                       #####################\n                                                    ##########################\n                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮\n                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │\n                                           ####  ###############################        │                                 │\n                                          ######################################        │ [i]Designed to automate the process[/i]│\n                                         #######################################        │  [i]of data and metadata retrieval[/i] │\n                                         ######################################(        │                                 │\n                                         ########################################       ╰────────────────▼────────────────╯\n##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################\n###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮\n#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │\n## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │\n##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │\n##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              ╰───────────────────────╯\n##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######\n                                                     ################     ***\n                                                   #################\n", style = "magenta")
+
+
 
 
 
