@@ -459,6 +459,7 @@ def geography(report_folder, p_df, f):
     try:
         p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') #attenzione: sostituire tutti quelli che immaginiamo possano essere scritti in un  modo che pycountry non voglia
         # qui link: https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
+        # https://stackoverflow.com/questions/15377832/pycountries-convert-country-names-possibly-incomplete-to-countrycodes
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
         for affiliation in affiliation_list:
@@ -469,7 +470,27 @@ def geography(report_folder, p_df, f):
                     print(pycountry.countries)
                     print(country)
                     print(country.name)
-            # for country not in pycountry.countries:
+
+
+        
+
+        # dicts = {}
+        # keys = range(len(p_df.index))
+        # values = p_df['affiliation'].tolist()
+        # for i in keys:
+        #     for x in values:
+        #         for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+        #             if country.name in x:
+        #                 #country_list.append(country.name)
+        #                 dicts[i] = x
+
+        # print(dicts)    
+
+
+
+        # temp_df  = pd.DataFrame(country_list, columns =['affiliation'])
+        # print([i.name for i in list(pycountry.countries)])
+        # print(p_df.affiliation[~temp_df.affiliation.isin([i.name for i in list(pycountry.countries)])])
                 
 
         # print(country_list)
