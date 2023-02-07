@@ -12,7 +12,7 @@ from rich.text import Text
 def data_retrievement(user_session):
 
     while True:
-        ##Utilities.clear() 
+        Utilities.clear() 
         #title = " DATA RETRIEVEMENT MODULE "
         #print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         #Utilities.clear() 
@@ -46,94 +46,6 @@ def data_retrievement(user_session):
             print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
-        
-        
-        # if user_data_input in ("main menu", "MAIN MENU", "Main menu"):
-        #     return
-
-        # elif user_data_input.isnumeric() == False:
-        #     print(Color.BOLD + Color.RED + "\nWrong input" + Color.END, "expected a numeric input or <main menu> (without <>)\n\n")
-
-        # elif user_data_input.isnumeric() == True:
-        #     user_data_input = int(user_data_input)
-        #     if user_data_input not in (1,2):
-        #         print("Error, enter a valid choice!\n")
-        #         return
-
-        #     else:
-#                 if data_download_choice == (1):
-#                     data_user_session = os.path.join("Downloads", user_session)
-#                     file_count = check_files(data_user_session)
-#                     if file_count == 0:
-#                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
-
-#                     elif file_count > 1:
-#                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
-
-#                     else:
-#                         print("\nWhat data format do you want to download? fastq, sra, or submitted")
-
-#                         user_file_type = ''
-#                         while user_file_type.strip() == '': # preventing empty inputs (giulia)
-#                             user_file_type = str(input(">> Enter your choice: ")).strip().lower()
-#                             if user_file_type in ("main menu"):
-#                                 return
-
-#                         while user_file_type not in ("fastq", "sra", "submitted", "main menu"):
-#                             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
-
-#                             user_file_type = ''
-#                             while user_file_type.strip() == '': # preventing empty inputs (giulia)
-#                                 user_file_type = str(input(">> Enter your choice: ")).strip().lower()
-#                                 if user_file_type in ("main menu"):
-#                                     return
-
-#                         merged_experiments = check_file_experiments(data_user_session)
-#                         e_df = read_experiments(data_user_session, merged_experiments)
-#                         print()  #riga vuota prima dell'output di enaBT
-#                         SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
-#                         return
-                                    
-#                 if data_download_choice == (2):
-#                     path = user_data_local(user_session)
-#                     if path == 0:
-#                         break
-#                     file_count = check_files(user_session)
-                    
-#                     if file_count == 0:
-#                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
-
-#                     elif file_count > 1:
-#                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
-
-#                     else:
-#                         print("\nWhat data format do you want to download? fastq, sra, or submitted")
-
-#                         user_file_type = ''
-#                         while user_file_type.strip() == '': # preventing empty inputs (giulia)
-#                             user_file_type = str(input(">> Enter your choice: ")).strip().lower()
-#                             if user_file_type in ("main menu"):
-#                                 return
-
-#                         while user_file_type not in ("fastq", "sra", "submitted", "main menu"):
-#                             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
-
-#                             user_file_type = ''
-#                             while user_file_type.strip() == '': # preventing empty inputs (giulia)
-#                                 user_file_type = str(input(">> Enter your choice: ")).strip().lower()
-#                                 if user_file_type in ("main menu"):
-#                                     return
-
-#                         merged_experiments = check_file_experiments(data_user_session)
-#                         e_df = read_experiments(data_user_session, merged_experiments)
-#                         print()  #riga vuota prima dell'output di enaBT
-#                         SequencesDownload.runDownloadData(user_session, e_df, file_type = user_file_type)
-#                         return
-                        
-
-
-
-
 
 #check files
 def check_files(data_user_session):
@@ -157,6 +69,9 @@ def read_experiments(data_user_session, merged_experiments):
 
 #DATA IN MADAME
 def data_download_MADAME(user_session):
+    Utilities.clear()
+    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
     data_user_session = os.path.join("Downloads", user_session)
     while True: 
         file_count = check_files(data_user_session)
@@ -168,11 +83,15 @@ def data_download_MADAME(user_session):
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
         else:
-            data_download_function(user_session, data_user_session)
+            enaBT_download(user_session, data_user_session)
 
 
 #DATA IN LOCAL PATH
-def data_download_path(user_session):
+def data_download_path(EnaBT_path, user_session):
+    Utilities.clear()
+    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     data_user_session = data_user_local(user_session)
     while True: 
         file_count = check_files(data_user_session)
@@ -184,11 +103,14 @@ def data_download_path(user_session):
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
         else:
-            data_download_function(user_session, data_user_session)
+            enaBT_download(user_session, data_user_session)
 
 
 def data_user_local(user_session):
     Utilities.clear()
+    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
     while True:
         print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
@@ -216,6 +138,9 @@ def data_download_CSV(user_session):
     
     while True:
         Utilities.clear()
+        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+
         user_input_csv = UserFileCodesInput(user_session)
         if user_input_csv in ("back", "BACK", "Back"):
             return
@@ -245,20 +170,77 @@ def data_download_CSV(user_session):
                         filename, file_extension = os.path.splitext(user_input_csv)
                         if file_extension == '.tsv':
                             e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
-                            print()  #riga vuota prima dell'output di enaBT
-                            SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+                            while True:
+                                EnaBT_path = input(">> Digit the path to enaDataGet: ")
+                                filename, file_extension = os.path.splitext(EnaBT_path)
+                                if os.path.basename(os.path.normpath(EnaBT_path)) == 'enaDataGet':
+                                    print()  #riga vuota prima dell'output di enaBT
+                                    SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+
+                                elif os.path.basename(os.path.normpath(EnaBT_path)) == 'python3':
+                                    EnaBT_path = os.path.join(EnaBT_path, 'enaDataGet')
+                                    print()  #riga vuota prima dell'output di enaBT
+                                    SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+                                    
+                                else:
+                                    print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
+                                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                                    continue
+                                
                         if file_extension == '.csv':
                             e_df = pd.read_csv(path, delimiter=',', infer_datetime_format=True)
-                            print()  #riga vuota prima dell'output di enaBT
-                            SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+                            while True:
+                                EnaBT_path = input(">> Digit the path to enaDataGet: ")
+                                filename, file_extension = os.path.splitext(EnaBT_path)
+                                if os.path.basename(os.path.normpath(EnaBT_path)) == 'enaDataGet':
+                                    print()  #riga vuota prima dell'output di enaBT
+                                    SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+
+                                elif os.path.basename(os.path.normpath(EnaBT_path)) == 'python3':
+                                    EnaBT_path = os.path.join(EnaBT_path, 'enaDataGet')
+                                    print()  #riga vuota prima dell'output di enaBT
+                                    SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+                                else:
+                                    print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
+                                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                                    continue
+
+
+#ENABT PATH
+def enaBT_download(user_session, data_user_session): #sara
+        # Accepted file_types: {submitted,fastq,sra}
+
+    while True:
+        Utilities.clear()
+        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+        EnaBT_path = input(">> Digit the path to enaDataGet: ")
+        filename, file_extension = os.path.splitext(EnaBT_path)
+        if os.path.basename(os.path.normpath(EnaBT_path)) == 'enaDataGet':
+            data_download_function(EnaBT_path, user_session, data_user_session)
+                #self.enaBT(path, EnaBT_path, runID, file_type)
+
+        elif os.path.basename(os.path.normpath(EnaBT_path)) == 'python3':
+            EnaBT_path = os.path.join(EnaBT_path, 'enaDataGet')
+            data_download_function(EnaBT_path, user_session, data_user_session)
+                #self.enaBT(path, EnaBT_path, runID, file_type)
             
+        else:
+            print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+            continue
 
 
 #PRINCIPAL DOWNLOAD FUNCTION
-def data_download_function(user_session, data_user_session):
-    
-        print("\nWhat data format do you want to download? fastq, sra, or submitted")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+def data_download_function(EnaBT_path, user_session, data_user_session):
+
+        Utilities.clear()
+        print('\nenaDataGet ', Color.BOLD + Color.GREEN + 'found' + Color.END)
+        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+        rich_print(title)
+
+        print("\nWhat data format do you want to download?", Color.UNDERLINE + "fastq" + Color.END, ",", Color.UNDERLINE + "sra" + Color.END,", or", Color.UNDERLINE + "submitted" + Color.END)
+        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<")
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
         data_download_type = input("\n>> Enter your choice: ").strip().lower()
         if data_download_type in ("main menu"):
@@ -268,13 +250,11 @@ def data_download_function(user_session, data_user_session):
             merged_experiments = check_file_experiments(data_user_session)
             e_df = read_experiments(data_user_session, merged_experiments)
             print()  #riga vuota prima dell'output di enaBT
-            SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+            SequencesDownload.runDownloadData(EnaBT_path, user_session, e_df, file_type = data_download_type)
 
         else:
             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-
-
 
 #FINAL SCREEN                  
 def final_screen(user_session): #trovare dove metterla: penso dentro SequenceDownload

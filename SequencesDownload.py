@@ -13,12 +13,11 @@ class SequencesDownload:
         self.name = name
 
     
-    def runDownloadData(self, user_session, e_df, file_type):
+    def runDownloadData(self, EnaBT_path, user_session, e_df, file_type):
     # Accepted file_types: {submitted,fastq,sra}
     # It needs enaBrowserTools scripts already installed: 
     # https://github.com/enasequence/enaBrowserTools#installing-and-running-the-scripts
-
-    
+        
         listOfProjectIDs = e_df['study_accession'].unique().tolist()
         
         for projectID in listOfProjectIDs:
@@ -37,8 +36,8 @@ class SequencesDownload:
                     # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
                     #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
                     for runID in available_runs:
-                        #download = self.enaBT(path, runID, file_type) silenziato da sara
-                        download = self.enaBT_path(path, runID, file_type)
+                        download = self.enaBT(path, EnaBT_path, runID, file_type) #silenziato da sara
+                        #download = self.enaBT_path(path, runID, file_type)
 
                         if download == 0:
                             print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
@@ -58,27 +57,9 @@ class SequencesDownload:
                     print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare ?
 
 
-    def enaBT_path(self, path, runID, file_type): #sara
-        # Accepted file_types: {submitted,fastq,sra}
-
-        while True:
-            EnaBT_path = input(">> Digit the path to enaDataGet: ")
-            filename, file_extension = os.path.splitext(EnaBT_path)
-            if os.path.basename(os.path.normpath(EnaBT_path)) == 'enaDataGet':
-                self.enaBT(path, EnaBT_path, runID, file_type)
-
-            elif os.path.basename(os.path.normpath(EnaBT_path)) == 'python3':
-                EnaBT_path = os.path.join(EnaBT_path, 'enaDataGet')
-                self.enaBT(path, EnaBT_path, runID, file_type)
-            
-            else:
-                print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-                continue
-
-
     
     def enaBT(self, path, EnaBT_path, runID, file_type):
+        
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         try:
             subprocess.run(command, check=True, shell=True, stdout=1, stderr=2) 
