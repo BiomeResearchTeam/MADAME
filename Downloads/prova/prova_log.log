@@ -1,0 +1,8 @@
+2023-02-06 18:07:51,904 - main_madame - [USER-SESSION-CREATED]: MADAME/Downloads/prova
+2023-02-06 18:08:01,105 - IDlist - [QUERY-ON-ENA]: [nail microbiome] - [projects]
+2023-02-06 18:08:01,105 - IDlist - [ACCESSION-IDS-FOUND]: ['PRJNA780434', 'PRJEB37496']
+2023-02-06 18:08:01,107 - IDlist - [QUERY-DETAILS]: found 2 projects.
+2023-02-06 18:08:01,107 - IDlist - [QUERY-DETAILS]: found 2 projects.
+2023-02-06 18:08:05,501 - Project - [AVAILABLE-ACCESSIONS]: ['PRJNA780434', 'PRJEB37496']
+2023-02-06 18:08:05,529 - Project - [LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/prova/prova_listOfAccessionIDs.tsv
+2023-02-06 18:08:05,529 - Project - [LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/prova/prova_listOfAccessionIDs.tsv
