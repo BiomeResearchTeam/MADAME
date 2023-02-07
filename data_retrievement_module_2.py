@@ -41,6 +41,9 @@ def data_retrievement(user_session):
 
                 if data_download_choice == 2:
                     data_download_path(user_session)
+                
+                if data_download_choice == 3:
+                    data_download_CSV(user_session)
         
         else:
             print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
@@ -146,7 +149,7 @@ def data_download_CSV(user_session):
             return
 
         else:
-            if path.isfile(user_input_csv) == False:
+            if path.isfile(user_input_csv) == False: #NON FUNZIONA QUIIIIIII##################################################################################
                 print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
