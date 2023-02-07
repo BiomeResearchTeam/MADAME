@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from Utilities import Color, Utilities
 from metadata_retrievement_module import metadata_retrievement
 from publications_retrievement_module import publications_retrievement
