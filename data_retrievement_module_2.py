@@ -4,6 +4,7 @@ from functions_modules import CheckTSV
 from os import path
 import os
 import pandas as pd
+from functions_modules import *
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
@@ -157,13 +158,34 @@ def read_experiments(data_user_session, merged_experiments):
 #DATA IN MADAME
 def data_download_MADAME(user_session):
     data_user_session = os.path.join("Downloads", user_session)
-    data_download_function(user_session, data_user_session)
+    while True: 
+        file_count = check_files(data_user_session)
+        
+        if file_count == 0:
+            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+
+        elif file_count > 1:
+            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+
+        else:
+            data_download_function(user_session, data_user_session)
 
 
 #DATA IN LOCAL PATH
 def data_download_path(user_session):
     data_user_session = data_user_local(user_session)
-    data_download_function(user_session, data_user_session)
+    while True: 
+        file_count = check_files(data_user_session)
+        
+        if file_count == 0:
+            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+
+        elif file_count > 1:
+            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+
+        else:
+            data_download_function(user_session, data_user_session)
+
 
 def data_user_local(user_session):
     Utilities.clear()
@@ -191,24 +213,54 @@ def data_user_local(user_session):
 
 #DATA FROM USER FILE
 def data_download_CSV(user_session):
-    return
+    
+    while True:
+        Utilities.clear()
+        user_input_csv = UserFileCodesInput(user_session)
+        if user_input_csv in ("back", "BACK", "Back"):
+            return
+
+        else:
+            if path.isfile(user_input_csv) == False:
+                print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                continue
+            else: 
+                listOfProjectIDs = UserFileCodesIDlist(user_input_csv)
+                if len(listOfProjectIDs) == 0:
+                    print(Color.BOLD + Color.RED + "Error, file is empty. " + Color.END, "Try again\n")
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                    continue
+                else: 
+                    listOfProjectIDs = UserDigitCodesIDlist(user_input_csv, user_session)
+                    print("\nWhat data format do you want to download? fastq, sra, or submitted")
+                    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
+                    print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
+                    data_download_type = input("\n\n>> Enter your choice: ").strip().lower()
+                    if data_download_type in ("main menu"):
+                        return
+        
+                    elif data_download_type in ("fastq", "sra", "submitted"):
+                        path = os.path.dirname(user_input_csv)
+                        filename, file_extension = os.path.splitext(user_input_csv)
+                        if file_extension == '.tsv':
+                            e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
+                            print()  #riga vuota prima dell'output di enaBT
+                            SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+                        if file_extension == '.csv':
+                            e_df = pd.read_csv(path, delimiter=',', infer_datetime_format=True)
+                            print()  #riga vuota prima dell'output di enaBT
+                            SequencesDownload.runDownloadData(user_session, e_df, file_type = data_download_type)
+            
 
 
 #PRINCIPAL DOWNLOAD FUNCTION
 def data_download_function(user_session, data_user_session):
-    file_count = check_files(data_user_session)
     
-    if file_count == 0:
-        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
-
-    elif file_count > 1:
-        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
-
-    else:
         print("\nWhat data format do you want to download? fastq, sra, or submitted")
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-        data_download_type = input(">> Enter your choice: ").strip().lower()
+        data_download_type = input("\n>> Enter your choice: ").strip().lower()
         if data_download_type in ("main menu"):
             return
         
@@ -221,6 +273,7 @@ def data_download_function(user_session, data_user_session):
         else:
             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+
 
 
 #FINAL SCREEN                  
