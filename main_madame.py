@@ -83,8 +83,8 @@ def new_session():
     Utilities.createDirectory(os.path.join("Downloads", user_session))
     print("\n Your new folder was succesfully created: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "")
     
-    logger = Utilities.log("main_madame", user_session)
-    logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
+    # logger = Utilities.log("main_madame", user_session)
+    # logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
 
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 

@@ -57,7 +57,7 @@ class Utilities:
         f_handler.setFormatter(f_format)
 
         # Add handlers to the logger
-        logger.addHandler(c_handler)
+        #logger.addHandler(c_handler) we are not using it
         logger.addHandler(f_handler)
 
         return logger

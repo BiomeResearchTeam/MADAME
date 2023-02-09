@@ -44,8 +44,8 @@ class Project:
 
         print("Available projects: ", ', '.join(listOfAvailableProjects), "\n")
 
-        logger = Utilities.log("Project", user_session)
-        logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableProjects}")
+        # logger = Utilities.log("Project", user_session)
+        # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableProjects}")
 
         return listOfAvailableProjects
 
@@ -163,7 +163,7 @@ class Project:
         listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         listOfAccessionIDs.to_csv(os.path.join(path, f'{user_session}_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
-        logger = Utilities.log("Project", user_session)
-        logger.debug(f"[LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/{user_session}/{user_session}_listOfAccessionIDs.tsv")
+        # logger = Utilities.log("Project", user_session)
+        # logger.debug(f"[LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/{user_session}/{user_session}_listOfAccessionIDs.tsv")
 
 Project = Project('Project') 
