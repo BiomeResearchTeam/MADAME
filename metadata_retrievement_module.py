@@ -33,8 +33,8 @@ def metadata_retrievement(user_session):
         elif metadata_retrievement_choice.isnumeric():
             metadata_retrievement_choice = int(metadata_retrievement_choice)
             if metadata_retrievement_choice not in (1,2,3):
-                print("Error, enter a valid choice!\n")
-                return
+                print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
             else:
                 if metadata_retrievement_choice == 1:
                     metadata_retrievement_query(user_session)
@@ -46,13 +46,16 @@ def metadata_retrievement(user_session):
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
+        else:
+            print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     
 
 
 def metadata_retrievement_query(user_session):
-    Utilities.clear()
+    
     while True:
-
+        Utilities.clear()
         user_query_input = UserQueryENAInput(user_session)
         
         if user_query_input in ("back", "BACK", "Back"):
@@ -62,7 +65,7 @@ def metadata_retrievement_query(user_session):
             user_data_type = str(input(">> Do you want to search for projects, runs, samples, or studies? Enter your choice: "))
             if user_data_type not in ("projects", "runs", "samples", "studies"):
                 print(Color.BOLD + Color.RED + "\nWrong input." + Color.END, "Write <projects>, <runs>, <samples>, or <studies> (without <>)\n")
-                time.sleep(3)
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
 
             else:
@@ -70,7 +73,7 @@ def metadata_retrievement_query(user_session):
 
                 if len(listOfProjectIDs) == 0:
                     print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
-                    time.sleep(2)
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                     
                 else:
@@ -80,9 +83,9 @@ def metadata_retrievement_query(user_session):
 
 
 def metadata_retrievement_digit(user_session):
-    Utilities.clear()
+    
     while True:
-        # clear()
+        Utilities.clear()
         user_query_input = UserDigitCodesInput(user_session)
 
         if user_query_input in ("back", "BACK", "Back"):
@@ -93,7 +96,7 @@ def metadata_retrievement_digit(user_session):
 
             if len(listOfProjectIDs) == 0:
                 print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
-                time.sleep(2)
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
 
             else:  
@@ -102,8 +105,9 @@ def metadata_retrievement_digit(user_session):
 
 
 def metadata_retrievement_file(user_session):
-    Utilities.clear()
+    
     while True:
+        Utilities.clear()
         csv_file_input = UserFileCodesInput(user_session)
         
         if csv_file_input in ("back", "BACK", "Back"):
@@ -112,13 +116,13 @@ def metadata_retrievement_file(user_session):
         else:
             if path.isfile(csv_file_input) == False:
                 print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
-                time.sleep(3)
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
             else: 
                 listOfProjectIDs = UserFileCodesIDlist(csv_file_input)
                 if len(listOfProjectIDs) == 0:
                     print(Color.BOLD + Color.RED + "Error, file is empty. " + Color.END, "Try again\n")
-                    time.sleep(2)
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                 else: 
                     metadata_download(listOfProjectIDs, user_session)

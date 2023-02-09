@@ -13,12 +13,11 @@ class SequencesDownload:
         self.name = name
 
     
-    def runDownloadData(self, user_session, e_df, file_type):
+    def runDownloadData(self, EnaBT_path, user_session, e_df, file_type):
     # Accepted file_types: {submitted,fastq,sra}
     # It needs enaBrowserTools scripts already installed: 
     # https://github.com/enasequence/enaBrowserTools#installing-and-running-the-scripts
-
-    
+        
         listOfProjectIDs = e_df['study_accession'].unique().tolist()
         
         for projectID in listOfProjectIDs:
@@ -37,7 +36,8 @@ class SequencesDownload:
                     # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
                     #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
                     for runID in available_runs:
-                        download = self.enaBT(path, runID, file_type)
+                        download = self.enaBT(path, EnaBT_path, runID, file_type) #silenziato da sara
+                        #download = self.enaBT_path(path, runID, file_type)
 
                         if download == 0:
                             print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
@@ -57,16 +57,22 @@ class SequencesDownload:
                     print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare ?
 
 
-    def enaBT(self, path, runID, file_type):
-        # Accepted file_types: {submitted,fastq,sra}
-
-        command = f'enaDataGet -f {file_type} {runID} -d {path}'
+    
+    def enaBT(self, path, EnaBT_path, runID, file_type):
+        
+        command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         try:
-            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)
-            
+            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2) 
+                    # print(os.getcwd())
+                    # subprocess.run([command], check=True, shell=True, stdout=1, stderr=2)
+                        
         except subprocess.CalledProcessError as error:
             # spesso ENA rifiuta la connessione, potremmo riprovare il comando di subprocess con lo stesso runID tot volte, e se dà sempre errore solo allora printare l'errore (how???)     
             return 0
+
+
+
+             
             
 
     def check_files():
@@ -74,4 +80,6 @@ class SequencesDownload:
 
 
         return
+
+
 SequencesDownload = SequencesDownload("SequencesDownload")
