@@ -12,10 +12,11 @@ class GetIDlist:
     # Class attributes
     RUNS_PATTERN =  r'([E|D|S]RR[0-9]{6,})'
     SAMPLES_PATTERN = r'([E|D|S]RS[0-9]{6,})'
+    BIOSAMPLES_PATTERN = r'(SAM[E|D|N][A-Z]?[0-9]+)'
+    EXPERIMENTS_PATTERN = r'([E|D|S]RX[0-9]{6,})'
     STUDIES_PATTERN = r'([E|D|S]RP[0-9]{6,})'
     PROJECTS_PATTERN = r'(PRJ[E|D|N][A-Z][0-9]+)'
-
-    
+ 
     def __init__(self, name): 
         self.name = name
     
@@ -73,6 +74,7 @@ class GetIDlist:
 
         runs = []
         samples = []
+        biosamples = []
         studies = []
         projects = []
         not_valid = []
@@ -82,6 +84,8 @@ class GetIDlist:
                 runs.append(accession)
             elif re.match(GetIDlist.SAMPLES_PATTERN, accession):
                 samples.append(accession)
+            elif re.match(GetIDlist.BIOSAMPLES_PATTERN, accession):
+                biosamples.append(accession)
             elif re.match(GetIDlist.STUDIES_PATTERN, accession):
                 studies.append(accession)
             elif re.match(GetIDlist.PROJECTS_PATTERN, accession):
@@ -89,11 +93,15 @@ class GetIDlist:
             else: 
                 not_valid.append(accession)
                 
-        # Error message
-        if not_valid:
+        # Print appropriate error message, if necessary, and give the user time to read it and then proceed
+        if not_valid and len(not_valid) == 1:
+            print(f"\nWARNING - {not_valid} is" + Color.BOLD + Color.RED + " not a valid accession code" + Color.END)
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+        if not_valid and len(not_valid) > 1:
             print(f"\nWARNING - {not_valid} are" + Color.BOLD + Color.RED + " not valid accession codes" + Color.END)
-
-        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "studies" : studies, "projects" : projects}    
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+        
+        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "biosamples" : biosamples, "studies" : studies, "projects" : projects}    
         listOfProjectIDs = runs+samples+studies+projects
     
         #logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
@@ -147,6 +155,11 @@ class GetIDlist:
         if dictionaryOfProjectIDs["samples"]:
             domain = "domain=sra-sample&query="
             accessions = dictionaryOfProjectIDs["samples"]
+            text_search()
+
+        if dictionaryOfProjectIDs["biosamples"]:
+            domain = "domain=sra-sample&query="
+            accessions = dictionaryOfProjectIDs["biosamples"]
             text_search()
 
         if dictionaryOfProjectIDs["studies"]:

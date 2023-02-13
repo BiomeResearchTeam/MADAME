@@ -40,9 +40,9 @@ class Project:
 
         
         print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableProjects)), 
-        "out of", str(len(listOfProjectIDs)) + Color.END ,"available projects")
+        "out of", str(len(listOfProjectIDs)) + Color.END ,"available accessions.")
 
-        print("Available projects: ", ', '.join(listOfAvailableProjects), "\n")
+        print("Available accessions: ", ', '.join(listOfAvailableProjects), "\n")
 
         # logger = Utilities.log("Project", user_session)
         # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableProjects}")

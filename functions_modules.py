@@ -62,7 +62,7 @@ def UserDigitCodesInput(user_session):
     print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
     print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
         + "back" + Color.END + " ---\n")
-    user_query_input = str(input(">> Digit your query: "))
+    user_query_input = str(input(">> Digit your list: "))
     
     return user_query_input
 
@@ -71,15 +71,14 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
     listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(user_input = user_query_input)
     GetIDlist.IDlistFromUserInputDetails(dictionaryOfProjectIDs)
-    print("\nChecking for their availability...") 
-    listOfAvailableProjects = Project.getAvailableProjects(user_session, listOfProjectIDs)
-    Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
+    listOfAvailableAccessions = Project.getAvailableProjects(user_session, listOfProjectIDs)
+    Project.listOfAccessionIDsTSV(listOfAvailableAccessions, user_session)
 
-    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}IDs.tsv")
+    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
 
     input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
 
-    return listOfAvailableProjects
+    return listOfAvailableAccessions
 
 
 #FILE ACCESSION CODES

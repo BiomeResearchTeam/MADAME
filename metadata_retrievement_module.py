@@ -69,15 +69,15 @@ def metadata_retrievement_query(user_session):
                 continue
 
             else:
-                listOfProjectIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
+                listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
-                if len(listOfProjectIDs) == 0:
+                if len(listOfAccessionIDs) == 0:
                     print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                     
                 else:
-                    metadata_download(listOfProjectIDs, user_session)
+                    metadata_download(listOfAccessionIDs, user_session)
                     return
                     
 
@@ -92,15 +92,15 @@ def metadata_retrievement_digit(user_session):
             return
 
         else:
-            listOfProjectIDs = UserDigitCodesIDlist(user_query_input, user_session)
+            listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
-            if len(listOfProjectIDs) == 0:
+            if len(listOfAccessionIDs) == 0:
                 print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
 
             else:  
-                metadata_download(listOfProjectIDs, user_session)
+                metadata_download(listOfAccessionIDs, user_session)
                 return
 
 
@@ -119,17 +119,17 @@ def metadata_retrievement_file(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
             else: 
-                listOfProjectIDs = UserFileCodesIDlist(csv_file_input)
-                if len(listOfProjectIDs) == 0:
+                listOfAccessionIDs = UserFileCodesIDlist(csv_file_input)
+                if len(listOfAccessionIDs) == 0:
                     print(Color.BOLD + Color.RED + "Error, file is empty. " + Color.END, "Try again\n")
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                 else: 
-                    metadata_download(listOfProjectIDs, user_session)
+                    metadata_download(listOfAccessionIDs, user_session)
                     return
         
        
-def metadata_download(listOfAvailableProjects, user_session):
+def metadata_download(listOfAvailableAccessions, user_session):
 
     Utilities.clear()
     # title = " DOWNLOAD METADATA "
@@ -156,17 +156,19 @@ def metadata_download(listOfAvailableProjects, user_session):
 
         else:
             if user_metadata_input == 1:
-                #Project.listOfProjectIDsTSV(listOfAvailableProjects)
+
+                # Exp_Proj_MetadataDownload needs a list of available accessions, this can also be a mixed
+                # accessions list; SampleMetadataDownload and Parser need the corresponding list of projects
                 
-                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
-                SampleMetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
-                SampleMetadataParser.runParseMetadata(listOfAvailableProjects, user_session)
+                listOfProjectIDs = Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableAccessions, user_session)
+                SampleMetadataDownload.runDownloadMetadata(listOfProjectIDs, user_session)
+                SampleMetadataParser.runParseMetadata(listOfProjectIDs, user_session)
                 final_screen(user_session)
                 
 
             elif user_metadata_input == 2:
                 
-                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableProjects, user_session)
+                Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableAccessions, user_session)
                 final_screen(user_session)
 
 
