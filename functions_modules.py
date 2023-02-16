@@ -1,9 +1,6 @@
 from IDlist import GetIDlist
-from Utilities import Color, Utilities
+from Utilities import Color
 from Project import Project
-from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
-from SampleMetadataDownload import SampleMetadataDownload
-from SampleMetadataParser import SampleMetadataParser
 import time #sara
 import csv
 import os
@@ -11,6 +8,7 @@ from os import path
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+from rich.console import Console
 
 #QUERY ENA
 
@@ -38,9 +36,9 @@ def UserQueryENAInput(user_session):
 
 def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
-    listOfProjectIDs = GetIDlist.Query(user_session, user_query_input, user_data_type)
-    GetIDlist.QueryDetails(user_session, listOfProjectIDs) 
-    listOfAvailableProjects = Project.getAvailableProjects(user_session, listOfProjectIDs)
+    listOfAccessionIDs = GetIDlist.Query(user_session, user_query_input, user_data_type)
+    GetIDlist.QueryDetails(user_session, listOfAccessionIDs) 
+    listOfAvailableProjects = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
 
     print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
@@ -62,16 +60,33 @@ def UserDigitCodesInput(user_session):
     print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
     print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
         + "back" + Color.END + " ---\n")
-    user_query_input = str(input(">> Digit your list: "))
+    
+    user_query_input = ''
+    while user_query_input.strip() == '':
+        user_query_input = str(input(">> Digit your list: "))
+
+    if user_query_input in ("back", "BACK", "Back"):
+        return "back"
+
+    # Clean user input
+    user_query_input = user_query_input.replace(" ", "") # remove whitespaces
+    user_query_input = list(user_query_input.split(",")) # split string with comma 
+    user_query_input = list(dict.fromkeys(user_query_input)) # remove duplicates
     
     return user_query_input
 
 
 def UserDigitCodesIDlist(user_query_input, user_session):
 
-    listOfProjectIDs, dictionaryOfProjectIDs = GetIDlist.IDlistFromUserInput(user_input = user_query_input)
-    GetIDlist.IDlistFromUserInputDetails(dictionaryOfProjectIDs)
-    listOfAvailableAccessions = Project.getAvailableProjects(user_session, listOfProjectIDs)
+    # Check validity of accessions
+    listOfAccessionIDs, dictionaryOfAccessionIDs = GetIDlist.IDlistFromUserInput(user_input = user_query_input)
+
+    # Spinner for showing MADAME is working (this process can be lenghty)
+    console = Console()
+    with console.status("Fetching details of entered accessions, please wait...") as status:
+        GetIDlist.IDlistFromUserInputDetails(dictionaryOfAccessionIDs)
+
+    listOfAvailableAccessions = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableAccessions, user_session)
 
     print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")

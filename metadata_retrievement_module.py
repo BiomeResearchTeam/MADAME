@@ -62,9 +62,9 @@ def metadata_retrievement_query(user_session):
             return
 
         else:
-            user_data_type = str(input(">> Do you want to search for projects, runs, samples, or studies? Enter your choice: "))
-            if user_data_type not in ("projects", "runs", "samples", "studies"):
-                print(Color.BOLD + Color.RED + "\nWrong input." + Color.END, "Write <projects>, <runs>, <samples>, or <studies> (without <>)\n")
+            user_data_type = str(input(">> Do you want to search for projects, runs, experiments, samples, or studies? Enter your choice: "))
+            if user_data_type not in ("projects", "runs", "experiments", "samples", "studies"):
+                print(Color.BOLD + Color.RED + "\nWrong input." + Color.END, "Write <projects>, <experiments>, <runs>, <samples>, or <studies> (without <>)\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
 
@@ -88,7 +88,7 @@ def metadata_retrievement_digit(user_session):
         Utilities.clear()
         user_query_input = UserDigitCodesInput(user_session)
 
-        if user_query_input in ("back", "BACK", "Back"):
+        if user_query_input == "back":
             return
 
         else:
@@ -159,7 +159,7 @@ def metadata_download(listOfAvailableAccessions, user_session):
 
                 # Exp_Proj_MetadataDownload needs a list of available accessions, this can also be a mixed
                 # accessions list; SampleMetadataDownload and Parser need the corresponding list of projects
-                
+
                 listOfProjectIDs = Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableAccessions, user_session)
                 SampleMetadataDownload.runDownloadMetadata(listOfProjectIDs, user_session)
                 SampleMetadataParser.runParseMetadata(listOfProjectIDs, user_session)

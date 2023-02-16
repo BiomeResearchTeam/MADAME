@@ -1,21 +1,26 @@
 import re
 import requests as rq
-import pandas as pd
-from Utilities import Utilities, Color
+from Utilities import Color
+from Project import Project
 import time
 
-# Class for getting the ID list from query or user input.
-# It also has methods for printing accessions' details from ENA 
-# and for getting a list containing only the available projects.
+# Class for getting the ID list from query or user input/file and for printing accessions details
 
 class GetIDlist:
-    # Class attributes
-    RUNS_PATTERN =  r'([E|D|S]RR[0-9]{6,})'
-    SAMPLES_PATTERN = r'([E|D|S]RS[0-9]{6,})'
-    BIOSAMPLES_PATTERN = r'(SAM[E|D|N][A-Z]?[0-9]+)'
-    EXPERIMENTS_PATTERN = r'([E|D|S]RX[0-9]{6,})'
-    STUDIES_PATTERN = r'([E|D|S]RP[0-9]{6,})'
-    PROJECTS_PATTERN = r'(PRJ[E|D|N][A-Z][0-9]+)'
+    # Class attributes - single accession
+    RUNS_PATTERN =  r'(?<!\S)[E|D|S]RR[0-9]{6,}(?!\d|\S)'
+    EXPERIMENTS_PATTERN = r'(?<!\S)[E|D|S]RX[0-9]{6,}(?!\d|\S)'
+    SAMPLES_PATTERN = r'(?<!\S)[E|D|S]RS[0-9]{6,}(?!\d|\S)'
+    BIOSAMPLES_PATTERN = r'(?<!\S)SAM[E|D|N][A-Z]?[0-9]+(?!\d|\S)'
+    STUDIES_PATTERN = r'(?<!\S)[E|D|S]RP[0-9]{6,}(?!\d|\S)'
+    PROJECTS_PATTERN = r'(?<!\S)PRJ[E|D|N][A-Z][0-9]+(?!\d|\S)'
+
+    # Class attributes - accessions range
+    RUNS_RANGE_PATTERN = r'(?<!\S)([E|D|S])RR[0-9]{6,}-\1RR[0-9]{6,}(?!\d|\S)'
+    EXPERIMENTS_RANGE_PATTERN = r'(?<!\S)([E|D|S])RX[0-9]{6,}-\1RX[0-9]{6,}(?!\d|\S)'
+    SAMPLES_RANGE_PATTERN = r'(?<!\S)([E|D|S])RS[0-9]{6,}-\1RS[0-9]{6,}(?!\d|\S)'
+    BIOSAMPLES_RANGE_PATTERN = r'(?<!\S)(SAM[E|D|N][A-Z]?)[0-9]+-\1[0-9]+(?!\d|\S)'
+    
  
     def __init__(self, name): 
         self.name = name
@@ -33,6 +38,9 @@ class GetIDlist:
         if self.data_type == "runs":
             domain = "domain=sra-run&query="
             pattern = GetIDlist.RUNS_PATTERN
+        elif self.data_type == "experiments":
+            domain = "domain=sra-experiment&query="
+            pattern = GetIDlist.EXPERIMENTS_PATTERN
         elif self.data_type == "samples":
             domain = "domain=sra-sample&query="
             pattern = GetIDlist.SAMPLES_PATTERN
@@ -52,36 +60,50 @@ class GetIDlist:
         self.queryresult = getlist.content.decode("utf-8", "ignore")
 
         # Search ID by regex pattern, resulting in listOfProjectIDs
-        listOfProjectIDs = re.findall(pattern, self.queryresult)
+        listOfAccessionIDs = re.findall(pattern, self.queryresult)
 
         # logger = Utilities.log("IDlist", user_session)
         # logger.debug(f"[QUERY-ON-ENA]: [{user_query}] - [{data_type}]")
         # logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfProjectIDs}")
 
-        return listOfProjectIDs
+        return listOfAccessionIDs
 
 
 
     def IDlistFromUserInput(self, user_input):
 
-    # Get ID list from a series of accession codes derived from user input.
-    # Accession codes need to be entered separated by comma.
-    
-        user_input = user_input.replace(" ", "")
-        submitted_list = list(user_input.split(","))
+    # Check the accession codes derived from user input or file. 
+    # -> input list must be a clean one (no duplicates, whitespaces, nonetype)
+    # Returns: 1) a list of valid accessions, checked with regex patterns
+    #          2) a dictionary of accessions separated by type, for logger and printing details purposes
+    # Prints appropriate errors message for invalid accessions
 
-    ## TO ADD: ACCEPT ACCESSION CODES FROM FILES (CSV, TSV...)
-
+        # Single accession lists
         runs = []
+        experiments = []
         samples = []
-        biosamples = []
+        biosamples = []  
         studies = []
         projects = []
-        not_valid = []
-       
-        for accession in submitted_list:
+
+        # Accessions range lists
+        runs_range = []
+        experiments_range = []
+        samples_range = []
+        biosamples_range = []
+        
+        # Invalid accessions lists
+        not_valid_single = []
+        not_valid_range = []
+        not_valid_range_pattern = r'^[a-zA-Z0-9]+-[a-zA-Z0-9]+$' # checked last, it is still written as a range but the string didn't match any of the specified patterns.
+
+        for accession in user_input:
+
+            # Single accession (check against regex)
             if re.match(GetIDlist.RUNS_PATTERN, accession):
                 runs.append(accession)
+            elif re.match(GetIDlist.EXPERIMENTS_PATTERN, accession):
+                experiments.append(accession)
             elif re.match(GetIDlist.SAMPLES_PATTERN, accession):
                 samples.append(accession)
             elif re.match(GetIDlist.BIOSAMPLES_PATTERN, accession):
@@ -90,31 +112,67 @@ class GetIDlist:
                 studies.append(accession)
             elif re.match(GetIDlist.PROJECTS_PATTERN, accession):
                 projects.append(accession)
+
+            # Accessions range (two checks: regex, expand_accessions_range function)
+            elif re.match(GetIDlist.RUNS_RANGE_PATTERN, accession):
+                if self.expand_accessions_range(accession):
+                    runs_range.append(accession)
+                else:
+                    not_valid_range.append(accession)
+            elif re.match(GetIDlist.EXPERIMENTS_RANGE_PATTERN, accession):
+                if self.expand_accessions_range(accession):
+                    experiments_range.append(accession)
+                else:
+                    not_valid_range.append(accession)
+            elif re.match(GetIDlist.SAMPLES_RANGE_PATTERN, accession):
+                if self.expand_accessions_range(accession):
+                    samples_range.append(accession)
+                else:
+                    not_valid_range.append(accession)
+            elif re.match(GetIDlist.BIOSAMPLES_RANGE_PATTERN, accession):
+                if self.expand_accessions_range(accession):
+                    biosamples_range.append(accession)
+                else:
+                    not_valid_range.append(accession)
+            
+            elif re.match(not_valid_range_pattern, accession):
+                not_valid_range.append(accession)
             else: 
-                not_valid.append(accession)
+                not_valid_single.append(accession)
                 
         # Print appropriate error message, if necessary, and give the user time to read it and then proceed
-        if not_valid and len(not_valid) == 1:
-            print(f"\nWARNING - {not_valid} is" + Color.BOLD + Color.RED + " not a valid accession code" + Color.END)
-            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-        if not_valid and len(not_valid) > 1:
-            print(f"\nWARNING - {not_valid} are" + Color.BOLD + Color.RED + " not valid accession codes" + Color.END)
+        if not_valid_single and len(not_valid_single) == 1:
+            print(f"\nWARNING - {not_valid_single} is" + Color.BOLD + Color.RED + " not a valid accession code" + Color.END)
+        
+        if not_valid_single and len(not_valid_single) > 1:
+            print(f"\nWARNING - These accession codes are" + Color.BOLD + Color.RED + " not valid" + Color.END + ":")
+            print(not_valid_single)
+
+        if not_valid_range and len(not_valid_range) == 1:
+            print(f"\nWARNING - {not_valid_range} is" + Color.BOLD + Color.RED + " not a valid accessions range" + Color.END)
+
+        if not_valid_range and len(not_valid_range) > 1:
+            print(f"\nWARNING - These accessions ranges are" + Color.BOLD + Color.RED + " not valid" + Color.END + ":")
+            print(not_valid_range)
+
+        # Give time to read the warnings  
+        if not_valid_single or not_valid_range:
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
         
-        dictionaryOfProjectIDs = {"runs" : runs, "samples" : samples, "biosamples" : biosamples, "studies" : studies, "projects" : projects}    
-        listOfProjectIDs = runs+samples+studies+projects
+        ####add ranges
+        dictionaryOfAccessionIDs = {"runs" : runs, "experiments" : experiments, "samples" : samples, "biosamples" : biosamples, "studies" : studies, "projects" : projects, "runs_range" : runs_range, "experiments_range" : experiments_range, "samples_range" : samples_range, "biosamples_range" : biosamples_range}
+
+        listOfAccessionIDs = runs+experiments+samples+biosamples+studies+projects+runs_range+experiments_range+samples_range+biosamples_range
     
         #logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
-        
-        return listOfProjectIDs, dictionaryOfProjectIDs
+    
+        return listOfAccessionIDs, dictionaryOfAccessionIDs
 
     
-    def QueryDetails(self, user_session, listOfProjectIDs):
+    def QueryDetails(self, user_session, listOfAccessionIDs):
     # Prints output for the query search. Has to be called after GetIDlist.Query()
-        
-        
-        
-        total_of_accessions = (len(listOfProjectIDs))
+           
+        total_of_accessions = (len(listOfAccessionIDs))
         
         if total_of_accessions == 0:
             print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
@@ -131,46 +189,66 @@ class GetIDlist:
             #         logger.debug(f"[QUERY-DETAILS]: {line}")
 
 
-    def IDlistFromUserInputDetails(self, dictionaryOfProjectIDs):
+    def IDlistFromUserInputDetails(self, dictionaryOfAccessionIDs):
     #Prints output for the user-submitted accessions. Has to be called after GetIDlist.IDlistFromUserInput()
         results = []
 
-        def text_search():
+        def text_search(ena_domain):
             # For each accession type submitted, a different query to ENA db is needed.
             # Then, all results (without the first line) are joined together and printed.
-
+            domain = f"domain={ena_domain}&query="
             # Query URL assembling. 
-            url = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
-            get_details = rq.get(url + domain + "%20OR%20".join(accessions), allow_redirects=True)
+            url_base = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
+            complete_url = url_base + domain + "%20OR%20".join(accessions)
+            request = rq.get(complete_url, allow_redirects=True)
             # String decoding
-            converted = get_details.content.decode("utf-8", "ignore").split("\n")[1:-1]
+            converted = request.content.decode("utf-8", "ignore").split("\n")[1:-1]
             results.extend(converted)
         
-        # Query ENA db only if accession codes are present, in each list.
-        if dictionaryOfProjectIDs["runs"]:
-            domain = "domain=sra-run&query="
-            accessions = dictionaryOfProjectIDs["runs"]
-            text_search()
-
-        if dictionaryOfProjectIDs["samples"]:
-            domain = "domain=sra-sample&query="
-            accessions = dictionaryOfProjectIDs["samples"]
-            text_search()
-
-        if dictionaryOfProjectIDs["biosamples"]:
-            domain = "domain=sra-sample&query="
-            accessions = dictionaryOfProjectIDs["biosamples"]
-            text_search()
-
-        if dictionaryOfProjectIDs["studies"]:
-            domain = "domain=sra-study&query="
-            accessions = dictionaryOfProjectIDs["studies"]
-            text_search()
+        # Query ENA db only if accession codes are present, check each list.
+        if dictionaryOfAccessionIDs["runs"]:
+            accessions = dictionaryOfAccessionIDs["runs"]
+            text_search("sra-run")
         
-        if dictionaryOfProjectIDs["projects"]:
-            domain = "domain=project&query="
-            accessions = dictionaryOfProjectIDs["projects"]
-            text_search()
+        if dictionaryOfAccessionIDs["runs_range"]:
+            for range in dictionaryOfAccessionIDs["runs_range"]:
+                accessions = self.expand_accessions_range(range)
+                text_search("sra-run")
+
+        if dictionaryOfAccessionIDs["experiments"]:
+            accessions = dictionaryOfAccessionIDs["experiments"]
+            text_search("sra-experiment")
+
+        if dictionaryOfAccessionIDs["experiments_range"]:
+            for range in dictionaryOfAccessionIDs["experiments_range"]:
+                accessions = self.expand_accessions_range(range)
+                text_search("sra-experiment")
+
+        if dictionaryOfAccessionIDs["samples"]:
+            accessions = dictionaryOfAccessionIDs["samples"]
+            text_search("sra-sample")
+
+        if dictionaryOfAccessionIDs["samples_range"]:
+            for range in dictionaryOfAccessionIDs["samples_range"]:
+                accessions = self.expand_accessions_range(range)
+                text_search("sra-sample")
+
+        if dictionaryOfAccessionIDs["biosamples"]:
+            accessions = dictionaryOfAccessionIDs["biosamples"]
+            text_search("sra-sample")
+
+        if dictionaryOfAccessionIDs["biosamples_range"]:
+            for range in dictionaryOfAccessionIDs["biosamples_range"]:
+                accessions = self.expand_accessions_range(range)
+                text_search("sra-sample")
+
+        if dictionaryOfAccessionIDs["studies"]:
+            accessions = dictionaryOfAccessionIDs["studies"]
+            text_search("sra-study")
+        
+        if dictionaryOfAccessionIDs["projects"]:
+            accessions = dictionaryOfAccessionIDs["projects"]
+            text_search("project")
 
         if len(results) == 0:
             print('Please try again\n')
@@ -181,7 +259,23 @@ class GetIDlist:
             print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
             + f"\naccession\tdescription\n{joined_results}")
 
-        # add 'return output' so as to save printed details in a nice format for the log
+        # what if joined_results is too long?
+
+
+    def expand_accessions_range(self, accessions_range):
+        # Takes an accessions range string such as "SRR16946893-SRR16946910" as input and 
+        # returns a complete list of all the accessions in the range. If the range is not valid
+        # (e.g. "SRR16946893-SRR16946800") it returns an empty list.
+
+        # find the letters from the first accession in the range
+        letters = (re.search(r'[a-zA-Z]+', accessions_range)).group(0)
+        # numbers is a list of two integers, the first and the second in the range
+        numbers = list(map(int, re.findall(r'\d+', accessions_range)))  
+        # # per la nuova lista assembla chr e i per ogni i nel range che parte 
+        # # dal primo numero fino al secondo + 1 per comprenderlo
+        accessions_range_list = ([f'{letters}{number}' for number in range(numbers[0], numbers[1]+1)])
+
+        return accessions_range_list
 
 
 GetIDlist = GetIDlist('GetIDlist') 

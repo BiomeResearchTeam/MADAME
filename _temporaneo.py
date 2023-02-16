@@ -75,23 +75,22 @@ def prova():
 
     print(df)
 
-def prova_range():
 
-    import re
+from Utilities import Utilities
+import pandas as pd
+from Utilities import Color 
+from Project import Project
 
-    str_list = 'ERS4202782-ERS4202689'
-    # chr: il primo match di qualsiasi gruppo di lettere in str_list
-    chr = (re.search(r'[a-zA-Z]+', str_list)).group(0)
-    # ranges: una lista di due elementi, il primo numero e il secondo numero del range str_list. [4202782, 4202789]
-    # è solo un findall di tutti i numeri dentro str, con int applicato su entrambi
-    ranges = list(map(int, re.findall(r'\d+', str_list)))  
-    # # per la nuova lista assembla chr e i per ogni i nel range che parte 
-    # # dal primo numero fino al secondo + 1 per comprenderlo
-    new_list = ([f'{chr}{i}' for i in range(ranges[0], ranges[1]+1)])
+accessions = ['PRJEB11484', 'PRJEB14474', 'PRJEB24007', 'PRJEB40938', 'PRJEB41002', 'PRJEB46174', 'PRJNA256117', 'PRJNA541082', 'PRJNA544954', 'PRJNA575544', 'PRJNA610453', 'PRJNA672813', 'PRJNA737285', 'PRJNA747635']
+sum = 0
+df = pd.read_csv("/home/gsoletta/MADAME/Downloads/giulia/giulia_merged_experiments-metadata.tsv", sep="\t")
 
-    print(new_list)
+for id in accessions:
+    bytes = Project.getProjectBytes(id, df, "fastq")
+    print(id)
+    print(Utilities.bytes_converter(bytes))
+    sum = sum + bytes
 
-# if range is not valid an empty list is returned :)
-
-prova_range()
-
+print("")
+print("TOTAL")
+print(Utilities.bytes_converter(sum))

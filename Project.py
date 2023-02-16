@@ -1,10 +1,14 @@
 import requests as rq
 import os
+import re
+import io
 import sys
 import xml.etree.ElementTree as ET
 import pandas as pd
 from rich.progress import track
 from Utilities import Utilities, Color
+from user_agent import generate_user_agent
+from requests.adapters import HTTPAdapter, Retry
 
 class Project:
     def __init__(self, projectID):
@@ -13,41 +17,74 @@ class Project:
     def getProjectID(self):
         return self.ProjectID
 
-    def getProjectAvailability(self, projectID):
-    # Check Project's availability based on its metadata availability
-        url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={projectID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
-        response = rq.head(url, allow_redirects=True)
+    def getAccessionAvailability(self, accessionID):
+    # Check the accession ID availability based on its metadata availability
+
+        s = rq.session()
+        retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
+        url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
+        headers = {"User-Agent": generate_user_agent()}
+        download = s.head(url, headers=headers, allow_redirects=True)
 
         # If metadata exists, Content-Lenght in header is present:
-        # this means the project contains uploaded data, so that is available.
-        if 'Content-Length' in response.headers:
-            self.ProjectAvailability = True
+        # this means the accession has uploaded data, so it is available.
+        if 'Content-Length' in download.headers:
+            return True
         else:
-            self.ProjectAvailability = False
-
-        return self.ProjectAvailability
+            return False
 
 
-    def getAvailableProjects(self, user_session, listOfProjectIDs):
-    # Input is the full list of project IDs, output is the list of the available projects.
-    # This list is needed for all steps after getting a listOfProjectIDs.
+    def getAvailableAccessions(self, user_session, listOfAccessionIDs):
+    # Input is the full list of accession IDs, output is the list of the available accessions.
+    # This list is needed for all steps after getting a listOfAccessionIDs.
 
-        listOfAvailableProjects = []
+        GENERIC_RANGE_PATTERN = r'^[a-zA-Z0-9]+-[a-zA-Z0-9]+$'
+        listOfAvailableAccessions = []
 
-        for projectID in track(listOfProjectIDs, description= "Checking for availability..."):
-            if self.getProjectAvailability(projectID) == True:
-                listOfAvailableProjects.append(projectID)
+
+        for accessionID in track(listOfAccessionIDs, description= "Checking for availability..."):
+            
+            # If it's a range, check the first and last element availability (to exclude out of range mistakes)
+            if re.match(GENERIC_RANGE_PATTERN, accessionID):
+                range_ids = accessionID.split("-")
+                first_id_availability = self.getAccessionAvailability(range_ids[0])
+                second_id_availability = self.getAccessionAvailability(range_ids[1])
+
+                if first_id_availability and second_id_availability == False:
+                    continue
+
+                elif first_id_availability and second_id_availability == True:
+                    # If they are both available, check if they are part of the same project (it is possible they are not)
+                    first_id_project = self.getAccessionProject(range_ids[0])
+                    second_id_project = self.getAccessionProject(range_ids[1])
+
+                    if first_id_project == second_id_project:
+                        listOfAvailableAccessions.append(accessionID)
+                    else:
+                        print(Color.BOLD + Color.RED + "\nWARNING" + Color.END, f": out of range error. {range_ids[0]} and {range_ids[1]} belong to different projects.\n")
+               
+                elif first_id_availability != second_id_availability:
+                    print(Color.BOLD + Color.RED + "\nWARNING" + Color.END, f": out of range error. Please check if the first or last element of {accessionID} is correct.\n")
+
+            # If it's a single accession, check the accession availability
+            else:
+                if self.getAccessionAvailability(accessionID) == True:
+                    listOfAvailableAccessions.append(accessionID)
 
         
-        print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableProjects)), 
-        "out of", str(len(listOfProjectIDs)) + Color.END ,"available accessions.")
+        print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableAccessions)), 
+        "out of", str(len(listOfAccessionIDs)) + Color.END ,"available accessions.")
 
-        print("Available accessions: ", ', '.join(listOfAvailableProjects), "\n")
+        print("Available accessions: ", ', '.join(listOfAvailableAccessions), "\n")
 
         # logger = Utilities.log("Project", user_session)
-        # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableProjects}")
+        # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableAccessions}")
 
-        return listOfAvailableProjects
+        return listOfAvailableAccessions
 
 
     def getProjectBytes(self, projectID, e_df, file_type): 
@@ -85,7 +122,6 @@ class Project:
 
         return size
 
-    
     def getAllRuns(self, projectID, e_df):
 
         df = e_df.loc[e_df['study_accession'] == projectID]
@@ -153,6 +189,23 @@ class Project:
         projectDescription = self.getProjectInfo(user_session, projectID, "DESCRIPTION")
         
         return projectDescription
+    
+    def getAccessionProject(self, accessionID):
+        # Return the corresponding project ID for any accessionID entered as input
+
+        s = rq.session()
+        retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
+        url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,secondary_study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession&format=tsv&download=true&limit=0"
+        headers = {"User-Agent": generate_user_agent()}
+        content = s.get(url, headers=headers, allow_redirects=True).content
+        incoming_df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t').reset_index(drop=True)
+        projectID = incoming_df.iloc[0,0]
+
+        return projectID
 
 
     def listOfAccessionIDsTSV(self, listOfProjectIDs, user_session): 
