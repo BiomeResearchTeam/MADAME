@@ -19,7 +19,7 @@ def publications_retrievement(user_session):
         rich_print(title)
 
         print("\nRetrieve the publications that include the projects of your interest. \n\nChoose one of the following options:")
-        print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
+        print(" 1 - Use '*_merged_experiments-metadata.tsv' file present in the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer")
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
