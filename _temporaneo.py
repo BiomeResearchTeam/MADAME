@@ -75,22 +75,22 @@ def prova():
 
     print(df)
 
+def per_giulia_g():
+    from Utilities import Utilities
+    import pandas as pd
+    from Utilities import Color 
+    from Project import Project
 
-from Utilities import Utilities
-import pandas as pd
-from Utilities import Color 
-from Project import Project
+    accessions = ['PRJEB11484', 'PRJEB14474', 'PRJEB24007', 'PRJEB40938', 'PRJEB41002', 'PRJEB46174', 'PRJNA256117', 'PRJNA541082', 'PRJNA544954', 'PRJNA575544', 'PRJNA610453', 'PRJNA672813', 'PRJNA737285', 'PRJNA747635']
+    sum = 0
+    df = pd.read_csv("/home/gsoletta/MADAME/Downloads/giulia/giulia_merged_experiments-metadata.tsv", sep="\t")
 
-accessions = ['PRJEB11484', 'PRJEB14474', 'PRJEB24007', 'PRJEB40938', 'PRJEB41002', 'PRJEB46174', 'PRJNA256117', 'PRJNA541082', 'PRJNA544954', 'PRJNA575544', 'PRJNA610453', 'PRJNA672813', 'PRJNA737285', 'PRJNA747635']
-sum = 0
-df = pd.read_csv("/home/gsoletta/MADAME/Downloads/giulia/giulia_merged_experiments-metadata.tsv", sep="\t")
+    for id in accessions:
+        bytes = Project.getProjectBytes(id, df, "fastq")
+        print(id)
+        print(Utilities.bytes_converter(bytes))
+        sum = sum + bytes
 
-for id in accessions:
-    bytes = Project.getProjectBytes(id, df, "fastq")
-    print(id)
-    print(Utilities.bytes_converter(bytes))
-    sum = sum + bytes
-
-print("")
-print("TOTAL")
-print(Utilities.bytes_converter(sum))
+    print("")
+    print("TOTAL")
+    print(Utilities.bytes_converter(sum))
