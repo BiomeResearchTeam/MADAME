@@ -35,7 +35,6 @@ class GetIDlist:
 
         RUNS_PATTERN =  r'[E|D|S]RR[0-9]{6,}'
         EXPERIMENTS_PATTERN = r'[E|D|S]RX[0-9]{6,}'
-        SAMPLES_PATTERN = r'[E|D|S]RS[0-9]{6,}'
         BIOSAMPLES_PATTERN = r'SAM[E|D|N][A-Z]?[0-9]+'
         STUDIES_PATTERN = r'[E|D|S]RP[0-9]{6,}'
         PROJECTS_PATTERN = r'PRJ[E|D|N][A-Z][0-9]+'
@@ -49,7 +48,7 @@ class GetIDlist:
             pattern = EXPERIMENTS_PATTERN
         elif self.data_type == "samples":
             domain = "domain=sra-sample&query="
-            pattern = SAMPLES_PATTERN
+            pattern = BIOSAMPLES_PATTERN
         elif self.data_type == "studies":
             domain = "domain=sra-study&query="
             pattern = STUDIES_PATTERN
