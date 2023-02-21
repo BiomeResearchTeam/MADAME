@@ -36,8 +36,7 @@ class SequencesDownload:
                     # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
                     #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
                     for runID in available_runs:
-                        download = self.enaBT(path, EnaBT_path, runID, file_type) #silenziato da sara
-                        #download = self.enaBT_path(path, runID, file_type)
+                        download = self.enaBT(path, EnaBT_path, runID, file_type) 
 
                         if download == 0:
                             print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
