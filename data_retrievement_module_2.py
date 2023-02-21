@@ -87,6 +87,7 @@ def data_download_MADAME(user_session):
 
         else:
             enaBT_download(user_session, data_user_session)
+            return
 
 
 #DATA IN LOCAL PATH
@@ -107,6 +108,7 @@ def data_download_path(EnaBT_path, user_session):
 
         else:
             enaBT_download(user_session, data_user_session)
+            return
 
 
 def data_user_local(user_session):
@@ -210,37 +212,34 @@ def data_download_CSV(user_session):
 
 
 #ENABT PATH
-def enaBT_download(user_session, data_user_session): #sara
-        # Accepted file_types: {submitted,fastq,sra}
+def enaBT_download(user_session, data_user_session): #CI STO LAVORANDO SARA
+
+    Utilities.clear()
+    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
 
     while True:
-        Utilities.clear()
-        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
-        EnaBT_path = input(">> Digit the path to enaDataGet: ")
-        filename, file_extension = os.path.splitext(EnaBT_path)
-        if os.path.basename(os.path.normpath(EnaBT_path)) == 'enaDataGet':
-            data_download_function(EnaBT_path, user_session, data_user_session)
-                #self.enaBT(path, EnaBT_path, runID, file_type)
-
-        elif os.path.basename(os.path.normpath(EnaBT_path)) == 'python3':
-            EnaBT_path = os.path.join(EnaBT_path, 'enaDataGet')
-            data_download_function(EnaBT_path, user_session, data_user_session)
-                #self.enaBT(path, EnaBT_path, runID, file_type)
-            
-        else:
-            print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
-            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-            continue
+        
+        enaBT_txt = open("enaBT_path.txt","r+")
+        enaBT_read = enaBT_txt.readline().split(':')[1].strip()
+        enaBT_path = os.path.join(enaBT_read, 'enaDataGet')
+        if os.path.isfile(os.path.normpath(enaBT_path)):
+            print(Color.BOLD + Color.GREEN + '\nenaDataGet found' + Color.END)
+            data_download_function(enaBT_path, user_session, data_user_session)
+        else: 
+            if len(enaBT_read) == 0:
+                print('It seems that', Color.BOLD + Color.RED + 'enaBT_path.txt is empty.' + Color.END, 'Remember to', Color.UNDERLINE + 'compile it' + Color.END, 'in order to download data!')
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                return
+            else:
+                print(Color.BOLD + Color.RED + "\nenaDataGet not found." + Color.END, "Maybe a typo in enaBT_path.txt? Remember to", Color.UNDERLINE + "compile it" + Color.END, "correctly in order to download data!\n")
+                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                return
+              
 
 
 #PRINCIPAL DOWNLOAD FUNCTION
 def data_download_function(EnaBT_path, user_session, data_user_session):
-
-        Utilities.clear()
-        print('\nenaDataGet ', Color.BOLD + Color.GREEN + 'found' + Color.END)
-        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
 
         print("\nWhat data format do you want to download?", Color.UNDERLINE + "fastq" + Color.END, ",", Color.UNDERLINE + "sra" + Color.END,", or", Color.UNDERLINE + "submitted" + Color.END)
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<")
