@@ -9,13 +9,16 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 
-def data_retrievement(user_session):
 
+def session_title():
+    Utilities.clear()
+    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    rich_print(title)
+
+
+def data_retrievement(user_session):
     while True:
-        Utilities.clear() 
-        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
-        
+        session_title()
         print("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:")
         print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer")
@@ -34,12 +37,17 @@ def data_retrievement(user_session):
 
             else:
                 if data_download_choice == 1:
-                    data_download_MADAME(user_session)
+                    session_title()
+                    data_user_session = os.path.join("Downloads", user_session)
+                    #data_download_MADAME(user_session)
 
                 if data_download_choice == 2:
-                    data_download_path(user_session)
+                    session_title()
+                    data_user_local(user_session)
+                    #data_download_path(user_session)
                 
                 if data_download_choice == 3:
+                    session_title()
                     data_download_CSV(user_session)
         
         else:
@@ -67,11 +75,15 @@ def read_experiments(data_user_session, merged_experiments):
     return e_df
 
 
+
+
+
+
 #DATA IN MADAME
 def data_download_MADAME(user_session):
-    Utilities.clear()
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
+    # Utilities.clear()
+    # title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    # rich_print(title)
     data_user_session = os.path.join("Downloads", user_session)
     while True: 
         file_count = check_files(data_user_session)
@@ -87,13 +99,8 @@ def data_download_MADAME(user_session):
             return
 
 
-#DATA IN LOCAL PATH
-def data_download_path(EnaBT_path, user_session):
-    Utilities.clear()
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
 
-    data_user_session = data_user_local(user_session)
+def download_loop(user_session, data_user_session):
     while True: 
         file_count = check_files(data_user_session)
         
@@ -108,10 +115,33 @@ def data_download_path(EnaBT_path, user_session):
             return
 
 
+
+
+# #DATA IN LOCAL PATH
+# def data_download_path(EnaBT_path, user_session):
+#     # Utilities.clear()
+#     # title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+#     # rich_print(title)
+
+#     #data_user_session = data_user_local(user_session)
+#     while True: 
+#         file_count = check_files(data_user_session)
+        
+#         if file_count == 0:
+#             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+
+#         elif file_count > 1:
+#             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+
+#         else:
+#             enaBT_download(user_session, data_user_session)
+#             return
+
+
 def data_user_local(user_session):
-    Utilities.clear()
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
+    # Utilities.clear()
+    # title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    # rich_print(title)
 
     while True:
         print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
@@ -124,7 +154,7 @@ def data_user_local(user_session):
                             
         if path.isdir(data_local_path) == False:
             if path.isfile(data_local_path) == True:
-                print(Color.BOLD + Color.RED + "\nError." + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
+                print(Color.BOLD + Color.RED + "\nError. " + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:

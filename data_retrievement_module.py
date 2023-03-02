@@ -13,6 +13,9 @@ def data_retrievement(user_session):
 
     while True:
         Utilities.clear() 
+        #title = " DATA RETRIEVEMENT MODULE "
+        #print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        #Utilities.clear() 
         title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
         rich_print(title)
         
@@ -124,7 +127,7 @@ def data_user_local(user_session):
                             
         if path.isdir(data_local_path) == False:
             if path.isfile(data_local_path) == True:
-                print(Color.BOLD + Color.RED + "\nError." + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
+                print(Color.BOLD + Color.RED + "\nError. " + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:
