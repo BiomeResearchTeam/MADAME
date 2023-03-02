@@ -135,7 +135,7 @@ def UserFileCodesIDlist(csv_file_input):
             list_accession_codes_csv_file = list(csv_file_read)
             listOfProjectIDs = [item for sublist in list_accession_codes_csv_file for item in sublist]
 
-            return listOfProjectIDs
+        return listOfProjectIDs
 
 
 #TSV INPUT (_experiment_metadata.tsv & listO)
