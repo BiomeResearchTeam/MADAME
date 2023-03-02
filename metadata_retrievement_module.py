@@ -125,7 +125,11 @@ def metadata_retrievement_file(user_session):
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                 else: 
-                    metadata_download(listOfAccessionIDs, user_session)
+                    listOfAvailableAccessions = Project.getAvailableAccessions(user_session, listOfAccessionIDs)#
+                    Project.listOfAccessionIDsTSV(listOfAvailableAccessions, user_session)#
+                    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")#
+                    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")#
+                    metadata_download(listOfAvailableAccessions, user_session) #prima era listOfAccessionIDs
                     return
         
        
