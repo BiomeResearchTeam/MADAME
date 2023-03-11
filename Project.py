@@ -110,7 +110,8 @@ class Project:
         # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
         # Split the two numbers and add them to each other, before calculating the total of the column. 
         else:
-            df3 = df2[bytes_column].apply(lambda x: sum(map(int, x.split(';'))))
+            df3 = df2[bytes_column].apply(lambda x: sum(int(float(num)) for num in x.split(';'))) #sara
+            #df3 = df2[bytes_column].apply(lambda x: sum(map(int, x.split(';')))) #silenziata da sara
             bytes = df3.sum()
 
         return bytes

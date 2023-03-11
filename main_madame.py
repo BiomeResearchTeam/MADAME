@@ -5,6 +5,7 @@ from metadata_retrievement_module import metadata_retrievement
 from publications_retrievement_module import publications_retrievement
 from report_generation_module import report_generation
 from data_retrievement_module_2 import data_retrievement
+from report_2_in_corso import report_generation #lo sto ancora modificando, quando sarà pronto sarà il report_generation_module da usare
 import os
 from rich.tree import Tree
 from rich import print as rich_print
@@ -12,6 +13,7 @@ from rich.panel import Panel
 from rich.text import Text
 from rich.console import Console
 import os.path
+import readline
 
 user_session = ""
 
