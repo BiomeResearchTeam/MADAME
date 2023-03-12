@@ -105,7 +105,7 @@ def available_metadata_files(user_session):
 
     elif available_metadata_files == 2:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
-        print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[1]}")
+        print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{list_metadata_files[1]}")
         e_df_path = os.path.join(user_session, list_metadata_files[0])
         e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
         p_df_path = os.path.join(user_session, list_metadata_files[1])
@@ -125,6 +125,10 @@ def report(user_session, e_df, p_df = None):
         'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
         'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
         'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)']
+    color_palette_scale = px.colors.make_colorscale(color_palette)
+
+    
+
 
 
     report_folder = (os.path.join(user_session, 'Report_images'))
@@ -136,7 +140,7 @@ def report(user_session, e_df, p_df = None):
     with open(report_html, 'w+') as f:
         initial_table(report_folder, e_df, p_df, f)
         sample_number(report_folder, e_df, color_palette, f)
-        pie_and_bar_charts(report_folder, e_df, color_palette_hex, f)
+        pie_and_bar_charts(report_folder, e_df, color_palette_scale, f)
         projects_size(report_folder, e_df, f)
         IDs_dates(report_folder, e_df, f)
         geography(report_folder, p_df, f)
@@ -275,22 +279,33 @@ def sample_number(report_folder, e_df, color_palette, f):
     fig.write_image(os.path.join(report_folder, "Sample number.png"), width=1920, height=1080)
     fig.write_html(os.path.join(report_folder, "Sample number.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-        
 
-def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
+
+def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
     
-    for column in ['scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout']: ########BACKUP
+    for column in ['scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout']:
         if pd.Series(column).isin(e_df.columns).all():
-            library_layout_df = e_df[column].value_counts() #df for pie
-            print(library_layout_df)
-            df_pie = pd.DataFrame(library_layout_df).reset_index()
+            column_count_df = e_df[column].value_counts() #df for pie
+            df_pie = pd.DataFrame(column_count_df).reset_index()
             column_name = column.capitalize().replace('_', ' ')
             df_pie.columns = [column_name, 'Counts']
-            
-            library_layout_IDs_df = e_df.groupby(['study_accession'])[column].value_counts() #df for bar
-            df_bar = library_layout_IDs_df.rename('count').reset_index()
+            #n_colors = len(df_pie.column_name.unique())
+            #n_colors = df_pie[column].unique()
+
+            column_count_IDs_df = e_df.groupby(['study_accession'])[column].value_counts() #df for bar
+            df_bar = column_count_IDs_df.rename('count').reset_index()
             column_name = column.capitalize().replace('_', ' ')
             df_bar.columns = ['Project', column_name, 'Counts']
+
+            n_colors = len(df_pie)
+            colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)]) 
+
+            fig = px.pie(df_pie, values=df_pie['Counts'], names=df_pie[column_name], hole=0.6, 
+                    color_discrete_sequence = colors)
+            fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
+            fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
+            f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
 
 
 # def pie_and_bar_charts(report_folder, e_df, color_palette_hex, f):
