@@ -188,12 +188,14 @@ def initial_table(report_folder, e_df, p_df, f):
 
             replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
             p_df['affiliation'] = p_df['affiliation'].replace(replacers) #problema con korea... bisogna capire se del nord o del sud, quindi tramite città?
+            p_df.fillna("nan",inplace=True)
             affiliation_list = p_df['affiliation'].tolist()
             country_list = []
             for affiliation in affiliation_list:
-                for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-                    if country.name in affiliation:
-                        country_list.append(country.name)
+                if affiliation !='nan':
+                    for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+                        if country.name in affiliation:
+                            country_list.append(country.name)
             
             unique_country_list = list(set(country_list)) #remove duplicates
             country_number = len(unique_country_list)
