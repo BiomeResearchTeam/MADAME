@@ -300,7 +300,10 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             df_bar.columns = ['Project', column_name, 'Counts']
 
             n_colors = len(df_pie)
-            colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)]) 
+            if n_colors > 1:
+                colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)]) 
+            if  n_colors == 1:
+                colors = px.colors.sample_colorscale(color_palette_scale, [n for n in range(n_colors)]) 
 
             df_pie = df_pie.sort_values("Counts", ascending=False)
             fig = px.pie(df_pie, values=df_pie['Counts'], names=df_pie[column_name], hole=0.6, 
