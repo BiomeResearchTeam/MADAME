@@ -5,7 +5,6 @@ from metadata_retrievement_module import metadata_retrievement
 from publications_retrievement_module import publications_retrievement
 from report_generation_module import report_generation
 from data_retrievement_module_2 import data_retrievement
-from report_2_in_corso import report_generation #lo sto ancora modificando, quando sarà pronto sarà il report_generation_module da usare
 import os
 from rich.tree import Tree
 from rich import print as rich_print
@@ -63,7 +62,7 @@ def new_session():
     
     Utilities.clear()
     madame_logo()
-    title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), style = "b magenta")
+    title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), expand=False, style = "b magenta")
     rich_print(title)
 
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
@@ -101,7 +100,7 @@ def existing_session():
 
     Utilities.clear()
     madame_logo()
-    title = Panel(Text("CONTINUE WITH EXISTING SESSION", style = "b magenta", justify="center"), style = "b magenta")
+    title = Panel(Text("CONTINUE WITH EXISTING SESSION", style = "b magenta", justify="center"), expand=False, style = "b magenta")
     rich_print(title)
 
     print("\n Which existing session do you want to select?\n")
