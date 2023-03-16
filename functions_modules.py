@@ -36,7 +36,9 @@ def UserQueryENAInput(user_session):
 
 def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
-    listOfAccessionIDs = GetIDlist.Query(user_session, user_query_input, user_data_type)
+    console = Console()
+    with console.status("\nFetching records from ENA browser API, please wait...") as status:
+        listOfAccessionIDs = GetIDlist.Query(user_session, user_query_input, user_data_type)
     GetIDlist.QueryDetails(user_session, listOfAccessionIDs) 
     listOfAvailableProjects = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
     Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)

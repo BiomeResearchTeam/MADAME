@@ -78,7 +78,6 @@ def prova():
 def per_giulia_g():
     from Utilities import Utilities
     import pandas as pd
-    from Utilities import Color 
     from Project import Project
 
     accessions = ['PRJEB11484', 'PRJEB14474', 'PRJEB24007', 'PRJEB40938', 'PRJEB41002', 'PRJEB46174', 'PRJNA256117', 'PRJNA541082', 'PRJNA544954', 'PRJNA575544', 'PRJNA610453', 'PRJNA672813', 'PRJNA737285', 'PRJNA747635']

@@ -45,7 +45,6 @@ class Project:
         GENERIC_RANGE_PATTERN = r'^[a-zA-Z0-9]+-[a-zA-Z0-9]+$'
         listOfAvailableAccessions = []
 
-
         for accessionID in track(listOfAccessionIDs, description= "Checking for availability..."):
             
             # If it's a range, check the first and last element availability (to exclude out of range mistakes)

@@ -1,8 +1,9 @@
 import re
+import io
 import requests as rq
 from Utilities import Color
-from Project import Project
 import time
+import pandas as pd
 
 # Class for getting the ID list from query or user input/file and for printing accessions details
 
@@ -33,46 +34,34 @@ class GetIDlist:
         self.user_query = user_query
         self.data_type = data_type
 
-        RUNS_PATTERN =  r'[E|D|S]RR[0-9]{6,}'
-        EXPERIMENTS_PATTERN = r'[E|D|S]RX[0-9]{6,}'
-        BIOSAMPLES_PATTERN = r'SAM[E|D|N][A-Z]?[0-9]+'
-        STUDIES_PATTERN = r'[E|D|S]RP[0-9]{6,}'
-        PROJECTS_PATTERN = r'PRJ[E|D|N][A-Z][0-9]+'
-
         # Setting parameters - based on user's input
         if self.data_type == "runs":
             domain = "domain=sra-run&query="
-            pattern = RUNS_PATTERN
         elif self.data_type == "experiments":
             domain = "domain=sra-experiment&query="
-            pattern = EXPERIMENTS_PATTERN
         elif self.data_type == "samples":
             domain = "domain=sra-sample&query="
-            pattern = BIOSAMPLES_PATTERN
         elif self.data_type == "studies":
             domain = "domain=sra-study&query="
-            pattern = STUDIES_PATTERN
         elif self.data_type == "projects":
             domain = "domain=project&query="
-            pattern = PROJECTS_PATTERN
         
-    
         # Query URL assembly
         url = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
         getlist = rq.get(url + domain + self.user_query.replace(" ", "%20"), allow_redirects=True)
 
-        # String decoding
+        # String decoding for returning self.queryresult, also to be used later in QueryDetails
         self.queryresult = getlist.content.decode("utf-8", "ignore")
 
-        # Search ID by regex pattern, resulting in listOfProjectIDs
-        listOfAccessionIDs = re.findall(pattern, self.queryresult)
+        # Fetch accession IDs from first column of ENA's tsv response
+        queryresult_df = pd.read_csv(io.StringIO(self.queryresult), sep='\t')
+        listOfAccessionIDs = queryresult_df['accession'].unique().tolist()
 
         # logger = Utilities.log("IDlist", user_session)
         # logger.debug(f"[QUERY-ON-ENA]: [{user_query}] - [{data_type}]")
         # logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfProjectIDs}")
 
         return listOfAccessionIDs
-
 
 
     def IDlistFromUserInput(self, user_input):
