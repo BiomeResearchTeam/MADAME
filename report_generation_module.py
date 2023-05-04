@@ -89,6 +89,7 @@ def available_metadata_files(user_session):
     possible_metadata_files = [file for file in os.listdir(user_session) if file.endswith("-metadata.tsv")]
     list_metadata_files = [file for file in possible_metadata_files if file.endswith(tuple(metadata_files))]
     list_metadata_files = sorted(list_metadata_files)
+    print(list_metadata_files)
      
     available_metadata_files = len(list_metadata_files)
 
@@ -100,7 +101,7 @@ def available_metadata_files(user_session):
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         e_df_path = os.path.join(user_session, list_metadata_files[0])
         e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
-        report(user_session, e_df, p_df = None)
+        report(user_session, e_df, p_df)
         final_screen(user_session)
 
     elif available_metadata_files == 2:
@@ -115,15 +116,21 @@ def available_metadata_files(user_session):
 
 
 #reports
-def report(user_session, e_df, p_df = None): 
+def report(user_session, e_df, p_df): 
     """
     report generation based on how many '*_merged_<experiment or publication>-metadata.tsv' files are present in the folder.
     create a report folder that will contain all plots in png format, create a single html that will contain all plots 
     """
-    color_palette = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
-        'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
-        'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
-        'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)']
+    #color_palette = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+        # 'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
+        # 'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
+        # 'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 210, 11)']
+    #color_palette_3 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#E70056', '#FF0054', '#FF2A2A', '#FF3F15', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
+    #color_palette_6 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#FF0054', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
+    #color_palette_7 = ['#714CF1', '#8338EC', '#A22ACD', '#C11CAD', '#FF006E', '#FB5607', '#FD8A09', '#FFBE0B']
+    #color_palette_8 = ['#301C80', '#5134B9', '#714CF1', '#7A42EF', '#8338EC', '#9331DD', '#A22ACD', '#D1746C', '#E8993B', '#FFBE0A']
+    #color_palette_9 = ['#301C80', '#252D87', '#1B3E8F', '#104F96', '#1D6391', '#2B788C', '#388C87', '#7A9D5D', '#BDAD34', '#FFBE0A']
+    color_palette = ['#301C80', '#282986', '#20368B', '#263C8E', '#2C4190', '#403F8E', '#702F86', '#9F207E', '#CF1076', '#FF006E']
     color_palette_scale = px.colors.make_colorscale(color_palette)
     color_palette_scale_r = list(reversed(color_palette))
     color_palette_scale_r = px.colors.make_colorscale(color_palette_scale_r)
@@ -149,7 +156,7 @@ def initial_table(report_folder, e_df, p_df, f):
     """
     table of most relevant info extracted from metadata
     """
-    
+
     first_column = ['Total number of projects with available metadata', 'Total number of projects with available data', 'Total number of samples', 'Total number of scientific names', 
         'Total number of library source','Total number of library strategies','Total number of instrument platforms',
         'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project', 'Total number of countries', 'Max total size']
