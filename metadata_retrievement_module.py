@@ -13,9 +13,7 @@ from rich.text import Text
 
 def metadata_retrievement(user_session):
     while True:
-        Utilities.clear() 
-        # title = " METADATA RETRIEVEMENT MODULE "
-        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        Utilities.clear()
         title = Panel(Text("METADATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
         rich_print(title)
 
@@ -136,8 +134,6 @@ def metadata_retrievement_file(user_session):
 def metadata_download(listOfAvailableAccessions, user_session):
 
     Utilities.clear()
-    # title = " DOWNLOAD METADATA "
-    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
     title = Panel(Text("DOWNLOAD METADATA", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 

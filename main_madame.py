@@ -20,6 +20,8 @@ def main():
 
     while True:
         Utilities.clear()
+        readline.parse_and_bind('tab: complete')
+        readline.set_completer_delims(' \t\n')
         madame_logo() 
 
         print("\n Choose your working session, it will be created in MADAME/Downloads \n")
@@ -107,26 +109,30 @@ def existing_session():
 
     print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
     
-    user_session = ''
-    while user_session.strip() == '': # preventing empty inputs (giulia)
+    user_session = ''  #>>>originale<<<
+    #user_session = 'Downloads'  #>>>nuovo<<<
+    while user_session.strip() == '': # preventing empty inputs
         user_session = str(input(" >> Digit the folder name (case sensitive): "))
         if user_session in ("main menu", "MAIN MENU", "Main menu"):
             return
 
-    while not os.path.isdir(os.path.join("Downloads", user_session)):
-        print("\n Error: there is no folder named " + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + ".")
+    while not os.path.isdir(os.path.join("Downloads", user_session)):  #>>>originale<<<
+    #while not os.path.isdir(os.path.join(user_session)):    #>>>nuovo<<<
+        print("\n Error: there is no folder named " + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
         print(" Here's your current sessions:\n")
 
         madame_tree = Tree("MADAME")
-        downloads_branch = madame_tree.add("Downloads")
-        dirs_branches = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]
+        downloads_branch = madame_tree.add("Downloads")    #>>>originale<<<
+
+        dirs_branches = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]    #>>>originale<<<
+        #dirs_branches = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]
         for dir in dirs_branches:
             downloads_branch.add(dir)
 
         rich_print(madame_tree)
 
         user_session = ''
-        while user_session.strip() == '': # preventing empty inputs (giulia)
+        while user_session.strip() == '': # preventing empty inputs
             user_session = str(input("\n >> Digit the folder name (case sensitive): ")) 
             if user_session in ("main menu", "MAIN MENU", "Main menu"):
                 return
