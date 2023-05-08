@@ -46,7 +46,7 @@ class Utilities:
         # Create handlers
         c_handler = logging.StreamHandler()
         f_handler = logging.FileHandler(os.path.join('Downloads', user_session, f'{user_session}_log.log'))
-        logger.setLevel(logging.DEBUG)
+        logger.setLevel(logging.DEBUG) 
         c_handler.setLevel(logging.INFO) # logger.info for saving to log file and printing nicely (only the message)
         f_handler.setLevel(logging.DEBUG) # logger.debug for ONLY saving log to file - does not print on console
 
@@ -57,7 +57,7 @@ class Utilities:
         f_handler.setFormatter(f_format)
 
         # Add handlers to the logger
-        #logger.addHandler(c_handler) we are not using it
+        logger.addHandler(c_handler)
         logger.addHandler(f_handler)
 
         return logger

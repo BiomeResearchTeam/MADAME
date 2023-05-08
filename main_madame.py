@@ -125,7 +125,6 @@ def existing_session():
         downloads_branch = madame_tree.add("Downloads")    #>>>originale<<<
 
         dirs_branches = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]    #>>>originale<<<
-        #dirs_branches = [d for d in os.listdir("Downloads") if os.path.isdir(os.path.join("Downloads", d)) and not d.startswith(".")]
         for dir in dirs_branches:
             downloads_branch.add(dir)
 
@@ -137,6 +136,8 @@ def existing_session():
             if user_session in ("main menu", "MAIN MENU", "Main menu"):
                 return
 
+    # logger = Utilities.log("main_madame", user_session)
+    # logger.debug(f"[PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/{user_session}")
     menu(user_session)
 
 def menu(user_session):
@@ -165,6 +166,8 @@ def menu(user_session):
             else:
                 if module_choice in ("exit", "EXIT", "Exit"):
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
+                    # logger = Utilities.log("main_madame", user_session)
+                    # logger.info("\nGood bye, see you soon!\n")
                     exit()
                 elif module_choice in ("change", "CHANGE", "Change"):
                     main()
