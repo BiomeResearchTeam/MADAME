@@ -47,18 +47,19 @@ class Utilities:
         c_handler = logging.StreamHandler()
         f_handler = logging.FileHandler(os.path.join('Downloads', user_session, f'{user_session}_log.log'))
         logger.setLevel(logging.DEBUG) 
-        c_handler.setLevel(logging.INFO) # logger.info for saving to log file and printing nicely (only the message)
-        f_handler.setLevel(logging.DEBUG) # logger.debug for ONLY saving log to file - does not print on console
+        if not logger.handlers: #prevent logger.info printing twice the message
+            c_handler.setLevel(logging.INFO) # logger.info for saving to log file and printing nicely (only the message)
+            f_handler.setLevel(logging.DEBUG) # logger.debug for ONLY saving log to file - does not print on console
 
-        # Create formatters and add it to handlers
-        c_format = logging.Formatter('%(message)s')
-        f_format = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
-        c_handler.setFormatter(c_format)
-        f_handler.setFormatter(f_format)
+            # Create formatters and add it to handlers
+            c_format = logging.Formatter('%(message)s')
+            f_format = logging.Formatter('%(asctime)s - %(name)s - %(message)s')
+            c_handler.setFormatter(c_format)
+            f_handler.setFormatter(f_format)
 
-        # Add handlers to the logger
-        logger.addHandler(c_handler)
-        logger.addHandler(f_handler)
+            # Add handlers to the logger
+            logger.addHandler(c_handler)
+            logger.addHandler(f_handler)
 
         return logger
 

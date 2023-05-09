@@ -88,8 +88,8 @@ def new_session():
     Utilities.createDirectory(os.path.join("Downloads", user_session))
     print("\n Your new folder was succesfully created: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "")
     
-    # logger = Utilities.log("main_madame", user_session)
-    # logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
+    logger = Utilities.log("main_madame", user_session)
+    logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
 
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
 
@@ -136,8 +136,8 @@ def existing_session():
             if user_session in ("main menu", "MAIN MENU", "Main menu"):
                 return
 
-    # logger = Utilities.log("main_madame", user_session)
-    # logger.debug(f"[PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/{user_session}")
+    logger = Utilities.log("main_madame", user_session)
+    logger.debug(f"[PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/{user_session}")
     menu(user_session)
 
 def menu(user_session):
@@ -166,8 +166,8 @@ def menu(user_session):
             else:
                 if module_choice in ("exit", "EXIT", "Exit"):
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
-                    # logger = Utilities.log("main_madame", user_session)
-                    # logger.info("\nGood bye, see you soon!\n")
+                    logger = Utilities.log("main_madame", user_session)
+                    logger.debug(f"[EXIT]")
                     exit()
                 elif module_choice in ("change", "CHANGE", "Change"):
                     main()
