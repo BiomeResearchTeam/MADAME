@@ -1,18 +1,18 @@
 from Utilities import Color, Utilities
 import os
-from os import path
+#from os #import path
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 from Project import Project
 import pycountry
 from collections import Counter
-from plotly.subplots import make_subplots
-import numpy as np
+#from plotly.subplots #import make_subplots
+#import numpy as np
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
-import glob
+#import glob
 
 def report_generation(user_session):
     """
@@ -46,7 +46,7 @@ def report_generation(user_session):
             
             else:
                 if user_report_input == 1:
-                    user_session = os.path.join("Downloads", user_session)
+                    user_session = os.path.join(user_session)
                     available_metadata_files(user_session) 
 
                 if user_report_input == 2:
@@ -84,9 +84,9 @@ def user_report_local(user_session):
 def available_metadata_files(user_session):
     """
     create list of available MADAME metadata files. check it and generate the report
-    """
+    """ 
     metadata_files = ["_merged_experiments-metadata.tsv","_merged_publications-metadata.tsv"]
-    possible_metadata_files = [file for file in os.listdir(user_session) if file.endswith("-metadata.tsv")]
+    possible_metadata_files = [file for file in os.listdir(os.path.join('Downloads', user_session)) if file.endswith("-metadata.tsv")]
     list_metadata_files = [file for file in possible_metadata_files if file.endswith(tuple(metadata_files))]
     list_metadata_files = sorted(list_metadata_files)
     print(list_metadata_files)
@@ -101,16 +101,20 @@ def available_metadata_files(user_session):
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         e_df_path = os.path.join(user_session, list_metadata_files[0])
         e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
+        logger = Utilities.log("report_generation_module", user_session)
+        logger.debug(f"Found {list_metadata_files[0]}")
         report(user_session, e_df, p_df)
         final_screen(user_session)
 
     elif available_metadata_files == 2:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{list_metadata_files[1]}")
-        e_df_path = os.path.join(user_session, list_metadata_files[0])
+        e_df_path = os.path.join('Downloads', user_session, list_metadata_files[0])
         e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
-        p_df_path = os.path.join(user_session, list_metadata_files[1])
+        p_df_path = os.path.join('Downloads', user_session, list_metadata_files[1])
         p_df = pd.read_csv (p_df_path, delimiter='\t', infer_datetime_format=True)
+        logger = Utilities.log("report_generation_module", user_session)
+        logger.debug(f"Found {list_metadata_files[0]} and {list_metadata_files[1]}")
         report(user_session, e_df, p_df)
         final_screen(user_session)
 
@@ -135,11 +139,11 @@ def report(user_session, e_df, p_df):
     color_palette_scale_r = list(reversed(color_palette))
     color_palette_scale_r = px.colors.make_colorscale(color_palette_scale_r)
 
-    report_folder = (os.path.join(user_session, 'Report_images'))
+    report_folder = (os.path.join('Downloads', user_session, 'Report_images'))
     if not os.path.exists(report_folder):
         os.makedirs(report_folder)
     
-    report_html = os.path.join(user_session,f'Report_{os.path.basename(user_session)}.html')
+    report_html = os.path.join('Downloads', user_session,f'Report_{user_session}.html')
     
     with open(report_html, 'w+') as f:
         initial_table(report_folder, e_df, p_df, f)
@@ -267,7 +271,10 @@ def initial_table(report_folder, e_df, p_df, f):
     fig.update_layout(title_text='Summary information<br><br><br><br><br><br><br><br>\n', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
     fig.write_html(os.path.join(report_folder, "Sample number.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-    
+
+    df = pd.DataFrame(values)
+    file_name = os.path.join(report_folder,'summary_table.xlsx')
+    df.to_excel(file_name)
 
 
 def sample_number(report_folder, e_df, color_palette_scale_r, f):
@@ -609,6 +616,8 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
 
     
 def final_screen(user_session):
-    print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report in HTML format' + Color.END, 
-    'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'{os.path.basename(user_session)}' + Color.END)
+    print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report file in HTML format' + Color.END, 
+    'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'Downloads/{user_session}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+    logger = Utilities.log("report_generation_module", user_session)
+    logger.debug(f"[REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/{user_session}")
