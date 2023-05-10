@@ -1,0 +1,58 @@
+2023-05-10 19:15:19,013 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:15:19,014 - main_madame - [USER-SESSION-CREATED]: MADAME/Downloads/10-maggio
+2023-05-10 19:15:21,729 - metadata_retrievement_module - [STARTED]
+2023-05-10 19:15:28,048 - metadata_retrievement_module - [QUERY ON ENA]: "nail microbiome"
+2023-05-10 19:15:28,048 - metadata_retrievement_module - [DATA TYPE CHOSEN]: "projects"
+2023-05-10 19:15:28,395 - IDlist - [QUERY-DETAILS]: found 2 projects:
+2023-05-10 19:15:28,395 - IDlist - [QUERY-DETAILS]: accession	description
+2023-05-10 19:15:28,395 - IDlist - [QUERY-DETAILS]: "PRJNA780434"	"nail microbiome ITS and 16S"
+2023-05-10 19:15:28,396 - IDlist - [QUERY-DETAILS]: "PRJEB37496"	"Landscape of fungal diversity in healthy nails and onychomycosis"
+2023-05-10 19:15:28,396 - IDlist - [QUERY-DETAILS]: 
+2023-05-10 19:15:36,380 - main_madame - [EXIT]
+
+2023-05-10 19:26:27,083 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:26:27,085 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/10-maggio
+2023-05-10 19:26:28,489 - metadata_retrievement_module - [STARTED]
+2023-05-10 19:26:35,611 - metadata_retrievement_module - [QUERY ON ENA]: "madame"
+2023-05-10 19:26:35,612 - metadata_retrievement_module - [DATA TYPE CHOSEN]: "projects"
+2023-05-10 19:26:36,506 - IDlist - [QUERY-DETAILS]: no projects found.
+2023-05-10 19:26:47,752 - main_madame - [EXIT]
+
+2023-05-10 19:27:37,977 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:27:37,979 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/10-maggio
+2023-05-10 19:27:40,237 - metadata_retrievement_module - [STARTED]
+2023-05-10 19:27:48,064 - metadata_retrievement_module - [QUERY ON ENA]: "nail microbiome"
+2023-05-10 19:27:48,065 - metadata_retrievement_module - [DATA TYPE CHOSEN]: "projects"
+2023-05-10 19:27:48,677 - IDlist - [QUERY-DETAILS]: found 2 projects:
+2023-05-10 19:27:48,677 - IDlist - [QUERY-DETAILS]: accession	description
+2023-05-10 19:27:48,677 - IDlist - [QUERY-DETAILS]: "PRJNA780434"	"nail microbiome ITS and 16S"
+2023-05-10 19:27:48,678 - IDlist - [QUERY-DETAILS]: "PRJEB37496"	"Landscape of fungal diversity in healthy nails and onychomycosis"
+2023-05-10 19:27:48,678 - IDlist - [QUERY-DETAILS]: 
+2023-05-10 19:27:57,810 - main_madame - [EXIT]
+
+2023-05-10 19:29:37,206 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:29:37,208 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/10-maggio
+2023-05-10 19:29:39,005 - metadata_retrievement_module - [STARTED]
+2023-05-10 19:29:47,228 - metadata_retrievement_module - [QUERY ON ENA]: "nail microbiome"
+2023-05-10 19:29:47,228 - metadata_retrievement_module - [DATA TYPE CHOSEN]: "projects"
+2023-05-10 19:29:47,447 - IDlist - [QUERY-DETAILS]: found 2 projects:
+2023-05-10 19:29:47,447 - IDlist - [QUERY-DETAILS]: accession	description
+2023-05-10 19:29:47,447 - IDlist - [QUERY-DETAILS]: "PRJNA780434"	"nail microbiome ITS and 16S"
+2023-05-10 19:29:47,447 - IDlist - [QUERY-DETAILS]: "PRJEB37496"	"Landscape of fungal diversity in healthy nails and onychomycosis"
+2023-05-10 19:29:47,448 - IDlist - [QUERY-DETAILS]: 
+2023-05-10 19:35:21,017 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:35:21,018 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/10-maggio
+2023-05-10 19:35:23,246 - metadata_retrievement_module - [STARTED]
+2023-05-10 19:35:29,509 - IDlist - [QUERY-ON-ENA]: [nail microbiome] - [projects]
+2023-05-10 19:35:29,509 - IDlist - [ACCESSION-IDS-FOUND]: ['PRJNA780434', 'PRJEB37496']
+2023-05-10 19:35:29,513 - IDlist - [QUERY-DETAILS]: found 2 projects:
+2023-05-10 19:35:29,513 - IDlist - [QUERY-DETAILS]: accession	description
+2023-05-10 19:35:29,513 - IDlist - [QUERY-DETAILS]: "PRJNA780434"	"nail microbiome ITS and 16S"
+2023-05-10 19:35:29,513 - IDlist - [QUERY-DETAILS]: "PRJEB37496"	"Landscape of fungal diversity in healthy nails and onychomycosis"
+2023-05-10 19:35:29,513 - IDlist - [QUERY-DETAILS]: 
+2023-05-10 19:35:50,535 - main_madame - [EXIT]
+
+2023-05-10 19:44:51,626 - main_madame - [MADAME INITIALIZED]
+2023-05-10 19:44:51,627 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/10-maggio
+2023-05-10 19:45:00,902 - main_madame - [EXIT]
+

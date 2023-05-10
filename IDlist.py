@@ -1,7 +1,7 @@
 import re
 import io
 import requests as rq
-from Utilities import Color
+from Utilities import Color, Utilities
 import time
 import pandas as pd
 
@@ -57,9 +57,9 @@ class GetIDlist:
         queryresult_df = pd.read_csv(io.StringIO(self.queryresult), sep='\t')
         listOfAccessionIDs = queryresult_df['accession'].unique().tolist()
 
-        # logger = Utilities.log("IDlist", user_session)
-        # logger.debug(f"[QUERY-ON-ENA]: [{user_query}] - [{data_type}]")
-        # logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfProjectIDs}")
+        logger = Utilities.log("IDlist", user_session)
+        logger.debug(f'[QUERY-ON-ENA]: "{user_query}" - {data_type}')
+        logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfAccessionIDs}")
 
         return listOfAccessionIDs
 
@@ -171,16 +171,16 @@ class GetIDlist:
         if total_of_accessions == 0:
             print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
             + Color.END, f"for the query: '{self.user_query}'\n")
-            # logger = Utilities.log("IDlist", user_session)
-            # logger.debug(f"[QUERY-DETAILS]: no {self.data_type} found.")
+            logger = Utilities.log("IDlist", user_session)
+            logger.debug(f"[QUERY-DETAILS]: no {self.data_type} found")
 
         else:
             print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
-            # logger = Utilities.log("IDlist", user_session)
-            # logger.debug(f"[QUERY-DETAILS]: found {total_of_accessions} {self.data_type}:")
-            # for line in self.queryresult.split("\n"):
-            #     if line != "" or "accession\tdescription":
-            #         logger.debug(f"[QUERY-DETAILS]: {line}")
+            logger = Utilities.log("IDlist", user_session)
+            logger.debug(f"[QUERY-DETAILS]: found {total_of_accessions} {self.data_type}:")
+            for line in self.queryresult.split("\n"):
+                if line != "" or "accession\tdescription":
+                    logger.debug(f"[QUERY-DETAILS]: {line}")
 
 
     def IDlistFromUserInputDetails(self, dictionaryOfAccessionIDs):

@@ -34,7 +34,9 @@ def metadata_retrievement(user_session):
                 print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
             else:
-                if metadata_retrievement_choice == 1:  
+                if metadata_retrievement_choice == 1:
+                    logger = Utilities.log("metadata_retrievement_module", user_session)
+                    logger.debug(f"[OPTION-1]: Doing a query on ENA")  
                     metadata_retrievement_query(user_session)
                     
 
@@ -67,9 +69,6 @@ def metadata_retrievement_query(user_session):
                 continue
 
             else:
-                logger = Utilities.log("metadata_retrievement_module", user_session)
-                logger.debug(f'[QUERY ON ENA]: "{user_query_input}"')
-                logger.debug(f'[DATA TYPE CHOSEN]: "{user_data_type}"')  
                 listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
                 if len(listOfAccessionIDs) == 0:
@@ -93,8 +92,6 @@ def metadata_retrievement_digit(user_session):
             return
 
         else:
-            logger = Utilities.log("metadata_retrievement_module", user_session)
-            logger.debug(f'[LIST OF ACCESSION CODES]: "{user_query_input}"')
             listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
             if len(listOfAccessionIDs) == 0:
