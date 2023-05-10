@@ -61,7 +61,7 @@ def main():
 # FOLDER CREATED BY USER INPUT
 
 def new_session():
-    
+
     Utilities.clear()
     madame_logo()
     title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), expand=False, style = "b magenta")
@@ -88,6 +88,8 @@ def new_session():
     Utilities.createDirectory(os.path.join("Downloads", user_session))
     print("\n Your new folder was succesfully created: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + "")
     
+    logger = Utilities.log("main_madame", user_session)
+    logger.debug(f"[MADAME INITIALIZED]")
     logger = Utilities.log("main_madame", user_session)
     logger.debug(f"[USER-SESSION-CREATED]: MADAME/Downloads/{user_session}")
 
@@ -135,7 +137,8 @@ def existing_session():
             user_session = str(input("\n >> Digit the folder name (case sensitive): ")) 
             if user_session in ("main menu", "MAIN MENU", "Main menu"):
                 return
-
+    logger = Utilities.log("main_madame", user_session)
+    logger.debug(f"[MADAME INITIALIZED]")
     logger = Utilities.log("main_madame", user_session)
     logger.debug(f"[PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/{user_session}")
     menu(user_session)
@@ -167,7 +170,7 @@ def menu(user_session):
                 if module_choice in ("exit", "EXIT", "Exit"):
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
                     logger = Utilities.log("main_madame", user_session)
-                    logger.debug(f"[EXIT]")
+                    logger.debug(f"[EXIT]\n")
                     exit()
                 elif module_choice in ("change", "CHANGE", "Change"):
                     main()
@@ -176,7 +179,9 @@ def menu(user_session):
         
         Utilities.clear()
 
-        if module_choice == 1:            
+        if module_choice == 1: 
+            logger = Utilities.log("metadata_retrievement_module", user_session)
+            logger.debug(f"[STARTED]")        
             metadata_retrievement(user_session)
 
         if module_choice == 2:
