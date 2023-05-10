@@ -38,8 +38,10 @@ def main():
                     continue
                 break
             else:
-                if module_choice in ("exit", "EXIT", "Exit"):
+                if module_choice.lower() in ("exit"):
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
+                    logger = Utilities.log("main_madame", user_session)
+                    logger.debug(f"[EXIT]\n")
                     exit()
                 else:
                     print("Wrong input, expected a numeric input or <exit> (without <>), try again.\n") 
@@ -115,7 +117,7 @@ def existing_session():
     #user_session = 'Downloads'  #>>>nuovo<<<
     while user_session.strip() == '': # preventing empty inputs
         user_session = str(input(" >> Digit the folder name (case sensitive): "))
-        if user_session in ("main menu", "MAIN MENU", "Main menu"):
+        if user_session.lower() in ("main menu"):
             return
 
     while not os.path.isdir(os.path.join("Downloads", user_session)):  #>>>originale<<<
@@ -135,7 +137,7 @@ def existing_session():
         user_session = ''
         while user_session.strip() == '': # preventing empty inputs
             user_session = str(input("\n >> Digit the folder name (case sensitive): ")) 
-            if user_session in ("main menu", "MAIN MENU", "Main menu"):
+            if user_session.lower() in ("main menu"):
                 return
     logger = Utilities.log("main_madame", user_session)
     logger.debug(f"[MADAME INITIALIZED]")
@@ -167,7 +169,7 @@ def menu(user_session):
                     continue
                 break
             else:
-                if module_choice in ("exit", "EXIT", "Exit"):
+                if module_choice.lower() in ("exit"):
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
                     logger = Utilities.log("main_madame", user_session)
                     logger.debug(f"[EXIT]\n")
@@ -181,16 +183,22 @@ def menu(user_session):
 
         if module_choice == 1: 
             logger = Utilities.log("metadata_retrievement_module", user_session)
-            logger.debug(f"[STARTED]")        
+            logger.debug(f"[STARTED]")
             metadata_retrievement(user_session)
 
         if module_choice == 2:
+            logger = Utilities.log("publications_retrievement_module", user_session)
+            logger.debug(f"[STARTED]")
             publications_retrievement(user_session)
 
         if module_choice == 3:
+            logger = Utilities.log("report_generation_module", user_session)
+            logger.debug(f"[STARTED]")
             report_generation(user_session)
 
-        if module_choice == 4:  
+        if module_choice == 4:
+            logger = Utilities.log("data_retrievement_module", user_session)
+            logger.debug(f"[STARTED]") 
             data_retrievement(user_session)
 
 
