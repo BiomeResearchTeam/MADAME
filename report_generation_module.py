@@ -89,7 +89,6 @@ def available_metadata_files(user_session):
     possible_metadata_files = [file for file in os.listdir(os.path.join('Downloads', user_session)) if file.endswith("-metadata.tsv")]
     list_metadata_files = [file for file in possible_metadata_files if file.endswith(tuple(metadata_files))]
     list_metadata_files = sorted(list_metadata_files)
-    print(list_metadata_files)
      
     available_metadata_files = len(list_metadata_files)
 
@@ -99,11 +98,11 @@ def available_metadata_files(user_session):
     
     elif available_metadata_files == 1:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
-        e_df_path = os.path.join(user_session, list_metadata_files[0])
+        e_df_path = os.path.join('Downloads', user_session, list_metadata_files[0])
         e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
         logger = Utilities.log("report_generation_module", user_session)
         logger.debug(f"Found {list_metadata_files[0]}")
-        report(user_session, e_df, p_df)
+        report(user_session, e_df, p_df=None) #mod sara
         final_screen(user_session)
 
     elif available_metadata_files == 2:
@@ -194,23 +193,24 @@ def initial_table(report_folder, e_df, p_df, f):
                 value = e_df[column].nunique()
                 second_column.append(value)
 
-    for column in ['affiliation']:
-        if pd.Series(column).isin(p_df.columns).all():
+    if p_df is not None:
+        for column in ['affiliation']:
+            if pd.Series(column).isin(p_df.columns).all():
 
-            replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
-            p_df['affiliation'] = p_df['affiliation'].replace(replacers)
-            p_df.fillna("nan",inplace=True)
-            affiliation_list = p_df['affiliation'].tolist()
-            country_list = []
-            for affiliation in affiliation_list:
-                if affiliation !='nan':
-                    for country in pycountry.countries:
-                        if country.name in affiliation:
-                            country_list.append(country.name)
-            
-            unique_country_list = list(set(country_list))
-            country_number = len(unique_country_list)
-            second_column.append(country_number)
+                replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
+                p_df['affiliation'] = p_df['affiliation'].replace(replacers)
+                p_df.fillna("nan",inplace=True)
+                affiliation_list = p_df['affiliation'].tolist()
+                country_list = []
+                for affiliation in affiliation_list:
+                    if affiliation !='nan':
+                        for country in pycountry.countries:
+                            if country.name in affiliation:
+                                country_list.append(country.name)
+                
+                unique_country_list = list(set(country_list))
+                country_number = len(unique_country_list)
+                second_column.append(country_number)
 
 
     for column in ['sra_bytes']:
@@ -320,8 +320,31 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
                 colors = px.colors.sample_colorscale(color_palette_scale, [n for n in range(n_colors)]) 
 
             df_pie = df_pie.sort_values("Counts", ascending=False)
+            df_pie["Percent"] = df_pie["Counts"]/df_pie["Counts"].sum()
+            if len(df_pie.index) > 10:
+                df_pie_copy = df_pie
+                df_pie_rare = df_pie_copy[df_pie_copy["Percent"]< 0.02]
+                print(df_pie_rare)
+                df_pie.drop(df_pie[df_pie["Percent"]< 0.02].index, inplace = True)
+                print(df_pie)
+
+                df_pie_rare = df_pie_rare.sum().to_frame().T #sum alla rows into one, make it in dataframe, and traspose rows into columns
+                df_pie_rare.at[0, f'{column_name}'] = 'OTHER'
+
+                df_pie = pd.concat([df_pie, df_pie_rare])
+                print(df_pie)
+
+                #df_pie_rare = df_pie_rare.rename(columns = {f'{column}':'OTHER'}, inplace = True)
+            
+            #else:
+                
+
+
+            #così funziona ma si crea una stringa in cui sono sommate le stringe con percentage < 0.02
+            # df_pie["Percent"] = df_pie["Counts"]/df_pie["Counts"].sum()
+            # df_pie_condensed = pd.concat([df_pie.loc[df_pie["Percent"] < 0.02].sum().to_frame().T, df_pie.loc[df_pie["Percent"] >= 0.02]])
             fig = px.pie(df_pie, values=df_pie['Counts'], names=df_pie[column_name], hole=0.6, 
-                    color_discrete_sequence = colors)
+                    color_discrete_sequence = colors) 
             
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
             fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
