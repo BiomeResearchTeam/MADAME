@@ -381,8 +381,6 @@ def projects_size(report_folder, e_df, color_palette_scale_r, f):
         user_Megabytes.append(user_bytes)
 
     df['User_Megabytes']=user_Megabytes
-
-    df['symbol'] =  np.where(df['User_Megabytes'] > 0, 'circle', 'x')
    
     #BUBBLE PLOT
     fig = px.scatter(df, x='Project', y='User_Megabytes', size='User_Megabytes',
