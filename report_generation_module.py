@@ -321,28 +321,20 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
 
             df_pie = df_pie.sort_values("Counts", ascending=False)
             df_pie["Percent"] = df_pie["Counts"]/df_pie["Counts"].sum()
-            if len(df_pie.index) > 10:
+
+            file_name = os.path.join(report_folder,f'{column_name}_table.xlsx')
+            df_pie.to_excel(file_name)
+
+            if len(df_pie.index) > 10: #prevent complex pie chart
                 df_pie_copy = df_pie
-                df_pie_rare = df_pie_copy[df_pie_copy["Percent"]< 0.02]
-                print(df_pie_rare)
-                df_pie.drop(df_pie[df_pie["Percent"]< 0.02].index, inplace = True)
-                print(df_pie)
+                df_pie_rare = df_pie.iloc[10:,]
+                df_pie_copy.drop(df_pie.iloc[10:,].index, inplace = True)
 
                 df_pie_rare = df_pie_rare.sum().to_frame().T #sum alla rows into one, make it in dataframe, and traspose rows into columns
-                df_pie_rare.at[0, f'{column_name}'] = 'OTHER'
+                df_pie_rare.at[0, f'{column_name}'] = 'Other'
 
                 df_pie = pd.concat([df_pie, df_pie_rare])
-                print(df_pie)
 
-                #df_pie_rare = df_pie_rare.rename(columns = {f'{column}':'OTHER'}, inplace = True)
-            
-            #else:
-                
-
-
-            #così funziona ma si crea una stringa in cui sono sommate le stringe con percentage < 0.02
-            # df_pie["Percent"] = df_pie["Counts"]/df_pie["Counts"].sum()
-            # df_pie_condensed = pd.concat([df_pie.loc[df_pie["Percent"] < 0.02].sum().to_frame().T, df_pie.loc[df_pie["Percent"] >= 0.02]])
             fig = px.pie(df_pie, values=df_pie['Counts'], names=df_pie[column_name], hole=0.6, 
                     color_discrete_sequence = colors) 
             
@@ -358,9 +350,6 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
             fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-
-
 
 
 #PROJECT SIZE & BYTES ##trovare modo di aggiungere una x rossa al progetto dove non ci sono dati
@@ -639,8 +628,9 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
 
     
 def final_screen(user_session):
+    logger = Utilities.log("report_generation_module", user_session)
+    logger.debug(f"[REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/{user_session}")
     print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report file in HTML format' + Color.END, 
     'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'Downloads/{user_session}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-    logger = Utilities.log("report_generation_module", user_session)
-    logger.debug(f"[REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/{user_session}")
+    
