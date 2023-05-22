@@ -8,7 +8,7 @@ from Project import Project
 import pycountry
 from collections import Counter
 #from plotly.subplots #import make_subplots
-#import numpy as np
+import numpy as np
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
@@ -381,6 +381,8 @@ def projects_size(report_folder, e_df, color_palette_scale_r, f):
         user_Megabytes.append(user_bytes)
 
     df['User_Megabytes']=user_Megabytes
+
+    df['symbol'] =  np.where(df['User_Megabytes'] > 0, 'circle', 'x')
    
     #BUBBLE PLOT
     fig = px.scatter(df, x='Project', y='User_Megabytes', size='User_Megabytes',
@@ -395,11 +397,11 @@ def projects_size(report_folder, e_df, color_palette_scale_r, f):
     fig.update_coloraxes(colorbar_title_text="Megabyte")#, colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20)
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
     fig.update_yaxes(title_text= "megabytes",title_font=dict(family='Times New Roman', size=25), type="log")
-    fig.update_traces(hovertemplate = "Project: %{x} <br>Megabytes: %{y:,.1f}<br><extra></extra>")
-
+    fig.update_traces(hovertemplate = "Project: %{x} <br>Megabytes: %{y:,.1f}<br><extra></extra>", marker_sizemin=10)
     fig.write_image(os.path.join(report_folder, "Projects size.png"), width=1920, height=1080)
     fig.write_html(os.path.join(report_folder, "Projects size.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
 
 
 def IDs_dates(report_folder, e_df, f):
