@@ -69,6 +69,9 @@ def metadata_retrievement_query(user_session):
                 continue
 
             else:
+                logger = Utilities.log("metadata_retrievement_module", user_session)
+                logger.debug(f"OPTION 1 - USER QUERY ON ENA")
+
                 listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
                 if len(listOfAccessionIDs) == 0:
@@ -90,6 +93,8 @@ def metadata_retrievement_digit(user_session):
             return
 
         else:
+            logger = Utilities.log("metadata_retrievement_module", user_session)
+            logger.debug(f"OPTION 2 - USER IDs SUBMISSION")
             listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
             if len(listOfAccessionIDs) == 0:
@@ -115,16 +120,14 @@ def metadata_retrievement_file(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
             else: 
+                logger = Utilities.log("metadata_retrievement_module", user_session)
+                logger.debug(f"OPTION 3 - USER FILE SUBMISSION: {csv_file_input}")
+    
                 listOfAccessionIDs = UserFileCodesIDlist(csv_file_input)
                 if len(listOfAccessionIDs) == 0:
-                    print(Color.BOLD + Color.RED + "Error, file is empty. " + Color.END, "Try again\n")
-                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                 else: 
-                    listOfAvailableAccessions = Project.getAvailableAccessions(user_session, listOfAccessionIDs)#
-                    Project.listOfAccessionIDsTSV(listOfAvailableAccessions, user_session)#
-                    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")#
-                    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")#
+                    listOfAvailableAccessions = UserDigitCodesIDlist(listOfAccessionIDs, user_session)
                     metadata_download(listOfAvailableAccessions, user_session)
                     return
         
