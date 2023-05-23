@@ -97,8 +97,6 @@ def metadata_retrievement_digit(user_session):
 
             else:  
                 metadata_download(listOfAccessionIDs, user_session)
-                print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
-                input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
                 return
 
 
