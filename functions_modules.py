@@ -41,10 +41,13 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
         listOfAccessionIDs = GetIDlist.Query(user_session, user_query_input, user_data_type)
     GetIDlist.QueryDetails(user_session, listOfAccessionIDs) 
     listOfAvailableProjects = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
-    Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
-
-    print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
-    input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
+    listOfAccessionIDs_tsv = Project.listOfAccessionIDsTSV(listOfAvailableProjects, user_session)
+    if len(listOfAvailableProjects) == 0:
+        print('Do you want to ' + Color.BOLD + 'try again?' + Color.END)
+        input("Press " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+    else:
+        print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
+        input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
                 
     return listOfAvailableProjects
         
