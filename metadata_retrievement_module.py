@@ -5,7 +5,7 @@ from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
 from SampleMetadataDownload import SampleMetadataDownload
 from SampleMetadataParser import SampleMetadataParser
 from functions_modules import *
-import time 
+#import time 
 from os import path
 from rich import print as rich_print
 from rich.panel import Panel
@@ -72,8 +72,6 @@ def metadata_retrievement_query(user_session):
                 listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
                 if len(listOfAccessionIDs) == 0:
-                    print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
-                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     continue
                     
                 else:
@@ -95,12 +93,12 @@ def metadata_retrievement_digit(user_session):
             listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
             if len(listOfAccessionIDs) == 0:
-                print('Do you want to ' + Color.BOLD + 'try again?\n' + Color.END)
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
 
             else:  
                 metadata_download(listOfAccessionIDs, user_session)
+                print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
+                input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
                 return
 
 
