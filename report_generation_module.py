@@ -124,16 +124,16 @@ def report(user_session, e_df, p_df):
     report generation based on how many '*_merged_<experiment or publication>-metadata.tsv' files are present in the folder.
     create a report folder that will contain all plots in png format, create a single html that will contain all plots 
     """
-    #color_palette = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
-        # 'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
-        # 'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
-        # 'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 210, 11)']
+    color_palette = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+        'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
+        'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
+        'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 210, 11)']
     #color_palette_3 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#E70056', '#FF0054', '#FF2A2A', '#FF3F15', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
     #color_palette_6 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#FF0054', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
     #color_palette_7 = ['#714CF1', '#8338EC', '#A22ACD', '#C11CAD', '#FF006E', '#FB5607', '#FD8A09', '#FFBE0B']
     #color_palette_8 = ['#301C80', '#5134B9', '#714CF1', '#7A42EF', '#8338EC', '#9331DD', '#A22ACD', '#D1746C', '#E8993B', '#FFBE0A']
     #color_palette_9 = ['#301C80', '#252D87', '#1B3E8F', '#104F96', '#1D6391', '#2B788C', '#388C87', '#7A9D5D', '#BDAD34', '#FFBE0A']
-    color_palette = ['#301C80', '#282986', '#20368B', '#263C8E', '#2C4190', '#403F8E', '#702F86', '#9F207E', '#CF1076', '#FF006E']
+    #color_palette = ['#301C80', '#282986', '#20368B', '#263C8E', '#2C4190', '#403F8E', '#702F86', '#9F207E', '#CF1076', '#FF006E']
     color_palette_scale = px.colors.make_colorscale(color_palette)
     color_palette_scale_r = list(reversed(color_palette))
     color_palette_scale_r = px.colors.make_colorscale(color_palette_scale_r)
