@@ -38,7 +38,7 @@ def main():
                     continue
                 break
             else:
-                if module_choice.lower() in ("exit"):
+                if module_choice.lower() == "exit":
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
                     logger = Utilities.log("main_madame", user_session)
                     logger.debug(f"[EXIT]\n")
@@ -169,7 +169,7 @@ def menu(user_session):
                     continue
                 break
             else:
-                if module_choice.lower() in ("exit"):
+                if module_choice.lower() == "exit":
                     print(Color.BOLD + Color.PURPLE + "\nGood bye, see you soon!\n" + Color.END)
                     logger = Utilities.log("main_madame", user_session)
                     logger.debug(f"[EXIT]\n")
