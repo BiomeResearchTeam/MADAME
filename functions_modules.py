@@ -1,7 +1,7 @@
 from IDlist import GetIDlist
 from Utilities import Color
 from Project import Project
-import time #sara
+import time 
 import csv
 import os
 from os import path
@@ -14,8 +14,6 @@ from rich.console import Console
 
 def UserQueryENAInput(user_session):
 
-    # title = " QUERY ON ENA "
-    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
     title = Panel(Text("QUERY ON ENA", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
@@ -27,7 +25,7 @@ def UserQueryENAInput(user_session):
             + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")   
 
     user_query_input = ''
-    while user_query_input.strip() == '': # preventing empty inputs (giulia)
+    while user_query_input.strip() == '':
         user_query_input = str(input(">> Digit your query: "))
     
 
@@ -84,7 +82,7 @@ def UserDigitCodesInput(user_session):
 def UserDigitCodesIDlist(user_query_input, user_session):
 
     # Check validity of accessions
-    listOfAccessionIDs, dictionaryOfAccessionIDs = GetIDlist.IDlistFromUserInput(user_input = user_query_input)
+    listOfAccessionIDs, dictionaryOfAccessionIDs = GetIDlist.IDlistFromUserInput(user_session, user_input = user_query_input)
 
     # Spinner for showing MADAME is working (this process can be lenghty)
     console = Console()
@@ -108,8 +106,6 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
 def UserFileCodesInput(user_session):
     
-    # title = " INPUT ACCESSION CODES FILE "
-    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
     title = Panel(Text("INPUT ACCESSION CODES FILE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 

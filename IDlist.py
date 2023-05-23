@@ -64,7 +64,7 @@ class GetIDlist:
         return listOfAccessionIDs
 
 
-    def IDlistFromUserInput(self, user_input):
+    def IDlistFromUserInput(self, user_session, user_input):
 
     # Check the accession codes derived from user input or file. 
     # -> input list must be a clean one (no duplicates, whitespaces, nonetype)
@@ -157,9 +157,11 @@ class GetIDlist:
         dictionaryOfAccessionIDs = {"runs" : runs, "experiments" : experiments, "samples" : samples, "biosamples" : biosamples, "studies" : studies, "projects" : projects, "runs_range" : runs_range, "experiments_range" : experiments_range, "samples_range" : samples_range, "biosamples_range" : biosamples_range}
 
         listOfAccessionIDs = runs+experiments+samples+biosamples+studies+projects+runs_range+experiments_range+samples_range+biosamples_range
-    
-        #logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
-    
+
+        logger = Utilities.log("IDlist", user_session)        
+        logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
+        logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfAccessionIDs}")
+
         return listOfAccessionIDs, dictionaryOfAccessionIDs
 
     
