@@ -41,13 +41,14 @@ def publications_retrievement(user_session):
                 if user_publication_input == (1):
                     user_session = os.path.join("Downloads", user_session)
 
-                    file_count = check_files(user_session)
+                    files_found = check_files(user_session)
+                    file_count = files_found[-1]
                     if file_count == 0:
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv'\n")
                         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
                     if file_count == 1:
-                        merged_experiments = check_file_experiments(user_session)
+                        merged_experiments = files_found[0]
                         e_df = read_experiments(user_session, merged_experiments)
                         publications(e_df, user_session)
                         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
@@ -108,17 +109,15 @@ def user_report_local(user_session):
 
 #check files
 def check_files(user_session):
+    files_found = []
     count = 0
     for file in os.listdir(user_session):
         if file.endswith(("_merged_experiments-metadata.tsv")):
             print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}")
-            count += 1   
-    return count    
-
-def check_file_experiments(user_session):
-    for file in os.listdir(user_session):
-        if file.endswith("_merged_experiments-metadata.tsv"):
-            return file
+            count += 1
+            files_found.append(file)
+    files_found.append(count)
+    return files_found
 
 #open tsv
 def read_experiments(user_session, merged_experiments):
