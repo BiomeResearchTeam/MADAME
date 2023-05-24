@@ -45,7 +45,11 @@ class Utilities:
 
         # Create handlers
         c_handler = logging.StreamHandler()
-        f_handler = logging.FileHandler(os.path.join('Downloads', user_session, f'{user_session}_log.log'))
+        if "Downloads" not in user_session:
+            f_handler = logging.FileHandler(os.path.join('Downloads', user_session, f'{user_session}_log.log'))
+        else:
+            f_handler = logging.FileHandler(os.path.join(user_session, f'{os.path.basename(user_session)}_log.log'))
+
         logger.setLevel(logging.DEBUG) 
         if not logger.handlers: #prevent logger.info printing twice the message
             c_handler.setLevel(logging.INFO) # logger.info for saving to log file and printing nicely (only the message)

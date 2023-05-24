@@ -70,7 +70,7 @@ def metadata_retrievement_query(user_session):
 
             else:
                 logger = Utilities.log("metadata_retrievement_module", user_session)
-                logger.debug(f"OPTION 1 - USER QUERY ON ENA")
+                logger.debug(f"[OPTION-1] - USER QUERY ON ENA")
 
                 listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
 
@@ -94,7 +94,7 @@ def metadata_retrievement_digit(user_session):
 
         else:
             logger = Utilities.log("metadata_retrievement_module", user_session)
-            logger.debug(f"OPTION 2 - USER IDs SUBMISSION")
+            logger.debug(f"[OPTION-2] - USER IDs SUBMISSION")
             listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
             if len(listOfAccessionIDs) == 0:
@@ -121,7 +121,7 @@ def metadata_retrievement_file(user_session):
                 continue
             else: 
                 logger = Utilities.log("metadata_retrievement_module", user_session)
-                logger.debug(f"OPTION 3 - USER FILE SUBMISSION: {csv_file_input}")
+                logger.debug(f"[OPTION-3] - USER FILE SUBMISSION: {csv_file_input}")
     
                 listOfAccessionIDs = UserFileCodesIDlist(csv_file_input)
                 if len(listOfAccessionIDs) == 0:

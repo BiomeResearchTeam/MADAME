@@ -6,7 +6,7 @@ import pandas as pd
 import os
 from rich.progress import track
 from io import StringIO
-from Utilities import Color  #---> RICH
+from Utilities import Color, Utilities  #---> RICH
 
 
 # Class for finding publications from sequences' accessions.
@@ -28,6 +28,8 @@ class GetPublications:
             path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
+                logger = Utilities.log("GetPublications", user_session)
+                logger.debug(f"{projectID}_publications-metadata.tsv already exist!")
                 print(f'{projectID}_publications-metadata.tsv', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
 
             else:
@@ -35,7 +37,8 @@ class GetPublications:
                 PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, path)  
                 
                 if PMC_pd_dataframe.empty:   
-
+                    logger = Utilities.log("GetPublications", user_session)
+                    logger.debug(f"No publications were found for {projectID}")
                     print(Color.BOLD + Color.RED +"No publications" + Color.END, f" were found for {projectID}")
                     projects_with_no_publication.append(projectID)
                     with open(os.path.join(path, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
@@ -43,6 +46,8 @@ class GetPublications:
 
                 else:
                     PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    logger = Utilities.log("GetPublications", user_session)
+                    logger.debug(f"Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
                 
             
@@ -454,7 +459,6 @@ class GetPublications:
                 return
 
             merged_dataframe = pd.concat(dataframes)
-            print(user_session)
             merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t") #mod sara: prima era path, aggiunto os.path.basaname
 
             # print(f'{user_session}_merged_publications-metadata.tsv' + Color.BOLD + Color.GREEN +  #silenziato da sara

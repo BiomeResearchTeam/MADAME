@@ -159,7 +159,7 @@ class GetIDlist:
         listOfAccessionIDs = runs+experiments+samples+biosamples+studies+projects+runs_range+experiments_range+samples_range+biosamples_range
 
         logger = Utilities.log("IDlist", user_session)        
-        logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}].")
+        logger.debug(f"[USER-SUBMITTED-IDs]: runs[{', '.join(runs)}], samples[{', '.join(samples)}], studies[{', '.join(studies)}], projects[{', '.join(projects)}]")
         logger.debug(f"[ACCESSION-IDS-FOUND]: {listOfAccessionIDs}")
 
         return listOfAccessionIDs, dictionaryOfAccessionIDs

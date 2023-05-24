@@ -183,22 +183,20 @@ def menu(user_session):
 
         if module_choice == 1: 
             logger = Utilities.log("metadata_retrievement_module", user_session)
-            logger.debug(f"[STARTED]")
+            logger.debug(f"[INIZIALIZED]")
             metadata_retrievement(user_session)
 
         if module_choice == 2:
-            logger = Utilities.log("publications_retrievement_module", user_session)
-            logger.debug(f"[STARTED]")
             publications_retrievement(user_session)
 
         if module_choice == 3:
             logger = Utilities.log("report_generation_module", user_session)
-            logger.debug(f"[STARTED]")
+            logger.debug(f"[INIZIALIZED]")
             report_generation(user_session)
 
         if module_choice == 4:
             logger = Utilities.log("data_retrievement_module", user_session)
-            logger.debug(f"[STARTED]") 
+            logger.debug(f"[INIZIALIZED]") 
             data_retrievement(user_session)
 
 
