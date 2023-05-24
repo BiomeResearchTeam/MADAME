@@ -37,51 +37,80 @@ def publications_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:
-
+                #ALTERNATIVA
                 if user_publication_input == (1):
                     user_session = os.path.join("Downloads", user_session)
+                elif user_publication_input == (2):
+                    user_session = user_report_local(user_session)
 
-                    files_found = check_files(user_session)
-                    file_count = files_found[-1]
-                    if file_count == 0:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv'\n")
-                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                files_found = check_files(user_session)
+                file_count = files_found[-1]
+                if file_count == 0:
+                    print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv'\n")
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
-                    if file_count == 1:
-                        merged_experiments = files_found[0]
-                        e_df = read_experiments(user_session, merged_experiments)
-                        publications(e_df, user_session)
-                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-                        return 
+                if file_count == 1:
+                    merged_experiments = files_found[0]
+                    e_df = read_experiments(user_session, merged_experiments)
+                    publications(e_df, user_session)
+                    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                    return 
 
-                    if file_count >= 2:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
-                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-                        publications(e_df, user_session)
+                if file_count >= 2:
+                    print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                    publications(e_df, user_session)
+                
+
+
+                ########DA QUIIIIIIII  >>funziona<<
+                # if user_publication_input == (1):
+                #     user_session = os.path.join("Downloads", user_session)
+
+                #     files_found = check_files(user_session)
+                #     file_count = files_found[-1]
+                #     if file_count == 0:
+                #         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file names must end with '_merged_experiments-metadata.tsv'\n")
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+
+                #     if file_count == 1:
+                #         merged_experiments = files_found[0]
+                #         e_df = read_experiments(user_session, merged_experiments)
+                #         publications(e_df, user_session)
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                #         return 
+
+                #     if file_count >= 2:
+                #         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                #         publications(e_df, user_session)
                     
 
-                if user_publication_input == (2):
-                    user_report_local_path = user_report_local(user_session)
-                    print(user_report_local_path)
-                    #serve a qualcosa? come fa un path a essere = 0?
-                    # if user_report_local_path == 0:
-                    #     break
-                    file_count = check_files(user_report_local_path)
-                    if file_count == 0:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file name must end with '_merged_experiments-metadata.tsv'\n")
-                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                # if user_publication_input == (2):
+                #     user_report_local_path = user_report_local(user_session)
 
-                    if file_count == 1:
-                        #merged_experiments = check_file_experiments(user_report_local_path)
-                        e_df = read_experiments(user_report_local_path, merged_experiments)
-                        publications(e_df, user_session)
-                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-                        return 
+                #     files_found = check_files(user_report_local_path)
+                #     file_count = files_found[-1]
+                #     #serve a qualcosa? come fa un path a essere = 0?
+                #     # if user_report_local_path == 0:
+                #     #     break
+                #     file_count = check_files(user_report_local_path)
+                #     if file_count == 0:
+                #         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Is it the correct folder? Note that the file name must end with '_merged_experiments-metadata.tsv'\n")
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
-                    if file_count >= 2:
-                        print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
-                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                #     if file_count == 1:
+                #         merged_experiments = files_found[0]
+                #         e_df = read_experiments(user_report_local_path, merged_experiments)
+                #         publications(e_df, user_session)
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                #         return 
+
+                #     if file_count >= 2:
+                #         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+                #         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     
+                    ########A QUIIIIII
 
 def user_report_local(user_session):
     Utilities.clear()
