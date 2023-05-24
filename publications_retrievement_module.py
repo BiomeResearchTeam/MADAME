@@ -12,9 +12,7 @@ from rich.text import Text
 def publications_retrievement(user_session):
     
     while True:
-        Utilities.clear()  
-        # title = " PUBLICATIONS RETRIEVEMENT MODULE "
-        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
+        Utilities.clear() 
         title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
         rich_print(title)
 
@@ -73,6 +71,7 @@ def publications_retrievement(user_session):
                     if file_count == 1:
                         merged_experiments = check_file_experiments(user_report_local_path)
                         e_df = read_experiments(user_report_local_path, merged_experiments)
+                        publications(e_df, user_session)
                         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
                         return 
 
@@ -84,8 +83,6 @@ def publications_retrievement(user_session):
 def user_report_local(user_session):
     Utilities.clear()
     while True:
-        # title = " PUBLICATIONS RETRIEVEMENT MODULE "
-        # print(Color.BOLD + Color.PURPLE + title.center(100, '-') + Color.END)
         title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
         rich_print(title)
         
