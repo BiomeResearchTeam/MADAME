@@ -26,7 +26,7 @@ def metadata_retrievement(user_session):
         + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
 
         metadata_retrievement_choice = input("\n>> Enter your choice: ")
-        if metadata_retrievement_choice in ("main menu", "MAIN MENU", "Main menu"):
+        if metadata_retrievement_choice.lower() in "main menu":
             return
         elif metadata_retrievement_choice.isnumeric():
             metadata_retrievement_choice = int(metadata_retrievement_choice)
@@ -58,7 +58,7 @@ def metadata_retrievement_query(user_session):
         Utilities.clear()
         user_query_input = UserQueryENAInput(user_session)
         
-        if user_query_input in ("back", "BACK", "Back"):
+        if user_query_input.lower() in "back":
             return
 
         else:
@@ -111,7 +111,7 @@ def metadata_retrievement_file(user_session):
         Utilities.clear()
         csv_file_input = UserFileCodesInput(user_session)
         
-        if csv_file_input in ("back", "BACK", "Back"):
+        if csv_file_input.lower() in "back":
             return
 
         else:
@@ -145,7 +145,7 @@ def metadata_download(listOfAvailableAccessions, user_session):
     print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
     user_metadata_input = input("\n>> Enter your choice: ")
         
-    if user_metadata_input in ("back", "BACK", "Back"):
+    if user_metadata_input.lower() in "back":
         return
 
     elif user_metadata_input.isnumeric():

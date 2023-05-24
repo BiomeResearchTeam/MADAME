@@ -75,7 +75,7 @@ def new_session():
     while user_session.strip() == '': 
         user_session = str(input(">> Digit the folder name: "))
     
-    if user_session in ("main menu", "MAIN MENU", "Main menu"):
+    if user_session.lower() in "main menu":
         return
 
     while os.path.isdir(os.path.join("Downloads", user_session)):
@@ -174,7 +174,7 @@ def menu(user_session):
                     logger = Utilities.log("main_madame", user_session)
                     logger.debug(f"[EXIT]\n")
                     exit()
-                elif module_choice in ("change", "CHANGE", "Change"):
+                elif module_choice.lower() in "change":
                     main()
                 else:
                     print("Wrong input, expected a numeric input, <change> or <exit> (without <>). Try again.\n") 

@@ -23,7 +23,7 @@ def publications_retrievement(user_session):
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
         user_publication_input = input("\n>> Enter your choice: ").strip()
         
-        if user_publication_input in ("main menu", "MAIN MENU", "Main menu"):
+        if user_publication_input.lower() in "main menu":
             return
 
         elif user_publication_input.isnumeric() == False:
@@ -81,7 +81,7 @@ def user_report_local(user_session):
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         user_report_local_path = input("\n>> Digit the path: ").strip()
 
-        if user_report_local_path in ("main menu", "MAIN MENU", "Main menu"):
+        if user_report_local_path.lower() in "main menu":
             return 0
                             
         if path.isdir(user_report_local_path) == False:
