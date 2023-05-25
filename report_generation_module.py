@@ -47,10 +47,12 @@ def report_generation(user_session):
             else:
                 if user_report_input == 1:
                     user_session = os.path.join(user_session)
-                    available_metadata_files(user_session) 
+                    available_metadata_files(user_session)
+                    return
 
                 if user_report_input == 2:
                     user_report_local(user_session)
+                    return
 
 
 def user_report_local(user_session):
@@ -633,4 +635,4 @@ def final_screen(user_session):
     print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report file in HTML format' + Color.END, 
     'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'Downloads/{user_session}' + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-    
+    return
