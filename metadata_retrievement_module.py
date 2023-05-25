@@ -38,14 +38,15 @@ def metadata_retrievement(user_session):
                     logger = Utilities.log("metadata_retrievement_module", user_session)
                     logger.debug(f"[OPTION-1]: Doing a query on ENA")  
                     metadata_retrievement_query(user_session)
-                    
+                    return
 
                 if metadata_retrievement_choice == 2:
                     metadata_retrievement_digit(user_session)
-                    
+                    return                    
 
                 if metadata_retrievement_choice == 3:
                     metadata_retrievement_file(user_session)
+                    return
         else:
             print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")

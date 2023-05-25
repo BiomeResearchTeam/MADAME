@@ -207,6 +207,7 @@ class Exp_Proj_MetadataDownload:
 
     def mergeExperimentsMetadata(self, user_session):
 
+        logger = Utilities.log("ExperimentMetadataDownload", user_session)
         path = (os.path.join("Downloads", user_session))
         dataframes = []
 
@@ -218,6 +219,7 @@ class Exp_Proj_MetadataDownload:
 
         # Stop and print message if dataframes list is empty
         if not dataframes:
+            logger.debug(f"[ERROR] - couldn't create {user_session}_merged_experiments-metadata.tsv: no experiments-metadata.tsv file found")
             print(f"\nError: couldn't create {user_session}_merged_experiments-metadata.tsv: " + Color.BOLD + Color.RED + 
             "no experiments-metadata.tsv file found." + Color.END)   ####messaggio da rivedere
             return 
@@ -225,6 +227,7 @@ class Exp_Proj_MetadataDownload:
         merged_dataframe = pd.concat(dataframes)
         merged_dataframe.to_csv(os.path.join(path, f'{user_session}_merged_experiments-metadata.tsv'), sep="\t")
 
+        logger.debug(f"{user_session}_merged_experiments-metadata.tsv successfully created")
         print(f'\n{user_session}_merged_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
             ' successfully created' + Color.END)
 
