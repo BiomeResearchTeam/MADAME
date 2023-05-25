@@ -26,6 +26,7 @@ class GetPublications:
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
             path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
+            print(path)
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
                 logger = Utilities.log("GetPublications", user_session)
@@ -45,7 +46,11 @@ class GetPublications:
                         file.write("")  
 
                 else:
-                    PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    if os.path.exists(path):
+                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                    else:
+                        os.mkdir(path)
+                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
                     logger = Utilities.log("GetPublications", user_session)
                     logger.debug(f"Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
