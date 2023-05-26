@@ -48,11 +48,19 @@ def report_generation(user_session):
                 if user_report_input == 1:
                     user_session = os.path.join(user_session)
                     available_metadata_files(user_session)
-                    return
+                    for file in os.listdir(os.path.join('Downloads', user_session)):
+                        if file in f'Report_{user_session}.html':
+                            return
+                        else:
+                            continue
 
                 if user_report_input == 2:
                     user_report_local(user_session)
-                    return
+                    for file in os.listdir(os.path.join('Downloads', user_session)):
+                        if file in f'Report_{user_session}.html':
+                            return
+                        else:
+                            continue
 
 
 def user_report_local(user_session):
@@ -100,20 +108,32 @@ def available_metadata_files(user_session):
     
     elif available_metadata_files == 1:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
-        e_df_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
-        logger = Utilities.log("report_generation_module", user_session)
-        logger.debug(f"Found {list_metadata_files[0]}")
-        report(user_session, e_df, p_df=None) #mod sara
-        final_screen(user_session)
+        f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
+        f1_df = pd.read_csv (f1_path, delimiter='\t', infer_datetime_format=True)
+        if 'study_accession' in f1_df:
+            e_df = f1_df
+            logger = Utilities.log("report_generation_module", user_session)
+            logger.debug(f"Found {list_metadata_files[0]}")
+            report(user_session, e_df, p_df=None) #mod sara
+            final_screen(user_session)
+        else:
+            print(Color.BOLD + Color.RED + "\nError the found file seems to lack some of the expected information" + Color.END, f" Is it the correct file? Try again")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
     elif available_metadata_files == 2:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{list_metadata_files[1]}")
-        e_df_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        e_df = pd.read_csv (e_df_path, delimiter='\t', infer_datetime_format=True)
-        p_df_path = os.path.join('Downloads', user_session, list_metadata_files[1])
-        p_df = pd.read_csv (p_df_path, delimiter='\t', infer_datetime_format=True)
+        f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
+        f1_df = pd.read_csv(f1_path, delimiter='\t', infer_datetime_format=True)
+        f2_path = os.path.join('Downloads', user_session, list_metadata_files[1])
+        f2_df = pd.read_csv(f2_path, delimiter='\t', infer_datetime_format=True)
+        print(f1_df.columns)
+        if 'study_accession' in f1_df:
+            e_df = f1_df
+            p_df = f2_df
+        else:
+            p_df = f1_df
+            e_df = f2_df
         logger = Utilities.log("report_generation_module", user_session)
         logger.debug(f"Found {list_metadata_files[0]} and {list_metadata_files[1]}")
         report(user_session, e_df, p_df)
