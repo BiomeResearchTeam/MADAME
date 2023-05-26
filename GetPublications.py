@@ -26,7 +26,6 @@ class GetPublications:
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
             path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
-            print(path)
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
                 logger = Utilities.log("GetPublications", user_session)
@@ -35,13 +34,15 @@ class GetPublications:
 
             else:
                 accessions_list = self.ENA_Xref_check(projectID)          
-                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, path)  
+                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, user_session, path)  
                 
                 if PMC_pd_dataframe.empty:   
                     logger = Utilities.log("GetPublications", user_session)
                     logger.debug(f"No publications were found for {projectID}")
                     print(Color.BOLD + Color.RED +"No publications" + Color.END, f" were found for {projectID}")
                     projects_with_no_publication.append(projectID)
+                    if not os.path.exists(path):
+                        os.mkdir(path) 
                     with open(os.path.join(path, f'{projectID}_publications-metadata.tsv'), 'w') as file:  
                         file.write("")  
 
@@ -103,8 +104,8 @@ class GetPublications:
 
         return accessions_list 
 
-    def PMC_pd_dataframe(self, projectID, accessions_list, path):
-       
+    def PMC_pd_dataframe(self, projectID, accessions_list, user_session, path):
+
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
         retries = Retry(total=6,
@@ -118,14 +119,20 @@ class GetPublications:
         # Fetching local metadata file and building the accessions list, only if it's None
         # (so if it's not provided by ENA_Xref_check)
         if not accessions_list:
-            experiments_metadata = os.path.join(path, f'{projectID}_experiments-metadata.tsv')
-            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-            accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-            accessions_list = []
-            
-            for column in accessions_columns:
-                accessions = metadata_df[column].unique().tolist()
-                accessions_list.extend(accessions)
+            for file in os.listdir(user_session):
+                if file.endswith('_merged_experiments-metadata.tsv'):
+                    merged_metadata_df = pd.read_csv(os.path.join(user_session, file), sep='\t')
+                    header = list(merged_metadata_df.columns)
+                    metadata_df = pd.DataFrame(merged_metadata_df[merged_metadata_df['study_accession'] == f'{projectID}'], columns = header)                    
+                    # experiments_metadata = os.path.join(path, f'{projectID}_experiments-metadata.tsv') #originale
+                    # metadata_df = pd.read_csv(experiments_metadata, sep='\t') #originale
+                    accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+                    accessions_list = []
+                        
+                    for column in accessions_columns:
+                        accessions = metadata_df[column].unique().tolist()
+                        print(accessions)
+                        accessions_list.extend(accessions)
         
       
         for queried_accession_id in accessions_list:
