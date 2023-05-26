@@ -127,7 +127,6 @@ def available_metadata_files(user_session):
         f1_df = pd.read_csv(f1_path, delimiter='\t', infer_datetime_format=True)
         f2_path = os.path.join('Downloads', user_session, list_metadata_files[1])
         f2_df = pd.read_csv(f2_path, delimiter='\t', infer_datetime_format=True)
-        print(f1_df.columns)
         if 'study_accession' in f1_df:
             e_df = f1_df
             p_df = f2_df
