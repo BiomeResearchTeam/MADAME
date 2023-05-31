@@ -1,1 +1,1 @@
-Path to enaBrowserTools: /sara/enaBrowserTools-1.1.0/python3
+Path to enaBrowserTools: /root/sara/v1.1.0/enaBrowserTools-1.1.0/python3

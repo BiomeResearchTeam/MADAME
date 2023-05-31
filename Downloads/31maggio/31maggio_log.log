@@ -1,0 +1,28 @@
+2023-05-31 17:41:08,653 - main_madame - [MADAME INITIALIZED]
+2023-05-31 17:41:08,654 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 17:41:42,987 - publications-retrievement-module - [INIZIALIZED]
+2023-05-31 17:41:42,987 - publications-retrievement-module - [OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session
+2023-05-31 17:41:42,988 - publications-retrievement-module - Found prova_merged_experiments-metadata.tsv
+2023-05-31 17:42:21,587 - main_madame - [MADAME INITIALIZED]
+2023-05-31 17:42:21,588 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 17:42:23,841 - publications-retrievement-module - [INIZIALIZED]
+2023-05-31 17:42:23,841 - publications-retrievement-module - [OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session
+2023-05-31 17:42:23,841 - publications-retrievement-module - [ERROR]: found more than 1 file
+2023-05-31 18:18:03,774 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:18:03,775 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:18:05,547 - data_retrievement_module - [INIZIALIZED]
+2023-05-31 18:18:33,807 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:18:33,808 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:18:35,136 - data_retrievement_module - [INIZIALIZED]
+2023-05-31 18:19:15,089 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:19:15,090 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:19:16,341 - data_retrievement_module - [INIZIALIZED]
+2023-05-31 18:30:34,890 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:30:34,891 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:30:37,026 - data_retrievement_module - [INIZIALIZED]
+2023-05-31 18:31:34,750 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:31:34,751 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:31:48,894 - data_retrievement_module - [INIZIALIZED]
+2023-05-31 18:32:57,210 - main_madame - [MADAME INITIALIZED]
+2023-05-31 18:32:57,211 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/31maggio
+2023-05-31 18:32:58,551 - data_retrievement_module - [INIZIALIZED]

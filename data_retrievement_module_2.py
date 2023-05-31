@@ -1,6 +1,6 @@
 from Utilities import Color, Utilities
 from SequencesDownload import SequencesDownload
-from functions_modules import CheckTSV
+#from functions_modules import CheckTSV
 from os import path
 import os
 import pandas as pd
@@ -19,14 +19,19 @@ def data_retrievement(user_session):
         print("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:")
         print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
         print(" 2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer")
-        print(" 3 - Input a file (tsv or csv format) with the list of runs you want to download")
+        print(" 3 - Input a file (tsv or csv format) with the list of accessions you want to download")
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
         data_download_choice = input("\n>> Enter your choice: ").strip().lower()
 
         if data_download_choice in ("main menu"):
             return
-        elif data_download_choice.isnumeric():
+        
+        elif data_download_choice.isnumeric() == False:
+            print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+        
+        elif data_download_choice.isnumeric() == True:
             data_download_choice = int(data_download_choice)
             if data_download_choice not in (1,2,3):
                 print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
@@ -41,30 +46,18 @@ def data_retrievement(user_session):
                 
                 if data_download_choice == 3:
                     data_download_CSV(user_session)
-        
-        else:
-            print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
-            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-
 
 #check files
 def check_files(data_user_session):
+    files_found = []
     count = 0
     for file in os.listdir(data_user_session):
         if file.endswith(("_merged_experiments-metadata.tsv")):
             print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{file}")
-            count += 1   
-    return count    
-
-def check_file_experiments(data_user_session):
-    for file in os.listdir(data_user_session):
-        if file.endswith("_merged_experiments-metadata.tsv"):
-            return file
-
-def read_experiments(data_user_session, merged_experiments):
-    path = os.path.join(data_user_session, merged_experiments)
-    e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
-    return e_df
+            count += 1
+            files_found.append(file)
+    files_found.append(count)
+    return files_found
 
 
 #DATA IN MADAME
@@ -74,7 +67,9 @@ def data_download_MADAME(user_session):
     rich_print(title)
     data_user_session = os.path.join("Downloads", user_session)
     while True: 
-        file_count = check_files(data_user_session)
+        files_found = check_files(data_user_session)
+        print(files_found)
+        file_count = files_found[-1]
         
         if file_count == 0:
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
@@ -83,12 +78,12 @@ def data_download_MADAME(user_session):
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
         else:
-            enaBT_download(user_session, data_user_session)
+            enaBT_download(user_session, data_user_session, files_found)
             return
 
 
 #DATA IN LOCAL PATH
-def data_download_path(EnaBT_path, user_session):
+def data_download_path(user_session):
     Utilities.clear()
     title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
@@ -104,7 +99,7 @@ def data_download_path(EnaBT_path, user_session):
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
         else:
-            enaBT_download(user_session, data_user_session)
+            enaBT_download(data_user_session)
             return
 
 
@@ -209,7 +204,7 @@ def data_download_CSV(user_session):
 
 
 #ENABT PATH
-def enaBT_download(user_session, data_user_session): #CI STO LAVORANDO SARA
+def enaBT_download(data_user_session, files_found): #CI STO LAVORANDO SARA
 
     Utilities.clear()
     title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
@@ -222,7 +217,7 @@ def enaBT_download(user_session, data_user_session): #CI STO LAVORANDO SARA
         enaBT_path = os.path.join(enaBT_read, 'enaDataGet')
         if os.path.isfile(os.path.normpath(enaBT_path)):
             print(Color.BOLD + Color.GREEN + '\nenaDataGet found' + Color.END)
-            data_download_function(enaBT_path, user_session, data_user_session)
+            data_download_function(enaBT_path, data_user_session, files_found)
         else: 
             if len(enaBT_read) == 0:
                 print('It seems that', Color.BOLD + Color.RED + 'enaBT_path.txt is empty.' + Color.END, 'Remember to', Color.UNDERLINE + 'compile it' + Color.END, 'in order to download data!')
@@ -236,7 +231,7 @@ def enaBT_download(user_session, data_user_session): #CI STO LAVORANDO SARA
 
 
 #PRINCIPAL DOWNLOAD FUNCTION
-def data_download_function(EnaBT_path, user_session, data_user_session):
+def data_download_function(EnaBT_path, data_user_session, files_found):
 
         print("\nWhat data format do you want to download?", Color.UNDERLINE + "fastq" + Color.END, ",", Color.UNDERLINE + "sra" + Color.END,", or", Color.UNDERLINE + "submitted" + Color.END)
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<")
@@ -246,14 +241,28 @@ def data_download_function(EnaBT_path, user_session, data_user_session):
             return
         
         elif data_download_type in ("fastq", "sra", "submitted"):
-            merged_experiments = check_file_experiments(data_user_session)
-            e_df = read_experiments(data_user_session, merged_experiments)
+            merged_experiments = files_found[0]
+            e_df = pd.read_csv(os.path.join(data_user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)
+            user_session = os.path.relpath(data_user_session, 'Downloads')
+            #e_df = read_experiments(data_user_session, merged_experiments)
             print()  #riga vuota prima dell'output di enaBT
             SequencesDownload.runDownloadData(EnaBT_path, user_session, e_df, file_type = data_download_type)
 
         else:
             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+
+
+# def check_file_experiments(data_user_session):
+#     for file in os.listdir(data_user_session):
+#         if file.endswith("_merged_experiments-metadata.tsv"):
+#             return file
+
+# def read_experiments(data_user_session, merged_experiments):
+#     path = os.path.join(data_user_session, merged_experiments)
+#     e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
+#     return e_df
+
 
 #FINAL SCREEN                  
 def final_screen(user_session): #trovare dove metterla: penso dentro SequenceDownload
