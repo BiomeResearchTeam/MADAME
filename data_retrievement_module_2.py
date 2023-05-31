@@ -38,11 +38,11 @@ def data_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:
-                if data_download_choice == 1:
-                    data_download_MADAME(user_session)
+                if data_download_choice in (1, 2):
+                    data_download_MADAME(user_session, data_download_choice)
 
-                if data_download_choice == 2:
-                    data_download_path(user_session)
+                # if data_download_choice == 2:
+                #     data_download_path(user_session)
                 
                 if data_download_choice == 3:
                     data_download_CSV(user_session)
@@ -61,11 +61,16 @@ def check_files(data_user_session):
 
 
 #DATA IN MADAME
-def data_download_MADAME(user_session):
+def data_download_MADAME(user_session, data_download_choice):
     Utilities.clear()
     title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
-    data_user_session = os.path.join("Downloads", user_session)
+    if data_download_choice == 1:
+        data_user_session = os.path.join("Downloads", user_session)
+    if data_download_choice == 2:
+        data_user_session = data_user_local(user_session)
+        print(data_user_session)
+    
     while True: 
         files_found = check_files(data_user_session)
         print(files_found)
@@ -78,43 +83,44 @@ def data_download_MADAME(user_session):
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
         else:
-            enaBT_download(user_session, data_user_session, files_found)
+            enaBT_download(data_user_session, files_found)
             return
 
 
-#DATA IN LOCAL PATH
-def data_download_path(user_session):
-    Utilities.clear()
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
+# #DATA IN LOCAL PATH
+# def data_download_path(user_session):
+#     Utilities.clear()
+#     title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+#     rich_print(title)
 
-    data_user_session = data_user_local(user_session)
-    while True: 
-        file_count = check_files(data_user_session)
+#     data_user_session = data_user_local(user_session)
+#     while True: 
+#         file_count = check_files(data_user_session)
         
-        if file_count == 0:
-            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+#         if file_count == 0:
+#             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
 
-        elif file_count > 1:
-            print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+#         elif file_count > 1:
+#             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
 
-        else:
-            enaBT_download(data_user_session)
-            return
+#         else:
+#             enaBT_download(data_user_session)
+#             return
 
 
 def data_user_local(user_session):
-    Utilities.clear()
+    
     title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
     while True:
+        Utilities.clear()
         print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print("\ --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
+        print("--- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
         data_local_path = input("\n>> Digit the path: ").strip()
 
-        if data_local_path in ("main menu", "MAIN MENU", "Main menu"):
+        if data_local_path.lower() in ("main menu"):
             return
                             
         if path.isdir(data_local_path) == False:
@@ -233,6 +239,7 @@ def enaBT_download(data_user_session, files_found): #CI STO LAVORANDO SARA
 #PRINCIPAL DOWNLOAD FUNCTION
 def data_download_function(EnaBT_path, data_user_session, files_found):
 
+        user_session = os.path.relpath(data_user_session, 'Downloads')
         print("\nWhat data format do you want to download?", Color.UNDERLINE + "fastq" + Color.END, ",", Color.UNDERLINE + "sra" + Color.END,", or", Color.UNDERLINE + "submitted" + Color.END)
         print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<")
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
@@ -243,10 +250,9 @@ def data_download_function(EnaBT_path, data_user_session, files_found):
         elif data_download_type in ("fastq", "sra", "submitted"):
             merged_experiments = files_found[0]
             e_df = pd.read_csv(os.path.join(data_user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)
-            user_session = os.path.relpath(data_user_session, 'Downloads')
-            #e_df = read_experiments(data_user_session, merged_experiments)
             print()  #riga vuota prima dell'output di enaBT
             SequencesDownload.runDownloadData(EnaBT_path, user_session, e_df, file_type = data_download_type)
+            final_screen(user_session) #proviamo qui
 
         else:
             print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Write <fastq>, <sra>, or <submitted> (without <>)\n")
