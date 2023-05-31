@@ -7,12 +7,10 @@ import plotly.express as px
 from Project import Project
 import pycountry
 from collections import Counter
-#from plotly.subplots #import make_subplots
 import numpy as np
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
-#import glob
 
 def report_generation(user_session):
     """
@@ -183,7 +181,7 @@ def initial_table(report_folder, e_df, p_df, f):
 
     first_column = ['Total number of projects with available metadata', 'Total number of projects with available data', 'Total number of samples', 'Total number of scientific names', 
         'Total number of library source','Total number of library strategies','Total number of instrument platforms',
-        'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project', 'Total number of countries', 'Max total size']
+        'Total number of library layouts', 'Year of the oldest project', 'Year of the most recent project', 'Max total size', 'Total number of countries']
     second_column = []
     
     
@@ -213,25 +211,6 @@ def initial_table(report_folder, e_df, p_df, f):
             else:
                 value = e_df[column].nunique()
                 second_column.append(value)
-
-    if p_df is not None:
-        for column in ['affiliation']:
-            if pd.Series(column).isin(p_df.columns).all():
-
-                replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
-                p_df['affiliation'] = p_df['affiliation'].replace(replacers)
-                p_df.fillna("nan",inplace=True)
-                affiliation_list = p_df['affiliation'].tolist()
-                country_list = []
-                for affiliation in affiliation_list:
-                    if affiliation !='nan':
-                        for country in pycountry.countries:
-                            if country.name in affiliation:
-                                country_list.append(country.name)
-                
-                unique_country_list = list(set(country_list))
-                country_number = len(unique_country_list)
-                second_column.append(country_number)
 
 
     for column in ['sra_bytes']:
@@ -263,6 +242,27 @@ def initial_table(report_folder, e_df, p_df, f):
             value = f'{size} ({total_bytes[2][0]})'
 
             second_column.append(value)
+
+
+    if p_df is not None:
+        for column in ['affiliation']:
+            if pd.Series(column).isin(p_df.columns).all():
+
+                replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
+                p_df['affiliation'] = p_df['affiliation'].replace(replacers)
+                p_df.fillna("nan",inplace=True)
+                affiliation_list = p_df['affiliation'].tolist()
+                country_list = []
+                for affiliation in affiliation_list:
+                    if affiliation !='nan':
+                        for country in pycountry.countries:
+                            if country.name in affiliation:
+                                country_list.append(country.name)
+                
+                unique_country_list = list(set(country_list))
+                country_number = len(unique_country_list)
+                second_column.append(country_number)
+
 
     values = [first_column, second_column]
 
@@ -373,7 +373,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
-#PROJECT SIZE & BYTES ##trovare modo di aggiungere una x rossa al progetto dove non ci sono dati
+#PROJECT SIZE & BYTES
 def projects_size(report_folder, e_df, color_palette_scale_r, f):
     """
     generate bubble plot based on fastq bytes for each project
@@ -405,7 +405,7 @@ def projects_size(report_folder, e_df, color_palette_scale_r, f):
    
     #BUBBLE PLOT
     fig = px.scatter(df, x='Project', y='User_Megabytes', size='User_Megabytes',
-                 color='User_Megabytes', size_max=100, color_continuous_scale = color_palette_scale_r, 
+                 color='User_Megabytes', size_max=150, color_continuous_scale = color_palette_scale_r, 
                  opacity = 0.8)
 
     fig.update_layout(title = 'Project size', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
@@ -531,7 +531,7 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
             showland=True, landcolor="#F6F6F4", 
             projection_type = 'natural earth')
 
-        fig.update_traces(marker=dict(line=dict(width=0)))
+        fig.update_traces(marker=dict(line=dict(width=0)), marker_sizemin=10)
 
         fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
         fig.write_html(os.path.join(report_folder, "Map of publications.html"))
