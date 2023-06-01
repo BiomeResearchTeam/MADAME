@@ -67,7 +67,7 @@ def publications_retrievement(user_session):
                         logger.debug(f"[ERROR]: found more than 1 file")
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
                         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-                        publications(e_df, user_session)
+                        #publications(e_df, user_session)
                 
 
 def user_report_local(user_session):

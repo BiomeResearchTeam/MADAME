@@ -245,7 +245,8 @@ def data_download_function(EnaBT_path, data_user_session, files_found):
         print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
         data_download_type = input("\n>> Enter your choice: ").strip().lower()
         if data_download_type in ("main menu"):
-            return
+            print('qui')
+            #return
         
         elif data_download_type in ("fastq", "sra", "submitted"):
             merged_experiments = files_found[0]

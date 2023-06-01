@@ -131,7 +131,6 @@ class GetPublications:
                         
                     for column in accessions_columns:
                         accessions = metadata_df[column].unique().tolist()
-                        print(accessions)
                         accessions_list.extend(accessions)
         
       
