@@ -85,6 +85,8 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
     # Check validity of accessions
     listOfAccessionIDs, dictionaryOfAccessionIDs = GetIDlist.IDlistFromUserInput(user_session, user_input = user_query_input)
+    if ((len(listOfAccessionIDs) == 0) and (all(len(value) == 0 for value in dictionaryOfAccessionIDs.values()))):
+        return
 
     # Spinner for showing MADAME is working (this process can be lenghty)
     console = Console()
@@ -109,7 +111,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 #FILE ACCESSION CODES
 
 def UserFileCodesInput(user_session):
-    
+    Utilities.clear()
     title = Panel(Text("INPUT ACCESSION CODES FILE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
