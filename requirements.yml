@@ -1,0 +1,10 @@
+name: madame_env
+dependencies:
+- pandas
+- plotly::plotly=5.14.1
+- requests
+- rich
+- conda-forge::user-agent
+- conda-forge::pycountry
+- conda-forge::python-kaleido
+- openpyxl

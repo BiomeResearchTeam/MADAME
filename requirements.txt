@@ -1,8 +1,0 @@
-pandas
-plotly=5.14.1
-requests
-rich
-user_agent
-pycountry
-kaleido
-openpyxl
