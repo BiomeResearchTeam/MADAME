@@ -1,10 +1,12 @@
-name: madame_env
+name: madame
 dependencies:
 - pandas
 - plotly::plotly=5.14.1
 - requests
 - rich
-- conda-forge::user-agent
-- conda-forge::pycountry
-- conda-forge::python-kaleido
-- openpyxl
+- pip
+- pip:
+  - user_agent
+  - pycountry
+  - kaleido
+  - openpyxl
