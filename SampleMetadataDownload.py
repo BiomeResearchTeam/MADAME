@@ -34,10 +34,18 @@ class SampleMetadataDownload:
 
                 for sampleID in track(sample_ids, description=f"Downloading {projectID} [{listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}] sample metadata: "):
                     # Checking the file existence before downloading
-                    if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
-                        pass
+                    if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
+                        single_sampleID = sampleID.split(";")
+                        for sampleID in single_sampleID:
+                            if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
+                                pass
+                            else:
+                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
                     else:
-                        self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
+                        if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
+                            pass
+                        else:
+                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
                 print(f'{projectID} samples metadata files were' + Color.BOLD + Color.GREEN + 
             ' successfully downloaded\n' + Color.END)  
 
