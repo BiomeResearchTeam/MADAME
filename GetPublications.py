@@ -25,7 +25,7 @@ class GetPublications:
         projects_with_no_publication = []   # Is it useful?
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
-            path = os.path.join(user_session, projectID)  #modificato da sara: tolto download perché già inserito in publication module
+            path = os.path.join(user_session, projectID) 
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
                 logger = Utilities.log("GetPublications", user_session)
