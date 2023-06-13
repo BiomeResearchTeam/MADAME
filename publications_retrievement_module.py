@@ -7,6 +7,7 @@ import pandas as pd
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+import json
 
 
 def publications_retrievement(user_session):
@@ -114,8 +115,17 @@ def read_experiments(user_session, merged_experiments):
     return e_df
 
 def publications(e_df, user_session):
-    study_accession = e_df["study_accession"].unique().tolist()
-    listOfProjectIDs = [id for id in study_accession if id is not None]   
+    e_df_project = e_df[["study_accession", "secondary_study_accession"]]
+    d = e_df_project.T.to_dict(orient='list')
+    
+    study_accession = []
+    for values in d.values():
+        if pd.isnull(values[0]):
+            study_accession.append(values[1])
+        if not pd.isnull(values[0]):
+            study_accession.append(values[0])
+    
+    listOfProjectIDs = list(set(study_accession))
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
     #e se non è stata trovata nessuna pubblicazione? 
     GetPublications.mergePublicationsMetadata(user_session)
