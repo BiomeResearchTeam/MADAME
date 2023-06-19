@@ -127,10 +127,12 @@ def publications(e_df, user_session):
     
     listOfProjectIDs = list(set(study_accession))
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
-    #e se non è stata trovata nessuna pubblicazione? 
     GetPublications.mergePublicationsMetadata(user_session)
     logger = Utilities.log("publications_retrievement_module", user_session)
-    logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
-    print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
+    
+    #e se non è stata trovata nessuna pubblicazione? 
+    if os.path.isfile(os.path.join(user_session, f'{study_accession}_merged_publications-metadata.tsv')):
+        print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
+        logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
      

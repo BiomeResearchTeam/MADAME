@@ -113,6 +113,8 @@ class Exp_Proj_MetadataDownload:
         content = s.get(url, headers=headers, allow_redirects=True).content
         incoming_df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t').reset_index(drop=True)
         projectID = incoming_df.loc[incoming_df.index[0], 'study_accession']
+        if pd.isna(projectID):
+            projectID = incoming_df.loc[incoming_df.index[0], 'secondary_study_accession']
 
         path = os.path.join("Downloads", user_session, projectID)
         Utilities.createDirectory(path)
@@ -155,6 +157,8 @@ class Exp_Proj_MetadataDownload:
         content_1 = s.get(url_1, headers=headers, allow_redirects=True).content
         incoming_df_1 = pd.read_csv(io.StringIO(content_1.decode('utf-8')), sep='\t')
         projectID = incoming_df_1.loc[incoming_df_1.index[0], 'study_accession']
+        if pd.isna(projectID):
+            projectID = incoming_df_1.loc[incoming_df_1.index[0], 'secondary_study_accession']
 
         # After obtaining the corresponding projectID, access to the whole project's metadata and
         # filter it selecting only the rows corresponding to the accessions range

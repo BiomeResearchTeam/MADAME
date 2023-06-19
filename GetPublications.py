@@ -4,9 +4,11 @@ import requests as rq
 from requests.adapters import HTTPAdapter, Retry
 import pandas as pd
 import os
+import re
 from rich.progress import track
 from io import StringIO
-from Utilities import Color, Utilities  #---> RICH
+from Utilities import Color, Utilities  
+from IDlist import GetIDlist
 
 
 # Class for finding publications from sequences' accessions.
@@ -34,7 +36,7 @@ class GetPublications:
 
             else:
                 accessions_list = self.ENA_Xref_check(projectID)          
-                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, user_session, path)  
+                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, user_session)  
                 
                 if PMC_pd_dataframe.empty:   
                     logger = Utilities.log("GetPublications", user_session)
@@ -57,7 +59,6 @@ class GetPublications:
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
                 
             
-
     def ENA_Xref_check(self, projectID):
         # Given a projectID, checks with the ENA Xref API if the project has any linked publications.
         # It returns a list of accessions (PubMed primary accessions) which will be used by PMC_pd_dataframe
@@ -104,7 +105,7 @@ class GetPublications:
 
         return accessions_list 
 
-    def PMC_pd_dataframe(self, projectID, accessions_list, user_session, path):
+    def PMC_pd_dataframe(self, projectID, accessions_list, user_session):
 
         ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
@@ -119,19 +120,24 @@ class GetPublications:
         # Fetching local metadata file and building the accessions list, only if it's None
         # (so if it's not provided by ENA_Xref_check)
         if not accessions_list:
-            for file in os.listdir(user_session):
-                if file.endswith('_merged_experiments-metadata.tsv'):
-                    merged_metadata_df = pd.read_csv(os.path.join(user_session, file), sep='\t')
-                    header = list(merged_metadata_df.columns)
-                    metadata_df = pd.DataFrame(merged_metadata_df[merged_metadata_df['study_accession'] == f'{projectID}'], columns = header)                    
-                    # experiments_metadata = os.path.join(path, f'{projectID}_experiments-metadata.tsv') #originale
-                    # metadata_df = pd.read_csv(experiments_metadata, sep='\t') #originale
-                    accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
-                    accessions_list = []
-                        
-                    for column in accessions_columns:
-                        accessions = metadata_df[column].unique().tolist()
-                        accessions_list.extend(accessions)
+                    
+            experiments_metadata = os.path.join(user_session, projectID, f'{projectID}_experiments-metadata.tsv')
+            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+            accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
+            accessions_list = []
+                
+            for column in accessions_columns:
+                accessions = metadata_df[column].unique().tolist()
+                # clean list from nan values
+                accessions = [x for x in accessions if str(x) != 'nan']
+                # split merged ids, if present
+                for accession in accessions:
+                    if ";" in accession:
+                        splitted_accessions = accession.split(";")
+                        accessions.remove(accession)
+                        accessions.extend(splitted_accessions)
+
+                accessions_list.extend(accessions)
         
       
         for queried_accession_id in accessions_list:
