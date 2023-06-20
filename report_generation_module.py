@@ -1,16 +1,15 @@
 from Utilities import Color, Utilities
 import os
-#from os #import path
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.express as px
 from Project import Project
 import pycountry
 from collections import Counter
-import numpy as np
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+import difflib #new
 
 def report_generation(user_session):
     """
@@ -494,8 +493,10 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
     """
     generate a bubble world map indicating each project's country
     """
+
     try:
-        p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') #problema con korea... bisogna capire se del nord o del sud, quindi tramite città?
+        replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
+        p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
         for affiliation in affiliation_list:
@@ -509,12 +510,12 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
         country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
         country_df.columns = ['Country', 'Count', 'CODE']
 
+
         fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
             color_continuous_scale=color_palette_scale_r , opacity = 0.95, size_max=30,
             hover_data = {'CODE':False,'Country':True,'Count': True})
             
-
-        fig.update_layout(
+        fig.update_layout({'geo': {'resolution': 50}},
             title = 'Map of publications', title_x=0.5,
             title_font = dict(family='Times New Roman', size=40),
             showlegend = True, coloraxis_colorbar=dict(title="Number of <br>publications", 
