@@ -571,8 +571,8 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
     fig = plt.figure(figsize=(16, 9))  # set the figure size to a widescreen aspect ratio (16:9)
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
-    plt.tight_layout()
-    title_font = {'family': 'serif', 'size': 20} #da migliorare: titolo non si vede e non è uguale ad altri
+    #plt.tight_layout() #silenziandolo si vede titolo ma grafico non autocentrato
+    title_font = {'family': 'serif', 'size': 20} #da migliorare: titolosi non è uguale ad altri
     plt.title("Publications titles wordcloud", fontdict=title_font)
 
     f.write(mpld3.fig_to_html(fig))
