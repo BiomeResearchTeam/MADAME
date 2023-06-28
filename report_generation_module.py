@@ -292,9 +292,10 @@ def initial_table(report_folder, e_df, p_df, f):
     fig.write_html(os.path.join(report_folder, "Sample number.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
-    df = pd.DataFrame(values)
+    df_dict = {'index': first_column, 'values': second_column}
+    df = pd.DataFrame(df_dict)
     file_name = os.path.join(report_folder,'summary_table.xlsx')
-    df.to_excel(file_name)
+    df.to_excel(file_name, index=False)
 
 
 def sample_number(report_folder, e_df, color_palette_scale_r, f):
