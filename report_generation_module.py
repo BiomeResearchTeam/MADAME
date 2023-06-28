@@ -327,12 +327,12 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             column_count_df = e_df[column].value_counts() #df for pie
             df_pie = pd.DataFrame(column_count_df).reset_index()
             column_name = column.capitalize().replace('_', ' ')
-            df_pie.columns = [column_name, 'Counts']
+            df_pie.columns = [column_name, 'Count']
 
             column_count_IDs_df = e_df.groupby(['study_accession'])[column].value_counts() #df for bar
             df_bar = column_count_IDs_df.rename('count').reset_index()
             column_name = column.capitalize().replace('_', ' ')
-            df_bar.columns = ['Project', column_name, 'Counts']
+            df_bar.columns = ['Project', column_name, 'Count']
 
             n_colors = len(df_pie)
             if n_colors > 1:
@@ -340,11 +340,11 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             if  n_colors == 1:
                 colors = px.colors.sample_colorscale(color_palette_scale, [n for n in range(n_colors)]) 
 
-            df_pie = df_pie.sort_values("Counts", ascending=False)
-            df_pie["Percent"] = df_pie["Counts"]/df_pie["Counts"].sum()
-
-            file_name = os.path.join(report_folder,f'{column_name}_table.xlsx')
-            df_pie.to_excel(file_name)
+            df_pie = df_pie.sort_values("Count", ascending=False)
+            df_pie["Percentage"] = (df_pie["Count"]/df_pie["Count"].sum())*100
+            df_pie["Percentage"] = df_pie["Percentage"].apply(lambda x: '{:.1f}%'.format(x))
+            file_name = os.path.join(report_folder,f'{column_name} table.xlsx')
+            df_pie.to_excel(file_name, index=False)
 
             if len(df_pie.index) > 10: #prevent complex pie chart
                 df_pie_copy = df_pie
@@ -356,7 +356,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
 
                 df_pie = pd.concat([df_pie, df_pie_rare])
 
-            fig = px.pie(df_pie, values=df_pie['Counts'], names=df_pie[column_name], hole=0.6, 
+            fig = px.pie(df_pie, values=df_pie['Count'], names=df_pie[column_name], hole=0.6, 
                     color_discrete_sequence = colors) 
             
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
@@ -364,8 +364,8 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
-            df_bar = df_bar.sort_values("Counts", ascending=False)
-            fig = fig = px.bar(df_bar, x="Project", y="Counts", color=column_name,
+            df_bar = df_bar.sort_values("Count", ascending=False)
+            fig = fig = px.bar(df_bar, x="Project", y="Count", color=column_name,
                     color_discrete_sequence = colors, log_y=True)
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
             fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
