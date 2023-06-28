@@ -1,16 +1,21 @@
 from Utilities import Color, Utilities
+from Project import Project
 import os
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
-from Project import Project
 import pycountry
 from collections import Counter
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
-import difflib #new
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
+from matplotlib.colors import LinearSegmentedColormap
+import mpld3
+from mpld3 import plugins
 
 def report_generation(user_session):
     """
@@ -136,26 +141,29 @@ def available_metadata_files(user_session):
         report(user_session, e_df, p_df)
         final_screen(user_session)
 
-
 #reports
 def report(user_session, e_df, p_df): 
     """
     report generation based on how many '*_merged_<experiment or publication>-metadata.tsv' files are present in the folder.
     create a report folder that will contain all plots in png format, create a single html that will contain all plots 
     """
-    color_palette = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
+    color_palette_rgb = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
         'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
         'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
         'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 210, 11)']
+    color_palette_hex = ['#29186b', '#2a1e8a', '#26299f', '#163e9b', '#104f96', '#125c8f', '#1b698c', '#277589', '#2f8188', '#388c87', '#3e9986', '#47a582',
+                         '#50b17c', '#61bd73', '#74c869', '#91d160', '#aed961', '#ffd20b']
+
     #color_palette_3 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#E70056', '#FF0054', '#FF2A2A', '#FF3F15', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
     #color_palette_6 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#FF0054', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
     #color_palette_7 = ['#714CF1', '#8338EC', '#A22ACD', '#C11CAD', '#FF006E', '#FB5607', '#FD8A09', '#FFBE0B']
     #color_palette_8 = ['#301C80', '#5134B9', '#714CF1', '#7A42EF', '#8338EC', '#9331DD', '#A22ACD', '#D1746C', '#E8993B', '#FFBE0A']
     #color_palette_9 = ['#301C80', '#252D87', '#1B3E8F', '#104F96', '#1D6391', '#2B788C', '#388C87', '#7A9D5D', '#BDAD34', '#FFBE0A']
     #color_palette = ['#301C80', '#282986', '#20368B', '#263C8E', '#2C4190', '#403F8E', '#702F86', '#9F207E', '#CF1076', '#FF006E']
-    color_palette_scale = px.colors.make_colorscale(color_palette)
-    color_palette_scale_r = list(reversed(color_palette))
-    color_palette_scale_r = px.colors.make_colorscale(color_palette_scale_r)
+    color_palette_scale = px.colors.make_colorscale(color_palette_rgb)
+    color_palette_rgb_r = list(reversed(color_palette_rgb))
+    color_palette_hex_r =list(reversed(color_palette_hex))
+    color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
 
     report_folder = (os.path.join('Downloads', user_session, 'Report_images'))
     if not os.path.exists(report_folder):
@@ -165,11 +173,12 @@ def report(user_session, e_df, p_df):
     
     with open(report_html, 'w+') as f:
         initial_table(report_folder, e_df, p_df, f)
-        sample_number(report_folder, e_df, color_palette_scale_r, f)
+        sample_number(report_folder, e_df, color_palette_scale_rgb_r, f)
         pie_and_bar_charts(report_folder, e_df, color_palette_scale, f)
-        projects_size(report_folder, e_df, color_palette_scale_r, f)
+        projects_size(report_folder, e_df, color_palette_scale_rgb_r, f)
         IDs_dates(report_folder, e_df, f)
-        geography(report_folder, p_df, color_palette_scale_r, f)
+        geography(report_folder, p_df, color_palette_scale_rgb_r, f)
+        wordcloud(report_folder, p_df, color_palette_hex_r , f)
 
 
 #report functions
@@ -300,7 +309,7 @@ def initial_table(report_folder, e_df, p_df, f):
     df.to_excel(file_name, index=False)
 
 
-def sample_number(report_folder, e_df, color_palette_scale_r, f):
+def sample_number(report_folder, e_df, color_palette_scale_rgb_r, f):
     """
     generate bar chart
     """
@@ -309,7 +318,7 @@ def sample_number(report_folder, e_df, color_palette_scale_r, f):
     sample_number_df.columns = ['Project', 'Number of samples']
     sample_number_df = sample_number_df.sort_values("Number of samples", ascending=False)
     fig = px.bar(sample_number_df, x="Project", y="Number of samples", log_y=True,
-                 color="Number of samples", color_continuous_scale = color_palette_scale_r)
+                 color="Number of samples", color_continuous_scale = color_palette_scale_rgb_r)
     fig.update_layout(title_text='Number of samples', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
                 barmode='stack', legend_title_text="Number of samples<br>", legend=dict(title_font_family="Times New Roman", #font=dict(size= 20),
                 bordercolor="lavenderblush", borderwidth=3))
@@ -376,7 +385,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
 
 
 #PROJECT SIZE & BYTES
-def projects_size(report_folder, e_df, color_palette_scale_r, f):
+def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
     """
     generate bubble plot based on fastq bytes for each project
     """
@@ -407,7 +416,7 @@ def projects_size(report_folder, e_df, color_palette_scale_r, f):
    
     #BUBBLE PLOT
     fig = px.scatter(df, x='Project', y='User_Megabytes', size='User_Megabytes',
-                 color='User_Megabytes', size_max=150, color_continuous_scale = color_palette_scale_r, 
+                 color='User_Megabytes', size_max=150, color_continuous_scale = color_palette_scale_rgb_r, 
                  opacity = 0.8)
 
     fig.update_layout(title = 'Project size', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
@@ -492,7 +501,7 @@ def alpha3code(column):
             CODE.append('None')
     return CODE
 
-def geography(report_folder, p_df, color_palette_scale_r, f):
+def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
     """
     generate a bubble world map indicating each project's country
     https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
@@ -500,15 +509,6 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
     """
 
     try:
-        # replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
-        # p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
-        # country_list = []
-        # affiliation_list = p_df['affiliation'].tolist()
-        # for affiliation in affiliation_list:
-        #     for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-        #         if country.name in affiliation:
-        #             country_list.append(country.name)
-
         replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
         p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
@@ -528,7 +528,7 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
         country_df.columns = ['Country', 'Count', 'CODE']
 
         fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
-            color_continuous_scale=color_palette_scale_r , opacity = 0.95, size_max=30,
+            color_continuous_scale=color_palette_scale_rgb_r , opacity = 0.95, size_max=30,
             hover_data = {'CODE':False,'Country':True,'Count': True})
             
         fig.update_layout({'geo': {'resolution': 50}},
@@ -541,7 +541,6 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
         min_val = country_df['Count'].min()
         max_val = country_df['Count'].max()
         tickvals = np.linspace(min_val, max_val, num=5, dtype=int)
-        print(tickvals)
 
         fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", #colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
             colorbar_dtick=1, colorbar_tickvals=tickvals) #only integers number separated by 1
@@ -560,116 +559,29 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
     except TypeError:
-        print('"_merged_publications-metadata.tsv" file missing')
+        print('"_merged_publications-metadata.tsv" file missing')    
 
 
-
-
-# #WORLD MAP #######DA MODIFICARE, SILENZIATO PERCHé NON FUNZIONAVA
-
-# def alpha3code(column): #create a list of ISO3 starting from the column of interest
-#         CODE=[]
-#         for country in column:
-#             try:
-#                 code=pycountry.countries.get(name=country).alpha_3
-#                 CODE.append(code)
-#             except:
-#                 CODE.append('None')
-#         return CODE
-
-# def geography(report_folder, p_df, f): 
+def wordcloud(report_folder, p_df, color_palette_hex_r , f): 
     
-#     # for column in ['affiliation']:
-#     #     if pd.Series(column).isin(p_df.columns).all():
-#     #         p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') # pycountry non riconosce US o USA e quindi non lo include
-            
-#             #collapsed_p_df = p_df.groupby(['project_id', 'affiliation']).count()
-#     try:
-#         p_df['affiliation'] = p_df['affiliation'].str.replace('USA','United States') #attenzione: sostituire tutti quelli che immaginiamo possano essere scritti in un  modo che pycountry non voglia
-#         # qui link: https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
-#         # https://stackoverflow.com/questions/15377832/pycountries-convert-country-names-possibly-incomplete-to-countrycodes
-#         country_list = []
-#         affiliation_list = p_df['affiliation'].tolist()
-#         for affiliation in affiliation_list:
-#             print(affiliation)
-#             for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-#                 if country.name in affiliation:
-#                     country_list.append(country.name) #punto debole: se non estrae paese da tutte le righe allora lunghezza di lista < della colonna
-#                     print(pycountry.countries)
-#                     print(country)
-#                     print(country.name)
+    titles = list(p_df['title'])
+    text = ' '.join(titles)
+    colormap = LinearSegmentedColormap.from_list("custom_colormap", color_palette_hex_r) #create customed colormap for worldcloud
+    wordcloud = WordCloud(width=1920, height=1080, background_color="white", colormap = colormap).generate(text) #max_font_size=50
+    fig = plt.figure(figsize=(16, 9))  # set the figure size to a widescreen aspect ratio (16:9)
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
+    plt.tight_layout()
+    ax = plt.gca()
+    ax.axis('off')
 
-#         # dicts = {}
-#         # keys = range(len(p_df.index))
-#         # values = p_df['affiliation'].tolist()
-#         # for i in keys:
-#         #     for x in values:
-#         #         for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-#         #             if country.name in x:
-#         #                 #country_list.append(country.name)
-#         #                 dicts[i] = x
+    f.write(mpld3.fig_to_html(fig))
+    fig.savefig(os.path.join(report_folder, "Wordcloud.png"), format='png')
+    plt.close(fig)
 
-#         # print(dicts)    
+    # Chiudi la figura
+    plt.close(fig)
 
-#         # temp_df  = pd.DataFrame(country_list, columns =['affiliation'])
-#         # print([i.name for i in list(pycountry.countries)])
-#         # print(p_df.affiliation[~temp_df.affiliation.isin([i.name for i in list(pycountry.countries)])])
-                
-
-#         # print(country_list)
-#         # print(p_df['project_id'])
-#         p_df['country'] = country_list
-#         pd.set_option('display.max_columns', None)
-#         pd.set_option('display.max_rows', None)
-#         # print(p_df)
-
-#         collapsed_p_df = p_df.groupby(['project_id', 'country']).count() #CONTINUARE DA QUI: USARE COLLAPSED PER FARE GRAFICO
-#         print(collapsed_p_df)
-
-        
-#         input =  country_list
-#         c = Counter(input) #counter of countries
-#         country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
-#         country_number = country_df['country'].nunique()
-#         country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
-#         country_df.columns = ['Country', 'Count', 'CODE']
-
-#         fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
-#             color_continuous_scale=['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
-#             'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
-#             'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
-#             'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 230, 87)'], opacity = 0.95, size_max=30,
-#             hover_data = {'CODE':False,'Country':True,'Count': True})
-            
-#         fig.update_layout(
-#             title = 'Map of publications', title_x=0.5,
-#             title_font = dict(family='Times New Roman', size=40),
-#             showlegend = True, coloraxis_colorbar=dict(title="Number of <br>publications", 
-#             thicknessmode="pixels", thickness=20,
-#             lenmode="pixels", len=500))
-        
-#         fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", #colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
-#             colorbar_dtick=1) #only integers number separated by 1
-
-#         fig.update_geos(scope='world',
-#             visible=False,
-#             showcoastlines=True, coastlinecolor="#F6F6F4",
-#             showocean=True, oceancolor='#98BAD8',
-#             showland=True, landcolor="#F6F6F4", 
-#             projection_type = 'natural earth')
-
-#         fig.update_traces(marker=dict(line=dict(width=0)))
-
-#         fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
-#         fig.write_html(os.path.join(report_folder, "Map of publications.html"))
-#         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
-
-#     except TypeError:
-#         print('"_merged_publications-metadata.tsv" file missing')
-    
-
-
-    
 def final_screen(user_session):
     logger = Utilities.log("report_generation_module", user_session)
     logger.debug(f"[REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/{user_session}")
