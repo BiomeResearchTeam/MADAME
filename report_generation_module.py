@@ -1,6 +1,7 @@
 from Utilities import Color, Utilities
 import os
 import pandas as pd
+import numpy as np
 import plotly.graph_objects as go
 import plotly.express as px
 from Project import Project
@@ -246,21 +247,22 @@ def initial_table(report_folder, e_df, p_df, f):
     if p_df is not None:
         for column in ['affiliation']:
             if pd.Series(column).isin(p_df.columns).all():
-
-                replacers = {'USA':'United States', 'United States America':'United States', 'American United States':'United States'}
-                p_df['affiliation'] = p_df['affiliation'].replace(replacers)
-                p_df.fillna("nan",inplace=True)
-                affiliation_list = p_df['affiliation'].tolist()
+                replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
+                p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
                 country_list = []
+                affiliation_list = p_df['affiliation'].tolist()
                 for affiliation in affiliation_list:
-                    if affiliation !='nan':
+                    try:
                         for country in pycountry.countries:
                             if country.name in affiliation:
                                 country_list.append(country.name)
-                
+                    except TypeError:
+                        pass
                 unique_country_list = list(set(country_list))
                 country_number = len(unique_country_list)
                 second_column.append(country_number)
+    else:
+        second_column.append(' ')
 
 
     values = [first_column, second_column]
@@ -493,24 +495,37 @@ def alpha3code(column):
 def geography(report_folder, p_df, color_palette_scale_r, f):
     """
     generate a bubble world map indicating each project's country
+    https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
+    https://stackoverflow.com/questions/15377832/pycountries-convert-country-names-possibly-incomplete-to-countrycodes
     """
 
     try:
+        # replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
+        # p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
+        # country_list = []
+        # affiliation_list = p_df['affiliation'].tolist()
+        # for affiliation in affiliation_list:
+        #     for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+        #         if country.name in affiliation:
+        #             country_list.append(country.name)
+
         replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
         p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
         for affiliation in affiliation_list:
-            for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
-                if country.name in affiliation:
-                    country_list.append(country.name)
+            try:
+                for country in pycountry.countries: #extract the name of the country from a string, in this case the affiliation
+                    if country.name in affiliation:
+                        country_list.append(country.name)
+            except TypeError:
+                pass
         
         input =  country_list
         c = Counter(input) #counter of countries
         country_df = pd.DataFrame(c.items(), columns = ['country', 'count'])
         country_df['CODE']=alpha3code(country_df.country) #call alpha3code to create ISO3 column
         country_df.columns = ['Country', 'Count', 'CODE']
-
 
         fig = px.scatter_geo(country_df, locations="CODE", color = 'Count', size="Count", 
             color_continuous_scale=color_palette_scale_r , opacity = 0.95, size_max=30,
@@ -523,8 +538,13 @@ def geography(report_folder, p_df, color_palette_scale_r, f):
             thicknessmode="pixels", thickness=20,
             lenmode="pixels", len=500))
         
+        min_val = country_df['Count'].min()
+        max_val = country_df['Count'].max()
+        tickvals = np.linspace(min_val, max_val, num=5, dtype=int)
+        print(tickvals)
+
         fig.update_coloraxes(colorbar_title_text="Number of <br>publications<br>", #colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20, 
-            colorbar_dtick=1) #only integers number separated by 1
+            colorbar_dtick=1, colorbar_tickvals=tickvals) #only integers number separated by 1
 
         fig.update_geos(scope='world',
             visible=False,
