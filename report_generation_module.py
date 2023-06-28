@@ -572,10 +572,13 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
     plt.tight_layout()
-    ax = plt.gca()
-    ax.axis('off')
+    title_font = {'family': 'serif', 'size': 20} #da migliorare: titolo non si vede e non è uguale ad altri
+    plt.title("Publications titles wordcloud", fontdict=title_font)
 
     f.write(mpld3.fig_to_html(fig))
+    fig_html = mpld3.fig_to_html(fig)
+    with open(os.path.join(report_folder,"Wordcloud.html"), "w") as file:
+        file.write(fig_html)
     fig.savefig(os.path.join(report_folder, "Wordcloud.png"), format='png')
     plt.close(fig)
 
