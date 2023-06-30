@@ -12,10 +12,8 @@ from rich.panel import Panel
 from rich.text import Text
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
 from matplotlib.colors import LinearSegmentedColormap
-import mpld3
-from mpld3 import plugins
+import squarify 
 
 def report_generation(user_session):
     """
@@ -179,6 +177,7 @@ def report(user_session, e_df, p_df):
         IDs_dates(report_folder, e_df, f)
         geography(report_folder, p_df, color_palette_scale_rgb_r, f)
         wordcloud(report_folder, p_df, color_palette_hex_r , f)
+        treemap(report_folder, p_df, color_palette_hex_r , f)
 
 
 #report functions
@@ -563,27 +562,42 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
 
 
 def wordcloud(report_folder, p_df, color_palette_hex_r , f): 
-    
+
     titles = list(p_df['title'])
     text = ' '.join(titles)
     colormap = LinearSegmentedColormap.from_list("custom_colormap", color_palette_hex_r) #create customed colormap for worldcloud
-    wordcloud = WordCloud(width=1920, height=1080, background_color="white", colormap = colormap).generate(text) #max_font_size=50
-    fig = plt.figure(figsize=(16, 9))  # set the figure size to a widescreen aspect ratio (16:9)
-    plt.imshow(wordcloud, interpolation='bilinear')
+    wordcloud = WordCloud(width=1920, height=1080, background_color="white", colormap = colormap).generate(text)
+    fig = plt.figure(figsize=(16, 9))
     plt.axis("off")
-    #plt.tight_layout() #silenziandolo si vede titolo ma grafico non autocentrato
-    title_font = {'family': 'serif', 'size': 20} #da migliorare: titolosi non è uguale ad altri
-    plt.title("Publications titles wordcloud", fontdict=title_font)
+    plt.tight_layout()
+    plt.imshow(wordcloud, interpolation='bilinear')
 
-    f.write(mpld3.fig_to_html(fig))
-    fig_html = mpld3.fig_to_html(fig)
-    with open(os.path.join(report_folder,"Wordcloud.html"), "w") as file:
-        file.write(fig_html)
-    fig.savefig(os.path.join(report_folder, "Wordcloud.png"), format='png')
-    plt.close(fig)
+    layout = go.Layout(
+    title={'text': "Wordcloud of projects-associated publications titles", 'x':0.5},
+    title_font=dict(family='Times New Roman', size=40),
+    hovermode=False)
 
-    # Chiudi la figura
-    plt.close(fig)
+    fig = go.Figure(data=go.Image(z=wordcloud.to_array()), layout=layout)
+    fig.write_image(os.path.join(report_folder, "WordCloud.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "WordCloud.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+
+def treemap(report_folder, p_df, color_palette_hex_r , f):
+        
+    df = pd.DataFrame({'nb_people':[8,3,4,2], 'group':["group A", "group B", "group C", "group D"] }) #cambiare qui
+
+    squarif = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
+    layout = go.Layout(
+    title={'text': "Treemap of journals subject", 'x':0.5},
+    title_font=dict(family='Times New Roman', size=40),
+    hovermode=False)
+
+    fig = go.Figure(data=go.Image(z=squarif.to_array()), layout=layout) #non va qui
+    fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "Treemap.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
 
 def final_screen(user_session):
     logger = Utilities.log("report_generation_module", user_session)
