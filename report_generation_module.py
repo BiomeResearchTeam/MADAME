@@ -553,9 +553,9 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
 
         fig.update_traces(marker=dict(line=dict(width=0)), marker_sizemin=10)
 
-        fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
-        fig.write_html(os.path.join(report_folder, "Map of publications.html"))
-        f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    #     fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
+    #     fig.write_html(os.path.join(report_folder, "Map of publications.html"))
+    #     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
     except TypeError:
         print('"_merged_publications-metadata.tsv" file missing')    
@@ -587,16 +587,18 @@ def treemap(report_folder, p_df, color_palette_hex_r , f):
         
     df = pd.DataFrame({'nb_people':[8,3,4,2], 'group':["group A", "group B", "group C", "group D"] }) #cambiare qui
 
-    squarif = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
+    s = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
+    print(s)
+    print(type(s))
     layout = go.Layout(
     title={'text': "Treemap of journals subject", 'x':0.5},
     title_font=dict(family='Times New Roman', size=40),
     hovermode=False)
 
-    fig = go.Figure(data=go.Image(z=squarif.to_array()), layout=layout) #non va qui
-    fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
-    fig.write_html(os.path.join(report_folder, "Treemap.html"))
-    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    # fig = go.Figure(data=go.Image(z=s), layout=layout) #non va qui
+    # fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
+    # fig.write_html(os.path.join(report_folder, "Treemap.html"))
+    # f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
 def final_screen(user_session):
