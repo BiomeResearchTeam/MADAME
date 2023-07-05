@@ -14,12 +14,13 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import squarify 
+import plotly.io as pio
+
 
 def report_generation(user_session):
     """
     main function
     """
-    
     while True:
         Utilities.clear() 
         title = Panel(Text("REPORT MODULE", style = "b magenta", justify="center"), style = "b magenta", expand=False, width = 300)
@@ -378,6 +379,7 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig = fig = px.bar(df_bar, x="Project", y="Count", color=column_name,
                     color_discrete_sequence = colors, log_y=True)
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
+            fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'}) #plot with transparent background
             fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
             fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
@@ -553,9 +555,9 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
 
         fig.update_traces(marker=dict(line=dict(width=0)), marker_sizemin=10)
 
-    #     fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
-    #     fig.write_html(os.path.join(report_folder, "Map of publications.html"))
-    #     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
+        fig.write_html(os.path.join(report_folder, "Map of publications.html"))
+        f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
     except TypeError:
         print('"_merged_publications-metadata.tsv" file missing')    
@@ -587,13 +589,13 @@ def treemap(report_folder, p_df, color_palette_hex_r , f):
         
     df = pd.DataFrame({'nb_people':[8,3,4,2], 'group':["group A", "group B", "group C", "group D"] }) #cambiare qui
 
-    s = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
-    print(s)
-    print(type(s))
-    layout = go.Layout(
-    title={'text': "Treemap of journals subject", 'x':0.5},
-    title_font=dict(family='Times New Roman', size=40),
-    hovermode=False)
+    # s = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
+    # print(s)
+    # print(type(s))
+    # layout = go.Layout(
+    # title={'text': "Treemap of journals subject", 'x':0.5},
+    # title_font=dict(family='Times New Roman', size=40),
+    # hovermode=False)
 
     # fig = go.Figure(data=go.Image(z=s), layout=layout) #non va qui
     # fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
