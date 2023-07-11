@@ -322,6 +322,7 @@ def sample_number(report_folder, e_df, color_palette_scale_rgb_r, f):
     fig.update_layout(title_text='Number of samples', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
                 barmode='stack', legend_title_text="Number of samples<br>", legend=dict(title_font_family="Times New Roman", #font=dict(size= 20),
                 bordercolor="lavenderblush", borderwidth=3))
+    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
     fig.update_yaxes(title_text= "number of samples",title_font=dict(family='Times New Roman', size=25))
     fig.write_image(os.path.join(report_folder, "Sample number.png"), width=1920, height=1080)
@@ -371,8 +372,9 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
                     color_discrete_sequence = colors) 
             
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
-            fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
-            fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
+            fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
+            fig.write_image(os.path.join(report_folder, f"{column_name}_pie.png"), width=1920, height=1080)
+            fig.write_html(os.path.join(report_folder, f"{column_name}_pie.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
             df_bar = df_bar.sort_values("Count", ascending=False)
@@ -380,8 +382,8 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
                     color_discrete_sequence = colors, log_y=True)
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
             fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'}) #plot with transparent background
-            fig.write_image(os.path.join(report_folder, f"{column_name}.png"), width=1920, height=1080)
-            fig.write_html(os.path.join(report_folder, f"{column_name}.html"))
+            fig.write_image(os.path.join(report_folder, f"{column_name}_bar.png"), width=1920, height=1080)
+            fig.write_html(os.path.join(report_folder, f"{column_name}_bar.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
@@ -406,7 +408,7 @@ def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
 
     df = pd.DataFrame({'Project': ids_list, 'Size' : size_list, 'Bytes' : bytes_list})
     file_name = os.path.join(report_folder,'Project_size.xlsx')
-    df.to_excel(file_name)
+    
 
     user_Megabytes = []
     for byte in bytes_list:
@@ -414,6 +416,7 @@ def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
         user_Megabytes.append(user_bytes)
 
     df['User_Megabytes']=user_Megabytes
+    df.to_excel(file_name)
    
     #BUBBLE PLOT
     fig = px.scatter(df, x='Project', y='User_Megabytes', size='User_Megabytes',
@@ -426,6 +429,7 @@ def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
         lenmode="pixels", len=500))
     
     fig.update_coloraxes(colorbar_title_text="Megabyte")#, colorbar_title_font_family='Times New Roman', colorbar_title_font_size=20)
+    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
     fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
     fig.update_yaxes(title_text= "megabytes",title_font=dict(family='Times New Roman', size=25), type="log")
     fig.update_traces(hovertemplate = "Project: %{x} <br>Megabytes: %{y:,.1f}<br><extra></extra>", marker_sizemin=10)
@@ -476,6 +480,7 @@ def IDs_dates(report_folder, e_df, f):
                     legend_title_text="Updates<br>", #legend=dict(#title_font_family="Times New Roman", #font=dict(size= 20),
                     #bordercolor="lavenderblush", borderwidth=3),
                     hovermode='x') #to see both hover labels
+        fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
         fig.update_xaxes(title_text= "project", title_font=dict(family='Times New Roman', size=25))
         fig.update_yaxes(title_text= "year",title_font=dict(family='Times New Roman', size=25),
             type="category", categoryorder='category ascending') #make years as categorical and sort them
@@ -510,7 +515,9 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
     """
 
     try:
-        replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of' }
+        replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 
+                             'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of', 'Brasil': 'Brazil', 'Perugia': 'Italy',
+                             'Indiana': ''}
         p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
@@ -554,6 +561,7 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
             projection_type = 'natural earth')
 
         fig.update_traces(marker=dict(line=dict(width=0)), marker_sizemin=10)
+        fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
 
         fig.write_image(os.path.join(report_folder, "Map of publications.png"), width=1920, height=1080)
         fig.write_html(os.path.join(report_folder, "Map of publications.html"))
@@ -580,6 +588,7 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
     hovermode=False)
 
     fig = go.Figure(data=go.Image(z=wordcloud.to_array()), layout=layout)
+    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
     fig.write_image(os.path.join(report_folder, "WordCloud.png"), width=1920, height=1080)
     fig.write_html(os.path.join(report_folder, "WordCloud.html"))
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
