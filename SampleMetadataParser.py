@@ -17,14 +17,11 @@ class SampleMetadataParser:
     # runs the parser on samples-metadata_xml's files, exits to main folder.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
         for projectID in track(listOfProjectIDs, description="Parsing samples metadata files..."):
-
-            #### aggiungere altre info sul processo?
             path = os.path.join("Downloads", user_session, projectID)
 
             # Pass if .tsv parsed file already exists
             if os.path.isfile(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv')):
                 pass 
-
             else:      
                 self.sampleMetadataParser(user_session, projectID)
 

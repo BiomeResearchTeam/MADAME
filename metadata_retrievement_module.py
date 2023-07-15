@@ -14,18 +14,10 @@ from rich.text import Text
 def metadata_retrievement(user_session):
     while True:
         Utilities.clear()
-        title = Panel(Text("METADATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
+        box = Panel(Text.assemble("\nHow do you want to retrieve metadata? Choose one of the following options:\n\n1 - Doing a query on ENA\n2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma\n3 - Load a file input (tsv or csv) containing a list of accession codes, created by the user\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
 
-        print("\nHow do you want to retrieve metadata? Choose one of the following options: \n ")
-        print(" 1 - Doing a query on ENA ")
-        print(" 2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma")
-        print(" 3 - Load a file input (tsv or csv) containing list of accession codes, created by the user")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to return to the main menu digit: " 
-        + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-
-        metadata_retrievement_choice = input("\n>> Enter your choice: ")
+        metadata_retrievement_choice = input("\n  >> Enter your choice: ")
         if metadata_retrievement_choice.lower() in "main menu":
             return
         elif metadata_retrievement_choice.isnumeric():
@@ -136,15 +128,11 @@ def metadata_retrievement_file(user_session):
 def metadata_download(listOfAvailableAccessions, user_session):
 
     Utilities.clear()
-    title = Panel(Text("DOWNLOAD METADATA", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
 
-    print("\nChoose one of the following options: \n ")
-    print(" 1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)")
-    print(" 2 - Download Project and Experiment metadata of the available projects")
-    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
-    user_metadata_input = input("\n>> Enter your choice: ")
+    box = Panel(Text.assemble("\nChoose one of the following options:\n\n1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)\n2 - Download Project and Experiment metadata of the available projects\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA DOWNLOAD ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
+
+    user_metadata_input = input("\n  >> Enter your choice: ")
         
     if user_metadata_input.lower() in "back":
         return

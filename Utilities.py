@@ -74,15 +74,14 @@ class Utilities:
         else:
             os.system('tput reset')
 
-# DA SOSTITUIRE CON LE FUNZIONALITA' DI RICH:
 class Color:
-    # Colors
-    RED = '\033[91m'
-    GREEN = '\033[92m'
-    YELLOW = '\033[93m'
-    BLUE = '\033[94m'
-    PURPLE = '\033[95m'
-    CYAN = '\033[96m'
+    # Bright RGB colors
+    RED = '\033[38;2;255;0;0m' 
+    GREEN = '\033[38;2;0;255;0m' 
+    YELLOW = '\033[38;2;255;255;0m' 
+    BLUE = '\033[38;2;0;0;255m' 
+    PURPLE = '\033[38;2;255;0;255m' 
+    CYAN = '\033[38;2;0;255;255m' 
 
     # Text format
     BOLD = '\033[1m'
@@ -90,15 +89,14 @@ class Color:
     UNDERLINE = '\033[4m'
     BLINK = '\33[5m'
 
-    # Background colors
-    BLACKBG = '\33[40m'
-    REDBG = '\33[41m'
-    GREENBG = '\33[42m'
-    YELLOWBG = '\33[43m'
-    BLUEBG = '\33[44m'
-    VIOLETBG = '\33[45m'
-    BEIGEBG = '\33[46m'
-    WHITEBG = '\33[47m'
+    # Bright RGB background colors
+    BLACKBG = '\033[48;2;0;0;0m'
+    REDBG = '\033[48;2;255;0;0m' 
+    GREENBG = '\033[48;2;0;255;0m'
+    YELLOWBG = '\033[48;2;255;255;0m'
+    BLUEBG = '\033[48;2;0;0;255m'
+    PURPLEBG = '\033[48;2;255;0;255m'
+    WHITEBG = '\033[48;2;255;255;255m'
 
     # End of format\colors
     END = '\033[0m'

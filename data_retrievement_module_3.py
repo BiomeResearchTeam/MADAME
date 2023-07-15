@@ -12,16 +12,11 @@ def data_retrievement(user_session):
 
     while True:
         Utilities.clear() 
-        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
-        
-        print("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:")
-        print(" 1 - Use '*_merged_experiments-metadata.tsv' file present the current session")
-        print(" 2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer")
-        print(" 3 - Input a file (tsv or csv format) with the list of accessions you want to download")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-        data_download_choice = input("\n>> Enter your choice: ").strip().lower()
+
+        box = Panel(Text.assemble("\nDownload the data associated to the previously downloaded metadata.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present the current session\n2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer\n3 - Input a file (tsv or csv format) with the list of accessions you want to download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
+        data_download_choice = input("\n  >> Enter your choice: ").strip().lower()
 
         if data_download_choice in ("main menu"):
             return
@@ -85,10 +80,11 @@ def data_user_local(user_session):
 
     while True:
         Utilities.clear()
-        print("Enter the path for '*_merged_experiments-metadata.tsv' file. \nData will be downloaded in the folder indicated.")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print("--- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
-        data_local_path = input("\n>> Digit the path: ").strip()
+
+        box = Panel(Text.assemble("\nEnter the path for '*_merged_experiments-metadata.tsv' file.\n\nData will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
+        data_local_path = input("\n  >> Digit the path: ").strip()
 
         if data_local_path.lower() in ("main menu"):
             return
@@ -107,21 +103,17 @@ def data_user_local(user_session):
         
 #DATA FROM USER FILE
 def check_CSV(user_session):
-    while True:
-        Utilities.clear()
-        title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
 
-        user_csv = UserFileCodesInput(user_session)
-        if user_csv.lower() == "back":
-            return
+    user_csv = UserFileCodesInput(user_session)
+    if user_csv.lower() == "back":
+        return
 
-        elif path.isfile(user_csv) == False:
-            print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
-            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-            return
-        else: 
-            return user_csv
+    elif path.isfile(user_csv) == False:
+        print(Color.BOLD + Color.RED + "File not found." + Color.END, " Maybe a typo? Try again\n")
+        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+        return
+    else: 
+        return user_csv
         
 def check_IDs_CSV(user_csv, user_session):
     if user_csv is not None:
@@ -144,9 +136,7 @@ def enaBT_download(files_found):
     print(type(files_found))
     if files_found is not None:
         while True:
-            Utilities.clear()
-            title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-            rich_print(title)
+
             enaBT_txt = open("enaBT_path.txt","r+")
             enaBT_read = enaBT_txt.readline().split(':')[1].strip()
             enaBT_path = os.path.join(enaBT_read, 'enaDataGet')
@@ -168,13 +158,12 @@ def data_download_function(enaBT_path, data_user_session, files_found):
     if files_found is not None:
         while True:
             Utilities.clear()
-            title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-            rich_print(title)
             user_session = os.path.relpath(data_user_session, 'Downloads')
-            print("\nWhat data format do you want to download?", Color.UNDERLINE + "fastq" + Color.END, ",", Color.UNDERLINE + "sra" + Color.END,", or", Color.UNDERLINE + "submitted" + Color.END)
-            print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<")
-            print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-            data_download_type = input("\n>> Enter your choice: ").strip().lower()
+
+            box = Panel(Text.assemble("\nWhat data format do you want to download? ", ("fastq", "u"), " , ", ("sra", "u"), " , or ", ("submitted", "u"), "\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+            rich_print(box)
+    
+            data_download_type = input("\n  >> Enter your choice: ").strip().lower()
             if data_download_type in ("main menu"):
                 return
                 
@@ -184,7 +173,7 @@ def data_download_function(enaBT_path, data_user_session, files_found):
                     e_df = pd.read_csv(os.path.join(data_user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)
                 if merged_experiments.endswith('.csv'):
                     e_df = pd.read_csv(os.path.join(data_user_session, merged_experiments), infer_datetime_format=True)
-                print()  #riga vuota prima dell'output di enaBT
+                print() 
                 SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type) #mettere op<ione per tornare indietro se uno non vuole scaricare. qui in sequence.download
                 
             else:

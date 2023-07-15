@@ -1,16 +1,11 @@
 import os
 import subprocess
 import shutil 
-import pandas as pd
 from Project import Project
 from Utilities import Utilities, Color
 from rich.console import Console
 from rich import print as rich_print
 from rich.panel import Panel
-from rich.text import Text
-#from rich.progress import track
-
-# NEEDS NESTED RICH BAR FOR OVERALL AND PARTIAL DOWNLOAD (example https://github.com/Textualize/rich/discussions/950)
 
 class SequencesDownload:
 
@@ -54,7 +49,7 @@ class SequencesDownload:
         if bytes_total == 0:
             print(Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format.") 
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            return ##### goes back to data retrievement module - should go back to main menu..
+            return 
 
         # Calculate free space on disk and % of total file size on free space
         free, percentage = self.check_available_disk_space(bytes_total)
@@ -63,7 +58,7 @@ class SequencesDownload:
         if free == 0:
             print(Color.RED + f"\nERROR" + Color.END + ": no available free space on disk.") 
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            return ##### goes back to data retrievement module - should go back to main menu..
+            return 
         
         # Print message for not available projects, if there's any
         if not_available:
@@ -92,8 +87,7 @@ class SequencesDownload:
             for project, runs in dictOfAvailableProjectIDs.items():
                 path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                 Utilities.createDirectory(path)
-                # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
-                #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
+            
                 for run in runs:
                     download = self.enaBT(path, EnaBT_path, run, file_type) #silenziato da sara
                     #download = self.enaBT_path(path, runID, file_type)
@@ -101,7 +95,7 @@ class SequencesDownload:
                     if download == 0:
                         print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
                         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-                        return ##### goes back to data retrievement module - should go back to main menu..
+                        return 
         
         # Percentage higher than 50%, user has to digit yes to continue with download
         elif percentage >= 50 and percentage <= 95:
@@ -115,8 +109,7 @@ class SequencesDownload:
                         for project, runs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
-                            # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
-                            #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
+                            
                             for run in runs:
                                 download = self.enaBT(path, EnaBT_path, run, file_type) #silenziato da sara
                                 #download = self.enaBT_path(path, runID, file_type)
@@ -124,11 +117,11 @@ class SequencesDownload:
                                 if download == 0:
                                     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
                                     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-                                    return ##### goes back to data retrievement module - should go back to main menu..
+                                    return 
                         break
                     
                     elif user_input in ("main menu", "MAIN MENU", "Main menu"):
-                        return ##### goes back to data retrievement module - should go back to main menu..
+                        return 
                     
                     else:
                         print("Error, enter a valid choice!\n")
@@ -138,17 +131,15 @@ class SequencesDownload:
         elif percentage > 95:
             print(Color.RED + Color.BOLD + f"\nERROR: the selected runs would occupy more than 95% of your free disk space." + Color.END)
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            return ##### goes back to data retrievement module - should go back to main menu..
+            return 
 
-
-        # >>>>>>>>> INSERT DOWNLOAD CHECK HERE <<<<<<<<<
 
 
         # Final message
         print("\nSEQUENCES DOWNLOAD completed!")
-        print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) # messaggio da modificare ?
+        print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) 
         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-        return #goes back to data retrievement module - should go back to main menu..
+        return 
 
 
 
@@ -194,7 +185,7 @@ class SequencesDownload:
                     # subprocess.run([command], check=True, shell=True, stdout=1, stderr=2)
                         
         except subprocess.CalledProcessError as error:
-            # spesso ENA rifiuta la connessione, potremmo riprovare il comando di subprocess con lo stesso runID tot volte, e se dà sempre errore solo allora printare l'errore (how???)     
+ 
             return 0
 
 

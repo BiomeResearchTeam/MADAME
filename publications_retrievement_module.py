@@ -14,15 +14,11 @@ def publications_retrievement(user_session):
     
     while True:
         Utilities.clear() 
-        title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
 
-        print("\nRetrieve the publications that include the projects of your interest. \n\nChoose one of the following options:")
-        print(" 1 - Use '*_merged_experiments-metadata.tsv' file present in the current session")
-        print(" 2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-        user_publication_input = input("\n>> Enter your choice: ").strip()
+        box = Panel(Text.assemble("\nRetrieve the publications that include the projects of your interest.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present in the current session\n2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
+        user_publication_input = input("\n  >> Enter your choice: ").strip()
         
         if user_publication_input.lower() in "main menu":
             return
@@ -73,13 +69,12 @@ def publications_retrievement(user_session):
 def user_report_local(user_session):
     Utilities.clear()
     while True:
-        title = Panel(Text("PUBLICATIONS RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
-        rich_print(title)
+
+        box = Panel(Text.assemble("\nEnter the path for '*_merged_experiments-metadata.tsv' file.\n\nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
         
-        print("\nEnter the path for '*_merged_experiments-metadata.tsv' file. \nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n") #verificare se è vero o se torna al report
-        user_report_local_path = input("\n>> Digit the path: ").strip()
+        user_report_local_path = input("\n  >> Digit the path: ").strip()
 
         if user_report_local_path.lower() in "main menu":
             return 0
@@ -130,7 +125,6 @@ def publications(e_df, user_session):
     GetPublications.mergePublicationsMetadata(user_session)
     logger = Utilities.log("publications_retrievement_module", user_session)
     
-    #e se non è stata trovata nessuna pubblicazione? 
     if os.path.isfile(os.path.join(user_session, f'{study_accession}_merged_publications-metadata.tsv')):
         print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)

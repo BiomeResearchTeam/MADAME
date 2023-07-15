@@ -19,15 +19,11 @@ def report_generation(user_session):
     
     while True:
         Utilities.clear() 
-        title = Panel(Text("REPORT MODULE", style = "b magenta", justify="center"), style = "b magenta", expand=False, width = 300)
-        rich_print(title)
 
-        print("\nGenerate a report file about the information present in the downloaded metadata & publications files. \n\nChoose one of the following options:")
-        print(" 1 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present the current session")
-        print(" 2 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present in any other location of your computer")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
-        user_report_input = input("\n>> Enter your choice: ").strip().lower()
+        box = Panel(Text.assemble("\nGenerate a report file about the information present in the downloaded metadata & publications files.\n\nChoose one of the following options:\n1 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present the current session\n2 - Use '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " REPORT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
+        user_report_input = input("\n  >> Enter your choice: ").strip().lower()
         
         if user_report_input in ("main menu"):
             return
@@ -67,13 +63,11 @@ def user_report_local(user_session):
     """
     while True:
         Utilities.clear()
-        title = Panel(Text("REPORT MODULE", style = "b magenta", justify="center"), expand=False, style = "b magenta")
-        rich_print(title)
-        
-        print("\nDigit the path to the folder containing '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files. \nThe report will be downloaded in the folder indicated.")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to go back digit: " + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")
-        user_path = input("\n>> Digit the path: ").strip()
+
+        box = Panel(Text.assemble("\nDigit the path to the folder containing '*_merged_experiments-metadata.tsv' & '*_merged_publications-metadata.tsv' files.\n\nThe report will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " REPORT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
+        user_path = input("\n  >> Digit the path: ").strip()
 
         if user_path in ("back", "BACK", "Back"):
             return

@@ -11,6 +11,7 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 from rich.console import Console
+from rich.theme import Theme
 import os.path
 import readline
 
@@ -24,13 +25,11 @@ def main():
         readline.set_completer_delims(' \t\n')
         madame_logo() 
 
-        print("\n Choose your working session, it will be created in MADAME/Downloads \n")
-        print(" 1 - Create new session")
-        print(" 2 - Continue with existing session") #only if downloads isn't empty..
-        print("\n --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
-        
+        box = Panel(Text.assemble(("◊", "rgb(0,255,0)"), " Choose your working session, it will be created in ", ("MADAME/Downloads", "u"),"\n\n1 - Create new session\n2 - Continue with existing session\n\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
+
         while True:
-            module_choice = input(">> Enter your option: ")
+            module_choice = input("  >> Enter your option: ")
             if module_choice.isnumeric():
                 module_choice = int(module_choice)
                 if module_choice not in (1, 2):
@@ -66,14 +65,13 @@ def new_session():
 
     Utilities.clear()
     madame_logo()
-    title = Panel(Text("CREATE NEW SESSION", style = "b magenta", justify="center"), expand=False, style = "b magenta")
-    rich_print(title)
 
-    print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
+    box = Panel(Text.assemble("\ninsert text here!\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CREATE NEW SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
     
     user_session = ''
     while user_session.strip() == '': 
-        user_session = str(input(">> Digit the folder name: "))
+        user_session = str(input("\n  >> Digit the folder name: "))
     
     if user_session.lower() in "main menu":
         return
@@ -106,17 +104,14 @@ def existing_session():
 
     Utilities.clear()
     madame_logo()
-    title = Panel(Text("CONTINUE WITH EXISTING SESSION", style = "b magenta", justify="center"), expand=False, style = "b magenta")
-    rich_print(title)
 
-    print("\n Which existing session do you want to select?\n")
-
-    print(" --- If you want to return to the main menu digit: " + Color.BOLD + Color.PURPLE + "main menu" + Color.END + " ---\n")
+    box = Panel(Text.assemble("\nWhich existing session do you want to select?\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CONTINUE WITH EXISTING SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
     
     user_session = ''  #>>>originale<<<
     #user_session = 'Downloads'  #>>>nuovo<<<
     while user_session.strip() == '': # preventing empty inputs
-        user_session = str(input(" >> Digit the folder name (case sensitive): "))
+        user_session = str(input("  >> Digit the folder name (case sensitive): "))
         if user_session.lower() in ("main menu"):
             return
 
@@ -151,17 +146,11 @@ def menu(user_session):
         Utilities.clear()
         madame_logo()
 
-        print("\n\n Which module do you want to use? \n")
-        print(" 1 - Metadata retrievement module: metadata search and download")
-        print(" 2 - Publication retrievement module: metadata- and data- associated publications download")
-        print(" 3 - Report module: explore metadata and publication retrivement outputs")
-        print(" 4 - Data retrievement module: metadata-associated data download")
-        print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-        print(" --- If you want to change session digit: " + Color.BOLD + Color.PURPLE +"change" + Color.END + " ---")
-        print(" --- If you want to close MADAME digit: " + Color.BOLD + Color.PURPLE +"exit" + Color.END + " ---\n")
+        box = Panel(Text.assemble("\nWhich module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " MODULE CHOICE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        rich_print(box)
 
         while True:
-            module_choice = input(">> Enter your option: ")
+            module_choice = input("  >> Enter your option: ")
             if module_choice.isnumeric():
                 module_choice = int(module_choice)
                 if module_choice not in (1, 2, 3, 4):
@@ -203,8 +192,13 @@ def menu(user_session):
 
 def madame_logo():
 
-    c = Console()
-    c.print("\n                                                           ##############\n                                                       #####################\n                                                    ##########################\n                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮\n                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │\n                                           ####  ###############################        │                                 │\n                                          ######################################        │ [i]Designed to automate the process[/i]│\n                                         #######################################        │  [i]of data and metadata retrieval[/i] │\n                                         ######################################(        │                                 │\n                                         ########################################       ╰────────────────▼────────────────╯\n##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################\n###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮\n#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │\n## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │\n##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │\n##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              │ [white][link=https://www.linkedin.com/company/biome-research-team/]:briefcase: Linkedin[/link][/white]           │\n##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######               ╰───────────────────────╯\n                                                     ################     ***\n                                                   #################\n", style = "magenta")
+    custom_theme = Theme({
+        "green": "rgb(0,255,0)",
+        "white": "rgb(255,255,255)",
+        "purple": "rgb(255,0,255)"})
+
+    c = Console(theme=custom_theme)
+    c.print("\n                                                           ##############\n                                                       #####################\n                                                    ##########################\n                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮\n                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │\n                                           ####  ###############################        │                                 │\n                                          ######################################        │ [i]Designed to automate the process[/i]│\n                                         #######################################        │  [i]of data and metadata retrieval[/i] │\n                                         ######################################(        │                                 │\n                                         ########################################       ╰────────────────▼────────────────╯\n##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################\n###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮\n#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │\n## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │\n##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │\n##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              │ [white][link=https://www.linkedin.com/company/biome-research-team/]:briefcase: Linkedin[/link][/white]           │\n##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######               ╰───────────────────────╯\n                                                     ################     ***\n                                                   #################\n", style = "purple")
 
 
 

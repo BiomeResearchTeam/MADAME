@@ -153,7 +153,6 @@ class GetIDlist:
         if not_valid_single or not_valid_range:
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
         
-        ####add ranges
         dictionaryOfAccessionIDs = {"runs" : runs, "experiments" : experiments, "samples" : samples, "biosamples" : biosamples, "studies" : studies, "projects" : projects, "runs_range" : runs_range, "experiments_range" : experiments_range, "samples_range" : samples_range, "biosamples_range" : biosamples_range}
 
         listOfAccessionIDs = runs+experiments+samples+biosamples+studies+projects+runs_range+experiments_range+samples_range+biosamples_range
@@ -255,20 +254,15 @@ class GetIDlist:
             print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
             + f"\naccession\tdescription\n{joined_results}")
 
-        # what if joined_results is too long?
-
 
     def expand_accessions_range(self, accessions_range):
         # Takes an accessions range string such as "SRR16946893-SRR16946910" as input and 
         # returns a complete list of all the accessions in the range. If the range is not valid
         # (e.g. "SRR16946893-SRR16946800") it returns an empty list.
 
-        # find the letters from the first accession in the range
+
         letters = (re.search(r'[a-zA-Z]+', accessions_range)).group(0)
-        # numbers is a list of two integers, the first and the second in the range
         numbers = list(map(int, re.findall(r'\d+', accessions_range)))  
-        # # per la nuova lista assembla chr e i per ogni i nel range che parte 
-        # # dal primo numero fino al secondo + 1 per comprenderlo
         accessions_range_list = ([f'{letters}{number}' for number in range(numbers[0], numbers[1]+1)])
 
         return accessions_range_list

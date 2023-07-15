@@ -14,19 +14,13 @@ from rich.console import Console
 
 def UserQueryENAInput(user_session):
 
-    title = Panel(Text("QUERY ON ENA", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
+    box = Panel(Text.assemble("\nExamples of queries:\n\n1) skin microbiome\n2) monkeypox\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " QUERY ON ENA ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
 
-    print("\nExamples of queries:\n"
-            "1) skin microbiome ")
-    print("2) monkeypox")
-    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " 
-            + Color.BOLD + Color.PURPLE + "back" + Color.END + " ---\n")   
 
     user_query_input = ''
     while user_query_input.strip() == '':
-        user_query_input = str(input(">> Digit your query: "))
+        user_query_input = str(input("  >> Digit your query: "))
     
 
     return user_query_input
@@ -55,20 +49,13 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 #DIGIT ACCESSION CODES
 
 def UserDigitCodesInput(user_session):
-    # title = " DIGIT LIST OF ACCESSION CODES "
-    # print(Color.BOLD + Color.GREEN + title.center(100, '-') + Color.END)
-    title = Panel(Text("DIGIT LIST OF ACCESSION CODES", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
 
-    print("\nDigit the accession codes you are interested in, separated by comma.")
-    print("\nExamples of accession codes:\n", "1) PRJNA689547\n", "2) ERP107880, DRP004449, SRP187334") 
-    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
-        + "back" + Color.END + " ---\n")
-    
+    box = Panel(Text.assemble("\nDigit the accession codes you are interested in, separated by comma.\n\nExamples of accession codes:\n1) PRJNA689547\n2) ERP107880, DRP004449, SRP187334\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DIGIT LIST OF ACCESSION CODES ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
+
     user_query_input = ''
     while user_query_input.strip() == '':
-        user_query_input = str(input(">> Digit your list: "))
+        user_query_input = str(input("  >> Digit your list: "))
 
     if user_query_input in ("back", "BACK", "Back"):
         return "back"
@@ -112,15 +99,12 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 
 def UserFileCodesInput(user_session):
     Utilities.clear()
-    title = Panel(Text("INPUT ACCESSION CODES FILE", style = "b magenta", justify="center"), style = "b magenta")
-    rich_print(title)
 
-    print("\n Load a file containing the accession codes you are interested in. File must have .csv or .tsv format.")
-    print("\n >>> Your current session is " + Color.BOLD + Color.YELLOW +f"{user_session}" + Color.END + " <<<\n")
-    print(" --- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: " + Color.BOLD + Color.PURPLE 
-            + "back" + Color.END + " ---\n")
+    box = Panel(Text.assemble("\nLoad a file containing the accession codes you are interested in. File format must be .csv or .tsv.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " INPUT ACCESSION CODES FILE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    rich_print(box)
+
         
-    csv_file_input = input(">> Enter your csv or tsv file path: ")
+    csv_file_input = input("  >> Enter your csv or tsv file path: ")
     csv_file_input = csv_file_input.strip()
 
     return csv_file_input

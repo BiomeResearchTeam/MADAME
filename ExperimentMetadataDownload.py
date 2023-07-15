@@ -24,7 +24,7 @@ class Exp_Proj_MetadataDownload:
 
         study_accession = []
 
-        for accessionID in track(listOfAccessionIDs, description="Downloading..."): #--> should change into 'list of accession ids'
+        for accessionID in track(listOfAccessionIDs, description="Downloading..."): 
 
             if re.match(GetIDlist.PROJECTS_PATTERN, accessionID):
                 projectID = accessionID
@@ -225,7 +225,7 @@ class Exp_Proj_MetadataDownload:
         if not dataframes:
             logger.debug(f"[ERROR] - couldn't create {user_session}_merged_experiments-metadata.tsv: no experiments-metadata.tsv file found")
             print(f"\nError: couldn't create {user_session}_merged_experiments-metadata.tsv: " + Color.BOLD + Color.RED + 
-            "no experiments-metadata.tsv file found." + Color.END)   ####messaggio da rivedere
+            "no experiments-metadata.tsv file found." + Color.END)  
             return 
 
         merged_dataframe = pd.concat(dataframes)

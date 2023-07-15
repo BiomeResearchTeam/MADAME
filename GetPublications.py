@@ -24,7 +24,7 @@ class GetPublications:
     # after querying each accession. This list of dictionaries, if not empty, is converted to
     # a pandas dataframe and then saved as a .tsv file to the corresponding project directory.
 
-        projects_with_no_publication = []   # Is it useful?
+        projects_with_no_publication = []  
 
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
             path = os.path.join(user_session, projectID) 
@@ -65,7 +65,7 @@ class GetPublications:
         # function. Only if the returned list is empty (no linked publications in ENA Xref API), the 
         # PMC_pd_dataframe function will search for every accession linked to the project. 
         
-        ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
+        ## source https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
         retries = Retry(total=6,
                         backoff_factor=0.1,
@@ -107,7 +107,6 @@ class GetPublications:
 
     def PMC_pd_dataframe(self, projectID, accessions_list, user_session):
 
-        ## TO TEST ###### https://stackoverflow.com/questions/15431044/can-i-set-max-retries-for-requests-request
         s = rq.session()
         retries = Retry(total=6,
                         backoff_factor=0.1,
@@ -141,8 +140,7 @@ class GetPublications:
         
       
         for queried_accession_id in accessions_list:
-            print(f"{projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})") # come sovrascrivere la precedente linea printata?
-            #capire come renderlo utile per user (queried accession id è inutile da sapere per uno user)  
+            print(f"{projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})") 
 
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core" 
             # a random user-agent is generated for each query
@@ -225,7 +223,6 @@ class GetPublications:
 
                         # Parse a selected list of fields with EPMC_tree_parser function.
 
-                        # DA DECIDERE COSA TENERE:
                         EPMC_tree_parser('id')
                         EPMC_tree_parser('source')
                         EPMC_tree_parser('pmid')
@@ -472,7 +469,7 @@ class GetPublications:
 
             # stop if dataframes list is empty
             if not dataframes:
-                print(f"\nError: couldn't create {user_session}_merged_publications-metadata.tsv: " + Color.BOLD + Color.RED + "no publications-metadata.tsv file found." + Color.END)   ####messaggio da rivedere
+                print(f"\nError: couldn't create {user_session}_merged_publications-metadata.tsv: " + Color.BOLD + Color.RED + "no publications-metadata.tsv file found." + Color.END) 
                 return
 
             merged_dataframe = pd.concat(dataframes)
@@ -483,13 +480,6 @@ class GetPublications:
 
             # return
 
-
-  
-    def download_publications(self, listOfProjectIDs):
-
-        ######DA SCRIVERE#######
-
-        return
               
 
 GetPublications = GetPublications('GetPublications')
