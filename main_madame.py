@@ -146,7 +146,7 @@ def menu(user_session):
         Utilities.clear()
         madame_logo()
 
-        box = Panel(Text.assemble("\nWhich module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " MODULE CHOICE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("\nWhich module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         while True:
