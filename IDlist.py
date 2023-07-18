@@ -170,13 +170,13 @@ class GetIDlist:
         total_of_accessions = (len(listOfAccessionIDs))
         
         if total_of_accessions == 0:
-            print(f"\n>> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
+            print(f"\n  >> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
             + Color.END, f"for the query: '{self.user_query}'\n")
             logger = Utilities.log("IDlist", user_session)
             logger.debug(f"[QUERY-DETAILS]: no {self.data_type} found")
 
         else:
-            print(f"\n>> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
+            print(f"\n  >> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
             logger = Utilities.log("IDlist", user_session)
             logger.debug(f"[QUERY-DETAILS]: found {total_of_accessions} {self.data_type}:")
             for line in self.queryresult.split("\n"):

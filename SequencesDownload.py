@@ -94,7 +94,7 @@ class SequencesDownload:
 
                     if download == 0:
                         print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
                         return 
         
         # Percentage higher than 50%, user has to digit yes to continue with download
@@ -103,9 +103,9 @@ class SequencesDownload:
             while True: 
                 user_input = ''
                 while user_input.strip() == '': 
-                    user_input = str(input(">> Digit " + Color.PURPLE + "yes" + Color.END + " to start downloading, or " + Color.PURPLE + "main menu" + Color.END + " to go back: "))
+                    user_input = str(input("  >> Digit " + Color.PURPLE + "yes" + Color.END + " to start downloading, or " + Color.PURPLE + "back" + Color.END + " to go back: "))
                     
-                    if user_input in ("yes", "YES", "Yes"):
+                    if user_input.lower() in ("yes"):
                         for project, runs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
@@ -116,11 +116,11 @@ class SequencesDownload:
 
                                 if download == 0:
                                     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-                                    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                                    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
                                     return 
                         break
                     
-                    elif user_input in ("main menu", "MAIN MENU", "Main menu"):
+                    elif user_input.lower() in ("back"):
                         return 
                     
                     else:

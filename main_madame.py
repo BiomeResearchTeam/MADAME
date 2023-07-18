@@ -25,7 +25,7 @@ def main():
         readline.set_completer_delims(' \t\n')
         madame_logo()
 
-        box = Panel(Text.assemble(("◊", "rgb(0,255,0)"), " Choose your working session, it will be created in ", ("MADAME/Downloads", "u"),"\n\n1 - Create new session\n2 - Continue with existing session\n\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble(("◊", "rgb(0,255,0)"), " Choose your working session. You will find all your sessions in ", ("MADAME/Downloads/", "rgb(255,255,0)"),"\n\n1 - Create new session\n2 - Continue with existing session\n\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         while True:
@@ -66,22 +66,22 @@ def new_session():
     Utilities.clear()
     madame_logo()
 
-    box = Panel(Text.assemble("\ninsert text here!\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CREATE NEW SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Digit the folder name, it will be created in ", ("MADAME/Downloads/", "rgb(255,255,0)"), ". MADAME will work in your new session folder.\n\n--- If you want to go back digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CREATE NEW SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
     
     user_session = ''
     while user_session.strip() == '': 
         user_session = str(input("\n  >> Digit the folder name: "))
     
-    if user_session.lower() in "main menu":
+    if user_session.lower() in ("back"):
         return
 
     while os.path.isdir(os.path.join("Downloads", user_session)):
         print("\n Error: " + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + " folder already exists.")
         user_session = ''
         while user_session.strip() == '': 
-            user_session = str(input(">> Please digit a different name: ")) 
-            if user_session in ("main menu", "MAIN MENU", "Main menu"):
+            user_session = str(input("  >> Please digit a different name: ")) 
+            if user_session.lower() in ("back"):
                 return
 
 
@@ -105,14 +105,14 @@ def existing_session():
     Utilities.clear()
     madame_logo()
 
-    box = Panel(Text.assemble("\nWhich existing session do you want to select?\n\n--- If you want to return to the main menu digit: ", ("main menu", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CONTINUE WITH EXISTING SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Which existing session do you want to select?\n\n--- If you want to go back digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CONTINUE WITH EXISTING SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
     
     user_session = ''  #>>>originale<<<
     #user_session = 'Downloads'  #>>>nuovo<<<
     while user_session.strip() == '': # preventing empty inputs
         user_session = str(input("  >> Digit the folder name (case sensitive): "))
-        if user_session.lower() in ("main menu"):
+        if user_session.lower() in ("back"):
             return
 
     while not os.path.isdir(os.path.join("Downloads", user_session)):  #>>>originale<<<
@@ -131,8 +131,8 @@ def existing_session():
 
         user_session = ''
         while user_session.strip() == '': # preventing empty inputs
-            user_session = str(input("\n >> Digit the folder name (case sensitive): ")) 
-            if user_session.lower() in ("main menu"):
+            user_session = str(input("\n  >> Digit the folder name (case sensitive): ")) 
+            if user_session.lower() in ("back"):
                 return
     logger = Utilities.log("main_madame", user_session)
     logger.debug(f"[MADAME INITIALIZED]")
@@ -146,7 +146,7 @@ def menu(user_session):
         Utilities.clear()
         madame_logo()
 
-        box = Panel(Text.assemble("Which module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Which module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report generation module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " MAIN MENU ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         while True:
@@ -198,7 +198,7 @@ def madame_logo():
         "purple": "rgb(255,0,255)"})
 
     c = Console(theme=custom_theme)
-    c.print("\n                                                           ##############\n                                                       #####################\n                                                    ##########################\n                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮\n                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │\n                                           ####  ###############################        │                                 │\n                                          ######################################        │ [i]Designed to automate the process[/i]│\n                                         #######################################        │  [i]of data and metadata retrieval[/i] │\n                                         ######################################(        │                                 │\n                                         ########################################       ╰────────────────▼────────────────╯\n##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################\n###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮\n#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │\n## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/]:computer: GitHub[/link][/white]             │\n##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │\n##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              │ [white][link=https://www.linkedin.com/company/biome-research-team/]:briefcase: Linkedin[/link][/white]           │\n##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######               ╰───────────────────────╯\n                                                     ################     ***\n                                                   #################\n", style = "purple")
+    c.print("\n                                                           ##############\n                                                       #####################\n                                                    ##########################\n                                                  #############################         ╭─────── [green]Welcome to MADAME[/green] ───────╮\n                                                 ###############################        │     [green]◊[/green] MetADAta MicrobiomE [green]◊[/green]     │\n                                           ####  ###############################        │                                 │\n                                          ######################################        │ [i]Designed to automate the process[/i]│\n                                         #######################################        │  [i]of data and metadata retrieval[/i] │\n                                         ######################################(        │                                 │\n                                         ########################################       ╰────────────────▼────────────────╯\n##     ##     ###     #######       ###  ###[green]##[/green]#####[green]##[/green]##[green]########[/green]##################\n###   ###    ## ##    ##    ##     ## ##  ##[green]###[/green]###[green]###[/green]##[green]##[/green]##########################          ╭─ [green]Biome Research Team[/green] ─╮\n#### ####   ##   ##   ##     ##   ##   ##  #[green]####[/green]#[green]####[/green]##[green]##[/green]########################            │   --- click me! ---   │\n## ### ##  ##     ##  ##     ##  ##     ##  [green]##[/green]#[green]###[/green]#[green]##[/green]##[green]######[/green]###################)            │ [white][link=https://github.com/Biome-team]:computer: GitHub[/link][/white]             │\n##     ##  #########  ##     ##  #########  [green]##[/green]#####[green]##[/green]##[green]##[/green]######################)             │ [white][link=https://biome-research-team.mailchimpsites.com/]:dna: Website[/link][/white]            │\n##     ##  ##     ##  ##    ##   ##     ##  [green]##     ##  ##[/green]######################              │ [white][link=https://www.linkedin.com/company/biome-research-team/]:briefcase: Linkedin[/link][/white]           │\n##     ##  ##     ##  #######    ##     ##  [green]##     ##  ########[/green]#######**######               ╰───────────────────────╯\n                                                     ################     ***\n                                                   #################\n", style = "purple")
 
 
 if __name__ == "__main__":
