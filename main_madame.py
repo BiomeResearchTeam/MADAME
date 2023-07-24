@@ -172,7 +172,7 @@ def menu(user_session):
 
         if module_choice == 1: 
             logger = Utilities.log("metadata_retrievement_module", user_session)
-            logger.debug(f"[INIZIALIZED]")
+            logger.debug(f"[INITIALIZED]")
             metadata_retrievement(user_session)
 
         if module_choice == 2:
@@ -180,12 +180,12 @@ def menu(user_session):
 
         if module_choice == 3:
             logger = Utilities.log("report_generation_module", user_session)
-            logger.debug(f"[INIZIALIZED]")
+            logger.debug(f"[INITIALIZED]")
             report_generation(user_session)
 
         if module_choice == 4:
             logger = Utilities.log("data_retrievement_module", user_session)
-            logger.debug(f"[INIZIALIZED]") 
+            logger.debug(f"[INITIALIZED]") 
             data_retrievement(user_session)
 
 

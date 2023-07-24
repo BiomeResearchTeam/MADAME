@@ -67,7 +67,7 @@ class Project:
                         print(Color.BOLD + Color.RED + "\nWARNING" + Color.END, f": out of range error. {range_ids[0]} and {range_ids[1]} belong to different projects.\n")
                
                 elif first_id_availability != second_id_availability:
-                    print(Color.BOLD + Color.RED + "\nWARNING" + Color.END, f": out of range error. Please check if the first or last element of {accessionID} is correct.\n")
+                    print(Color.BOLD + Color.RED + "\nWARNING" + Color.END, f": out of range error. Please check if the first or last element of {accessionID} is written correctly.\n")
 
             # If it's a single accession, check the accession availability
             else:
@@ -203,7 +203,9 @@ class Project:
         headers = {"User-Agent": generate_user_agent()}
         content = s.get(url, headers=headers, allow_redirects=True).content
         incoming_df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t').reset_index(drop=True)
-        projectID = incoming_df.iloc[0,0]
+        projectID = incoming_df.loc[incoming_df.index[0], 'study_accession']
+        if pd.isna(projectID):
+            projectID = incoming_df.loc[incoming_df.index[0], 'secondary_study_accession']
 
         return projectID
 

@@ -195,6 +195,11 @@ class GetIDlist:
             # Query URL assembling. 
             url_base = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
             complete_url = url_base + domain + "%20OR%20".join(accessions)
+
+            ####
+            print("!!!URL=", complete_url)
+            ####
+            
             request = rq.get(complete_url, allow_redirects=True)
             # String decoding
             converted = request.content.decode("utf-8", "ignore").split("\n")[1:-1]

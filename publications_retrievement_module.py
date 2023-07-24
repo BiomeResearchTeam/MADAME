@@ -35,7 +35,7 @@ def publications_retrievement(user_session):
 
             else:
                 logger = Utilities.log("publications-retrievement-module", user_session)
-                logger.debug(f"[INIZIALIZED]")
+                logger.debug(f"[INITIALIZED]")
                 if user_publication_input == (1):
                     user_session = os.path.join("Downloads", user_session)
                     logger.debug(f"[OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session")
