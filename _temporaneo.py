@@ -93,3 +93,32 @@ def per_giulia_g():
     print("")
     print("TOTAL")
     print(Utilities.bytes_converter(sum))
+
+import requests as rq
+from requests.adapters import HTTPAdapter, Retry
+from user_agent import generate_user_agent
+import io
+import pandas as pd
+def getAccessionAvailability(accessionID):
+    # Check the accession ID availability based on its metadata availability
+
+        s = rq.session()
+        retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
+        url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
+        headers = {"User-Agent": generate_user_agent()}
+
+
+        download = s.head(url, headers=headers)
+        print(int(download.headers['Content-Length']))
+
+
+
+
+getAccessionAvailability('ERP104155')
+getAccessionAvailability('ERR164409')
+
+

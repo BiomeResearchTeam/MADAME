@@ -28,11 +28,14 @@ class Project:
 
         url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
         headers = {"User-Agent": generate_user_agent()}
-        download = s.head(url, headers=headers, allow_redirects=True)
+        download = s.head(url, headers=headers)
 
-        # If metadata exists, Content-Lenght in header is present:
-        # this means the accession has uploaded data, so it is available.
-        if 'Content-Length' in download.headers:
+        # If metadata is not available, the report dataframe will be empty, only containing column names (123 characters)
+        #if 'Content-Length' in download.headers > 123:
+
+        content_lenght = int(download.headers['Content-Length'])
+
+        if content_lenght > 123:
             return True
         else:
             return False

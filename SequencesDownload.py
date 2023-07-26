@@ -6,6 +6,7 @@ from Utilities import Utilities, Color
 from rich.console import Console
 from rich import print as rich_print
 from rich.panel import Panel
+from rich.text import Text
 
 class SequencesDownload:
 
@@ -76,8 +77,8 @@ class SequencesDownload:
         if percentage < 1:
             percentage = "<1"
 
-        download_preview = f"[white]Available/Total Projects ({file_type}) = {len(dictOfAvailableProjectIDs)}/{len(listOfProjectIDs)}" + f"\nTotal file size = {Utilities.bytes_converter(bytes_total)}" + f"\nTotal file size/Free disk space % = {color}{percentage} %"
-        title = Panel.fit(download_preview, style = "magenta", title = "Download preview")
+        download_preview = f"[white]Available/Total Projects ({file_type}) = {len(dictOfAvailableProjectIDs)}/{len(listOfProjectIDs)}" + f"\nTotal file size = {Utilities.bytes_converter(bytes_total)}" + f"\nYou are going to occupy {color}{percentage}% of free disk space"
+        title = Panel.fit(download_preview, style = "magenta", title=Text.assemble((" ◊", "rgb(0,255,0)"), " DOWNLOAD PREVIEW ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)")
         print()
         rich_print(title)
 
