@@ -42,8 +42,6 @@ def publications_retrievement(user_session):
                     logger.debug(f"[OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session")
                 elif user_publication_input == (2):
                     user_session = user_report_local(user_session)
-                    # logger.debug(f"[OPTION-2]: use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
-                    # logger.debug(f"[PATH-SUBMITTED]: {user_session}")
 
                 if user_session != None:
                     files_found = check_files(user_session)
@@ -135,6 +133,7 @@ def publications(e_df, user_session):
     logger = Utilities.log("publications_retrievement_module", user_session)
     
     if os.path.isfile(os.path.join(user_session, f'{study_accession}_merged_publications-metadata.tsv')):
-        print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
+        print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD PUBLICATIONS METADATA COMPLETED! " + Color.END + "<<<")
+        print('You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
         logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
