@@ -162,7 +162,7 @@ def metadata_download(listOfAvailableAccessions, user_session):
 
 
 def final_screen(user_session):
-    print("\nDOWNLOAD METADATA completed!")
+    print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD METADATA COMPLETED! " + Color.END + "<<<")
     print("Now you can find the metadata files divided by projects inside the folder: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END)
     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
     return
