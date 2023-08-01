@@ -77,8 +77,13 @@ def user_report_local(user_session):
         user_report_local_path = input("\n  >> Digit the path: ").strip()
 
         if user_report_local_path.lower() in "back":
-            return 0
-                            
+            return
+        
+        elements = user_report_local_path.split(os.sep)
+        if "merged_experiments-metadata.tsv" in elements[-1]:
+            folders = elements[:-1]
+            user_report_local_path = os.sep.join(folders)
+
         if path.isdir(user_report_local_path) == False:
             if path.isfile(user_report_local_path) == True:
                 print(Color.BOLD + Color.RED + "Error" + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n")

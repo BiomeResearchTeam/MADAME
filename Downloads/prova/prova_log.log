@@ -1,7 +1,0 @@
-2023-08-01 15:29:33,065 - main_madame - [MADAME INITIALIZED]
-2023-08-01 15:29:33,066 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova
-2023-08-01 15:29:34,573 - metadata_retrievement_module - [INITIALIZED]
-2023-08-01 15:29:40,632 - metadata_retrievement_module - [OPTION-2] - USER IDs SUBMISSION
-2023-08-01 15:29:40,636 - IDlist - [USER-SUBMITTED-IDs]: runs[], samples[], studies[], projects[PRJNA689547]
-2023-08-01 15:29:40,636 - IDlist - [ACCESSION-IDS-FOUND]: ['PRJNA689547']
-2023-08-01 15:29:41,226 - functions-module - prova_listOfAccessionIDs.tsv created
