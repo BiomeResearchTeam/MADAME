@@ -132,8 +132,6 @@ def check_IDs_CSV(user_csv, user_session):
                 return files_found
 
 def enaBT_download(files_found):
-    print(files_found)
-    print(type(files_found))
     if files_found is not None:
         while True:
 

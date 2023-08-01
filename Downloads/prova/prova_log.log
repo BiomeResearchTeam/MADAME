@@ -1,0 +1,13 @@
+2023-08-01 23:04:53,278 - main_madame - [MADAME INITIALIZED]
+2023-08-01 23:04:53,280 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova
+2023-08-01 23:04:58,201 - data_retrievement_module - [INITIALIZED]
+2023-08-01 23:11:26,461 - main_madame - [MADAME INITIALIZED]
+2023-08-01 23:11:26,463 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova
+2023-08-01 23:11:28,029 - data_retrievement_module - [INITIALIZED]
+2023-08-01 23:19:02,851 - main_madame - [MADAME INITIALIZED]
+2023-08-01 23:19:02,853 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova
+2023-08-01 23:19:04,231 - data_retrievement_module - [INITIALIZED]
+2023-08-01 23:20:28,770 - main_madame - [MADAME INITIALIZED]
+2023-08-01 23:20:28,772 - main_madame - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova
+2023-08-01 23:20:31,190 - report_generation_module - [INITIALIZED]
+2023-08-01 23:20:35,581 - data_retrievement_module - [INITIALIZED]
