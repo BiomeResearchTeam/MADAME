@@ -13,7 +13,8 @@ import json
 def publications_retrievement(user_session):
     
     while True:
-        Utilities.clear() 
+        Utilities.clear()
+        original_user_session = user_session
 
         box = Panel(Text.assemble("Retrieve the publications that include the projects of your interest.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present in the current session\n2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
@@ -41,8 +42,8 @@ def publications_retrievement(user_session):
                     logger.debug(f"[OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session")
                 elif user_publication_input == (2):
                     user_session = user_report_local(user_session)
-                    logger.debug(f"[OPTION-2]: use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
-                    logger.debug(f"[PATH-SUBMITTED]: {user_session}")
+                    # logger.debug(f"[OPTION-2]: use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
+                    # logger.debug(f"[PATH-SUBMITTED]: {user_session}")
 
                 if user_session != None:
                     files_found = check_files(user_session)
@@ -64,6 +65,8 @@ def publications_retrievement(user_session):
                         logger.debug(f"[ERROR]: found more than 1 file")
                         print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
                         input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                else:
+                    user_session = original_user_session
                 
 
 def user_report_local(user_session):
@@ -72,29 +75,30 @@ def user_report_local(user_session):
 
         box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the PUBLICATIONS RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
-
         
         user_report_local_path = input("\n  >> Digit the path: ").strip()
 
         if user_report_local_path.lower() in "back":
             return
         
+        logger = Utilities.log("publications-retrievement-module", user_session)
+        logger.debug(f"[OPTION-2]: use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
+        logger.debug(f"[PATH-SUBMITTED]: {user_report_local_path}")
+
         elements = user_report_local_path.split(os.sep)
         if "merged_experiments-metadata.tsv" in elements[-1]:
             folders = elements[:-1]
             user_report_local_path = os.sep.join(folders)
 
-        if path.isdir(user_report_local_path) == False:
+        if path.isdir(user_report_local_path) == True:
             if path.isfile(user_report_local_path) == True:
-                print(Color.BOLD + Color.RED + "Error" + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n")
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
-                return
-            else:
-                print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n")
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
-                return
+                return user_report_local_path
         else:
-            return user_report_local_path
+            print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
+            return
+
+            
 
 #check files
 def check_files(user_session):
@@ -134,4 +138,3 @@ def publications(e_df, user_session):
         print(Color.BOLD + Color.GREEN + '\nPublications successfully retrieved.' + Color.END,'You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
     'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
         logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
-     
