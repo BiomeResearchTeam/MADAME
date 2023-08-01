@@ -11,7 +11,7 @@ from rich.text import Text
 def data_retrievement(user_session):
 
     while True:
-        Utilities.clear() 
+        #Utilities.clear() 
 
         box = Panel(Text.assemble("Download the data associated to the previously downloaded metadata.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present the current session\n2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer\n3 - Input a file (tsv or csv format) with the list of accessions you want to download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
@@ -63,7 +63,6 @@ def check_files(data_user_session):
 def data_download_MADAME(data_user_session):
     while True: 
         files_found = check_files(data_user_session)
-        print(files_found)
         file_count = files_found[-1]
         
         if file_count == 0:
@@ -79,7 +78,7 @@ def data_user_local(user_session):
     rich_print(title)
 
     while True:
-        Utilities.clear()
+        #Utilities.clear()
 
         box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nData will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
@@ -88,18 +87,18 @@ def data_user_local(user_session):
 
         if data_local_path.lower() in ("back"):
             return
-                            
-        if path.isdir(data_local_path) == False:
-            if path.isfile(data_local_path) == True:
-                print(Color.BOLD + Color.RED + "\nError." + Color.END, "Please digit the path for the folder containing '*_merged_experiments-metadata.tsv' file\n\n")
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+        
+        elements = data_local_path.split(os.sep)
+        if "merged_experiments-metadata.tsv" in elements[-1]:
+            folders = elements[:-1]
+            data_local_path = os.sep.join(folders)
 
-            else:
-                print(Color.BOLD + Color.RED + "\nFolder not found." + Color.END, " Maybe a typo? Try again\n\n")
-                input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
-                
+        if path.isdir(data_local_path) == True:
+            return data_local_path                
         else:
-            return data_local_path
+            print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue")
+            return
         
 #DATA FROM USER FILE
 def check_CSV(user_session):
@@ -155,8 +154,8 @@ def enaBT_download(files_found):
 def data_download_function(enaBT_path, data_user_session, files_found):
     if files_found is not None:
         while True:
-            Utilities.clear()
-            user_session = os.path.relpath(data_user_session, 'Downloads')
+            #Utilities.clear()
+            user_session = os.path.relpath(data_user_session, 'Downloads') #da cambiare: dà errori se user usa path locale
 
             box = Panel(Text.assemble("What data format do you want to download? ", ("fastq", "u"), " , ", ("sra", "u"), " , or ", ("submitted", "u"), "\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
             rich_print(box)
