@@ -132,17 +132,12 @@ class SequencesDownload:
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
 
-
-
         # Final message
         print("\nSEQUENCES DOWNLOAD completed!")
         print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) 
         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
         return 
-
-
-
-            
+        
             # if available_runs:
                 
             #     # Create main files directory (only if it doesn't exist yet)
@@ -188,7 +183,6 @@ class SequencesDownload:
             return 0
 
 
-
     def check_available_disk_space(self, bytes_total):
            
         total, used, free = shutil.disk_usage("/")
@@ -198,10 +192,5 @@ class SequencesDownload:
         
         except ZeroDivisionError:
             return 0, 0
-        
-
-
-
-
 
 SequencesDownload = SequencesDownload("SequencesDownload")
