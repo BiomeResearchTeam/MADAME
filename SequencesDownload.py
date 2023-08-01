@@ -82,29 +82,28 @@ class SequencesDownload:
         print()
         rich_print(title)
 
-        # Safe percentage, just press ENTER to loop through available projects and ids in the dictionary
-        if percentage < 50:
-            input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to continue with the download")
-            for project, runs in dictOfAvailableProjectIDs.items():
-                path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
-                Utilities.createDirectory(path)
+        # # Safe percentage, just press ENTER to loop through available projects and ids in the dictionary
+        # if percentage < 50:
+        #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to continue with the download")
+        #     for project, runs in dictOfAvailableProjectIDs.items():
+        #         path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
+        #         Utilities.createDirectory(path)
             
-                for run in runs:
-                    download = self.enaBT(path, EnaBT_path, run, file_type) #silenziato da sara
-                    #download = self.enaBT_path(path, runID, file_type)
+        #         for run in runs:
+        #             download = self.enaBT(path, EnaBT_path, run, file_type)
 
-                    if download == 0:
-                        print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-                        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
-                        return 
+        #             if download == 0:
+        #                 print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
+        #                 input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
+        #                 return 
         
-        # Percentage higher than 50%, user has to digit yes to continue with download
-        elif percentage >= 50 and percentage <= 95:
-            print(Color.YELLOW + Color.BOLD + "\nWARNING" + Color.END + f": you're gonna occupy {percentage} % of your free disk space.")
+        # Percentage higher than 1%, user has to digit yes to continue with download
+        if percentage >= 1 and percentage <= 95:
+            print(Color.YELLOW + Color.BOLD + "\nWARNING" + Color.END + ": you're gonna occupy" + Color.YELLOW + Color.BOLD + f" {percentage} % " + Color.END + "of your free disk space.")
             while True: 
                 user_input = ''
                 while user_input.strip() == '': 
-                    user_input = str(input("  >> Digit " + Color.PURPLE + "yes" + Color.END + " to start downloading, or " + Color.PURPLE + "back" + Color.END + " to go back: "))
+                    user_input = str(input("  >> Digit " + Color.BOLD + Color.PURPLE + "yes" + Color.END + " to start downloading, or " + Color.BOLD + Color.PURPLE + "back" + Color.END + " to go back: "))
                     
                     if user_input.lower() in ("yes"):
                         for project, runs in dictOfAvailableProjectIDs.items():
@@ -112,8 +111,7 @@ class SequencesDownload:
                             Utilities.createDirectory(path)
                             
                             for run in runs:
-                                download = self.enaBT(path, EnaBT_path, run, file_type) #silenziato da sara
-                                #download = self.enaBT_path(path, runID, file_type)
+                                download = self.enaBT(path, EnaBT_path, run, file_type)
 
                                 if download == 0:
                                     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
