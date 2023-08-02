@@ -34,11 +34,13 @@ def data_retrievement(user_session):
             else:
                 if data_download_choice == 2:
                     user_session = data_user_local(user_session)
-                files_found = check_files(user_session)
-                
-                enaBT_path = enaBT_check(files_found)
-                data_download(enaBT_path, user_session, files_found)
-                user_session = original_user_session
+                if user_session != None:
+                    files_found = check_files(user_session)
+                    enaBT_path = enaBT_check(files_found)
+                    data_download(enaBT_path, user_session, files_found)
+                    user_session = original_user_session
+                else:
+                    user_session = original_user_session
 
     
 def check_files(user_session):
