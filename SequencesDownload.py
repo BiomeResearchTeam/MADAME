@@ -48,7 +48,7 @@ class SequencesDownload:
 
         # No available runs across all projects for chosen file_type 
         if bytes_total == 0:
-            print(Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format.") 
+            print(Color.BOLD + Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format") 
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
 
@@ -57,13 +57,13 @@ class SequencesDownload:
 
         # No available free space on disk
         if free == 0:
-            print(Color.RED + f"\nERROR" + Color.END + ": no available free space on disk.") 
+            print(Color.BOLD + Color.RED + f"\nERROR" + Color.END + ": no available free space on disk") 
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
         
         # Print message for not available projects, if there's any
         if not_available:
-            print(Color.RED + "\nNo available " + Color.END + f"{file_type} format files for projectIDs: {not_available}")
+            print(Color.BOLD + Color.RED + "\nNo available " + Color.END + f"{file_type} format files for projectIDs: {not_available}")
 
         # Setting color for printing the preview
         if percentage < 50:

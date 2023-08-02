@@ -4,7 +4,7 @@ from Utilities import Color, Utilities
 from metadata_retrievement_module import metadata_retrievement
 from publications_retrievement_module import publications_retrievement
 from report_generation_module import report_generation
-from data_retrievement_module_3 import data_retrievement
+from data_retrievement_module import data_retrievement
 import os
 from rich.tree import Tree
 from rich import print as rich_print
