@@ -567,25 +567,28 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
 
 def wordcloud(report_folder, p_df, color_palette_hex_r , f): 
 
-    titles = list(p_df['title'])
-    text = ' '.join(titles)
-    colormap = LinearSegmentedColormap.from_list("custom_colormap", color_palette_hex_r) #create customed colormap for worldcloud
-    wordcloud = WordCloud(width=1920, height=1080, background_color="white", colormap = colormap).generate(text)
-    fig = plt.figure(figsize=(16, 9))
-    plt.axis("off")
-    plt.tight_layout()
-    plt.imshow(wordcloud, interpolation='bilinear')
+    try:
+        titles = list(p_df['title'])
+        text = ' '.join(titles)
+        colormap = LinearSegmentedColormap.from_list("custom_colormap", color_palette_hex_r) #create customed colormap for worldcloud
+        wordcloud = WordCloud(width=1920, height=1080, background_color="white", colormap = colormap).generate(text)
+        fig = plt.figure(figsize=(16, 9))
+        plt.axis("off")
+        plt.tight_layout()
+        plt.imshow(wordcloud, interpolation='bilinear')
 
-    layout = go.Layout(
-    title={'text': "Wordcloud of projects-associated publications titles", 'x':0.5},
-    title_font=dict(family='Times New Roman', size=40),
-    hovermode=False)
+        layout = go.Layout(
+        title={'text': "Wordcloud of projects-associated publications titles", 'x':0.5},
+        title_font=dict(family='Times New Roman', size=40),
+        hovermode=False)
 
-    fig = go.Figure(data=go.Image(z=wordcloud.to_array()), layout=layout)
-    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
-    fig.write_image(os.path.join(report_folder, "WordCloud.png"), width=1920, height=1080)
-    fig.write_html(os.path.join(report_folder, "WordCloud.html"))
-    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+        fig = go.Figure(data=go.Image(z=wordcloud.to_array()), layout=layout)
+        fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
+        fig.write_image(os.path.join(report_folder, "WordCloud.png"), width=1920, height=1080)
+        fig.write_html(os.path.join(report_folder, "WordCloud.html"))
+        f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    except TypeError:
+        print('"_merged_publications-metadata.tsv" file missing')   
 
 
 def treemap(report_folder, p_df, color_palette_hex_r , f):
