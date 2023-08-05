@@ -15,6 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
 import squarify 
 import plotly.io as pio
+import random
 
 
 def report_generation(user_session):
@@ -146,13 +147,7 @@ def report(user_session, e_df, p_df):
         'rgb(116, 200, 105)', 'rgb(145, 209, 96)', 'rgb(174, 217, 97)', 'rgb(255, 210, 11)']
     color_palette_hex = ['#29186b', '#2a1e8a', '#26299f', '#163e9b', '#104f96', '#125c8f', '#1b698c', '#277589', '#2f8188', '#388c87', '#3e9986', '#47a582',
                          '#50b17c', '#61bd73', '#74c869', '#91d160', '#aed961', '#ffd20b']
-
-    #color_palette_3 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#E70056', '#FF0054', '#FF2A2A', '#FF3F15', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
-    #color_palette_6 = ['#390099', '#6C0079', '#850069', '#9E0059', '#CF0057', '#FF0054', '#FF5400', '#FF8900', '#FFA300', '#FFBD00']
-    #color_palette_7 = ['#714CF1', '#8338EC', '#A22ACD', '#C11CAD', '#FF006E', '#FB5607', '#FD8A09', '#FFBE0B']
-    #color_palette_8 = ['#301C80', '#5134B9', '#714CF1', '#7A42EF', '#8338EC', '#9331DD', '#A22ACD', '#D1746C', '#E8993B', '#FFBE0A']
-    #color_palette_9 = ['#301C80', '#252D87', '#1B3E8F', '#104F96', '#1D6391', '#2B788C', '#388C87', '#7A9D5D', '#BDAD34', '#FFBE0A']
-    #color_palette = ['#301C80', '#282986', '#20368B', '#263C8E', '#2C4190', '#403F8E', '#702F86', '#9F207E', '#CF1076', '#FF006E']
+    
     color_palette_scale = px.colors.make_colorscale(color_palette_rgb)
     color_palette_rgb_r = list(reversed(color_palette_rgb))
     color_palette_hex_r =list(reversed(color_palette_hex))
@@ -341,10 +336,14 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             df_bar.columns = ['Project', column_name, 'Count']
 
             n_colors = len(df_pie)
-            if n_colors > 1:
-                colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)]) 
             if  n_colors == 1:
                 colors = px.colors.sample_colorscale(color_palette_scale, [n for n in range(n_colors)]) 
+            if n_colors > 1 and n_colors < 10:
+                colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)])
+            if n_colors >= 10:
+                colors = [random.choice(color_palette_scale) for n in range(n_colors)]
+                colors = [n[1] for n in colors]
+            
 
             df_pie = df_pie.sort_values("Count", ascending=False)
             df_pie["Percentage"] = (df_pie["Count"]/df_pie["Count"].sum())*100
@@ -562,7 +561,7 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
     except TypeError:
-        print('"_merged_publications-metadata.tsv" file missing')    
+        print('"merged_publications-metadata.tsv" file missing: NO world map generated')    
 
 
 def wordcloud(report_folder, p_df, color_palette_hex_r , f): 
@@ -588,7 +587,7 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
         fig.write_html(os.path.join(report_folder, "WordCloud.html"))
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
     except TypeError:
-        print('"_merged_publications-metadata.tsv" file missing')   
+        print('"merged_publications-metadata.tsv" file missing: NO wordcloud generated')   
 
 
 def treemap(report_folder, p_df, color_palette_hex_r , f):
