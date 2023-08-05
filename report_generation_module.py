@@ -338,9 +338,9 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             n_colors = len(df_pie)
             if  n_colors == 1:
                 colors = px.colors.sample_colorscale(color_palette_scale, [n for n in range(n_colors)]) 
-            if n_colors > 1 and n_colors < 10:
+            if n_colors > 1 and n_colors < 15:
                 colors = px.colors.sample_colorscale(color_palette_scale, [n/(n_colors -1) for n in range(n_colors)])
-            if n_colors >= 10:
+            if n_colors >= 15:
                 colors = [random.choice(color_palette_scale) for n in range(n_colors)]
                 colors = [n[1] for n in colors]
             
@@ -371,9 +371,12 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
             df_bar = df_bar.sort_values("Count", ascending=False)
+            plot_width = max(800, n_colors * 100) #prova
             fig = fig = px.bar(df_bar, x="Project", y="Count", color=column_name,
                     color_discrete_sequence = colors, log_y=True)
-            fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
+            fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
+                    width = plot_width) #prova
+               
             fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'}) #plot with transparent background
             fig.write_image(os.path.join(report_folder, f"{column_name}_bar.png"), width=1920, height=1080)
             fig.write_html(os.path.join(report_folder, f"{column_name}_bar.html"))
