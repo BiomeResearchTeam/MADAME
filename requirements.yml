@@ -10,3 +10,5 @@ dependencies:
   - pycountry
   - kaleido
   - openpyxl
+  - wordcloud
+  - squarify

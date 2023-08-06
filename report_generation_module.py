@@ -16,7 +16,6 @@ from matplotlib.colors import LinearSegmentedColormap
 import squarify 
 import plotly.io as pio
 import random
-import mpld3
 
 def report_generation(user_session):
     """
