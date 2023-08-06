@@ -16,7 +16,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import squarify 
 import plotly.io as pio
 import random
-
+import mpld3
 
 def report_generation(user_session):
     """
@@ -167,7 +167,7 @@ def report(user_session, e_df, p_df):
         IDs_dates(report_folder, e_df, f)
         geography(report_folder, p_df, color_palette_scale_rgb_r, f)
         wordcloud(report_folder, p_df, color_palette_hex_r , f)
-        treemap(report_folder, p_df, color_palette_hex_r , f)
+        treemap(report_folder, e_df, color_palette_hex_r , f)
 
 
 #report functions
@@ -596,22 +596,26 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
         print('"merged_publications-metadata.tsv" file missing: NO wordcloud generated')   
 
 
-def treemap(report_folder, p_df, color_palette_hex_r , f):
-        
-    df = pd.DataFrame({'nb_people':[8,3,4,2], 'group':["group A", "group B", "group C", "group D"] }) #cambiare qui
+def treemap(report_folder, e_df, color_palette_hex_r , f): #da customizzare
 
-    # s = squarify.plot(sizes=df['nb_people'], label=df['group'], alpha=.8 )
-    # print(s)
-    # print(type(s))
-    # layout = go.Layout(
-    # title={'text': "Treemap of journals subject", 'x':0.5},
-    # title_font=dict(family='Times New Roman', size=40),
-    # hovermode=False)
+    column='scientific_name'
+    column_count_IDs_df = e_df.groupby(['study_accession'])[column].value_counts()
+    df_bar = column_count_IDs_df.rename('count').reset_index()
+    column_name = column.capitalize().replace('_', ' ')
+    df_bar.columns = ['Project', column_name, 'Count']
+    df_bar = df_bar.sort_values("Count", ascending=False)
 
-    # fig = go.Figure(data=go.Image(z=s), layout=layout) #non va qui
-    # fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
-    # fig.write_html(os.path.join(report_folder, "Treemap.html"))
-    # f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+    fig = px.treemap(df_bar, path=[px.Constant("Scientific names"), column_name], values= df_bar['Count'])
+    fig.update_traces(root_color="lightgrey")
+    fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
+
+    fig.update_layout(
+            title = 'Treemap of scientific names', title_x=0.5,
+            title_font = dict(family='Times New Roman', size=40))
+
+    fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "Treemap.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
 def final_screen(user_session):
