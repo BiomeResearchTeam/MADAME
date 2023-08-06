@@ -364,6 +364,9 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig = px.pie(df_pie, values=df_pie['Count'], names=df_pie[column_name], hole=0.6, 
                     color_discrete_sequence = colors) 
             
+            for i, elem in enumerate(fig.data[0].labels): #to prevent long labels #pie
+                fig.data[0].labels[i] = fig.data[0].labels[i][:25]
+            
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
             fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
             fig.write_image(os.path.join(report_folder, f"{column_name}_pie.png"), width=1920, height=1080)
@@ -371,12 +374,12 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
             df_bar = df_bar.sort_values("Count", ascending=False)
-            plot_width = max(800, n_colors * 100) #prova
-            fig = fig = px.bar(df_bar, x="Project", y="Count", color=column_name,
+            names = [item[:25] for item in df_bar[column_name]] #to prevent long labels #bar
+            fig = fig = px.bar(df_bar, x="Project", y="Count", color=names,
                     color_discrete_sequence = colors, log_y=True)
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40),
-                    width = plot_width) #prova
-               
+                    legend=dict(groupclick='toggleitem'))
+
             fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'}) #plot with transparent background
             fig.write_image(os.path.join(report_folder, f"{column_name}_bar.png"), width=1920, height=1080)
             fig.write_html(os.path.join(report_folder, f"{column_name}_bar.html"))
