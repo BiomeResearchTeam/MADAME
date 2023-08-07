@@ -10,6 +10,8 @@ from collections import Counter
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+from rich.progress import track
+from rich.progress import Progress, BarColumn
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 from matplotlib.colors import LinearSegmentedColormap
@@ -105,7 +107,7 @@ def available_metadata_files(user_session):
     elif available_metadata_files == 1:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        f1_df = pd.read_csv (f1_path, delimiter='\t', infer_datetime_format=True)
+        f1_df = pd.read_csv (f1_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
         if 'study_accession' in f1_df:
             e_df = f1_df
             logger = Utilities.log("report_generation_module", user_session)
@@ -120,9 +122,9 @@ def available_metadata_files(user_session):
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{list_metadata_files[1]}")
         f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        f1_df = pd.read_csv(f1_path, delimiter='\t', infer_datetime_format=True)
+        f1_df = pd.read_csv(f1_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
         f2_path = os.path.join('Downloads', user_session, list_metadata_files[1])
-        f2_df = pd.read_csv(f2_path, delimiter='\t', infer_datetime_format=True)
+        f2_df = pd.read_csv(f2_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
         if 'study_accession' in f1_df:
             e_df = f1_df
             p_df = f2_df
@@ -157,21 +159,15 @@ def report(user_session, e_df, p_df):
         os.makedirs(report_folder)
     
     report_html = os.path.join('Downloads', user_session,f'Report_{user_session}.html')
-    
+    plot_functions = [initial_table, sample_number, pie_and_bar_charts, treemap, projects_size, IDs_dates, geography, wordcloud]
     with open(report_html, 'w+') as f:
-        initial_table(report_folder, e_df, p_df, f)
-        sample_number(report_folder, e_df, color_palette_scale_rgb_r, f)
-        pie_and_bar_charts(report_folder, e_df, color_palette_scale, f)
-        projects_size(report_folder, e_df, color_palette_scale_rgb_r, f)
-        IDs_dates(report_folder, e_df, f)
-        geography(report_folder, p_df, color_palette_scale_rgb_r, f)
-        wordcloud(report_folder, p_df, color_palette_hex_r , f)
-        treemap(report_folder, e_df, color_palette_hex_r , f)
+        for plot in track(plot_functions, description="Generating plots..."):
+            plot(report_folder, e_df, p_df, color_palette_rgb, f)     
 
 
 #report functions
 #INITIAL TABLE
-def initial_table(report_folder, e_df, p_df, f):
+def initial_table(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     table of most relevant info extracted from metadata
     """
@@ -297,10 +293,14 @@ def initial_table(report_folder, e_df, p_df, f):
     df.to_excel(file_name, index=False)
 
 
-def sample_number(report_folder, e_df, color_palette_scale_rgb_r, f):
+def sample_number(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     generate bar chart
     """
+    color_palette_scale = px.colors.make_colorscale(color_palette_rgb)
+    color_palette_rgb_r = list(reversed(color_palette_rgb))
+    color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
+
     sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
     sample_number_df = pd.DataFrame(sample_number_series).reset_index()
     sample_number_df.columns = ['Project', 'Number of samples']
@@ -318,10 +318,12 @@ def sample_number(report_folder, e_df, color_palette_scale_rgb_r, f):
     f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
-def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
+def pie_and_bar_charts(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     generate pie chart and bar chart
     """
+    color_palette_scale = px.colors.make_colorscale(color_palette_rgb)
+
     for column in ['scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout']:
         if pd.Series(column).isin(e_df.columns).all():
             column_count_df = e_df[column].value_counts() #df for pie
@@ -363,8 +365,9 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig = px.pie(df_pie, values=df_pie['Count'], names=df_pie[column_name], hole=0.6, 
                     color_discrete_sequence = colors) 
             
-            for i, elem in enumerate(fig.data[0].labels): #to prevent long labels #pie
-                fig.data[0].labels[i] = fig.data[0].labels[i][:25]
+            names = [item[:25] for item in df_pie[column_name]]
+            # for i, elem in enumerate(fig.data[0].labels): #to prevent long labels #pie
+            #     fig.data[0].labels[i] = fig.data[0].labels[i][:25]
             
             fig.update_layout(title_text=f'{column_name}', title_x=0.5, title_font = dict(family='Times New Roman', size=40))
             fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
@@ -384,12 +387,46 @@ def pie_and_bar_charts(report_folder, e_df, color_palette_scale, f):
             fig.write_html(os.path.join(report_folder, f"{column_name}_bar.html"))
             f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
+def treemap(report_folder, e_df, p_df, color_palette_rgb, f):
+
+    color_palette_hex = ['#29186b', '#2a1e8a', '#26299f', '#163e9b', '#104f96', '#125c8f', '#1b698c', '#277589', '#2f8188', '#388c87', '#3e9986', '#47a582',
+                         '#50b17c', '#61bd73', '#74c869', '#91d160', '#aed961', '#ffd20b']
+    color_palette_hex_r =list(reversed(color_palette_hex))
+
+    df_bar = e_df[['scientific_name']]
+    df_bar = df_bar.groupby(['scientific_name']).value_counts().rename('count').reset_index()
+    total_scientific_name = df_bar['count'].sum()
+    df_bar['percentage'] = round((df_bar['count']/total_scientific_name)*100, 2).astype(str) + '%'
+    df_bar.to_excel(os.path.join(report_folder, "df_bar.xlsx"))
+    average = df_bar['count'].mean()
+
+    fig = px.treemap(df_bar, path=[px.Constant("Scientific names"), df_bar['scientific_name']], values= df_bar['count'], color = df_bar['count'],
+            color_continuous_scale=color_palette_hex_r)
+
+    percents = df_bar.percentage.tolist()
+    fig.data[0].customdata = np.column_stack([percents])
+    fig.update_traces(hovertemplate='Scientific name=%{label}<br>Count=%{value}<br>Percentage=%{customdata[0]}<extra></extra>')
+    fig.update_traces(marker=dict(colorscale=color_palette_hex_r, cornerradius=5))
+    fig.update_layout(margin = dict(t=60, l=25, r=25, b=25))
+    fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
+
+    fig.update_layout(
+            title = 'Treemap of scientific names', title_x=0.5,
+            title_font = dict(family='Times New Roman', size=40))
+
+    df_bar.to_excel(os.path.join(report_folder, "Treemap.xlsx"))
+    fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
+    fig.write_html(os.path.join(report_folder, "Treemap.html"))
+    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 #PROJECT SIZE & BYTES
-def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
+def projects_size(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     generate bubble plot based on fastq bytes for each project
     """
+    color_palette_rgb_r = list(reversed(color_palette_rgb))
+    color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
+
     IDs =  e_df['study_accession'].unique().tolist()
     ids_list = []
     bytes_list = []
@@ -437,7 +474,7 @@ def projects_size(report_folder, e_df, color_palette_scale_rgb_r, f):
 
 
 
-def IDs_dates(report_folder, e_df, f):
+def IDs_dates(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     generate bubble plot based on first and last update year for each project
     """
@@ -505,12 +542,15 @@ def alpha3code(column):
             CODE.append('None')
     return CODE
 
-def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
+def geography(report_folder, e_df, p_df, color_palette_rgb, f):
     """
     generate a bubble world map indicating each project's country
     https://github.com/flyingcircusio/pycountry/blob/main/src/pycountry/databases/iso3166-1.json
     https://stackoverflow.com/questions/15377832/pycountries-convert-country-names-possibly-incomplete-to-countrycodes
     """
+
+    color_palette_rgb_r = list(reversed(color_palette_rgb))
+    color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
 
     try:
         replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 
@@ -569,8 +609,11 @@ def geography(report_folder, p_df, color_palette_scale_rgb_r, f):
         print('"merged_publications-metadata.tsv" file missing: NO world map generated')    
 
 
-def wordcloud(report_folder, p_df, color_palette_hex_r , f): 
-
+def wordcloud(report_folder, e_df, p_df, color_palette_rgb, f): 
+    
+    color_palette_hex = ['#29186b', '#2a1e8a', '#26299f', '#163e9b', '#104f96', '#125c8f', '#1b698c', '#277589', '#2f8188', '#388c87', '#3e9986', '#47a582',
+                         '#50b17c', '#61bd73', '#74c869', '#91d160', '#aed961', '#ffd20b']
+    color_palette_hex_r =list(reversed(color_palette_hex))
     try:
         titles = list(p_df['title'])
         text = ' '.join(titles)
@@ -593,28 +636,6 @@ def wordcloud(report_folder, p_df, color_palette_hex_r , f):
         f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
     except TypeError:
         print('"merged_publications-metadata.tsv" file missing: NO wordcloud generated')   
-
-
-def treemap(report_folder, e_df, color_palette_hex_r , f): #da customizzare
-
-    column='scientific_name'
-    column_count_IDs_df = e_df.groupby(['study_accession'])[column].value_counts()
-    df_bar = column_count_IDs_df.rename('count').reset_index()
-    column_name = column.capitalize().replace('_', ' ')
-    df_bar.columns = ['Project', column_name, 'Count']
-    df_bar = df_bar.sort_values("Count", ascending=False)
-
-    fig = px.treemap(df_bar, path=[px.Constant("Scientific names"), column_name], values= df_bar['Count'])
-    fig.update_traces(root_color="lightgrey")
-    fig.update_layout(margin = dict(t=50, l=25, r=25, b=25))
-
-    fig.update_layout(
-            title = 'Treemap of scientific names', title_x=0.5,
-            title_font = dict(family='Times New Roman', size=40))
-
-    fig.write_image(os.path.join(report_folder, "Treemap.png"), width=1920, height=1080)
-    fig.write_html(os.path.join(report_folder, "Treemap.html"))
-    f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
 
 
 def final_screen(user_session):
