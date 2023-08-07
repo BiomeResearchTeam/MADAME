@@ -18,6 +18,7 @@ from matplotlib.colors import LinearSegmentedColormap
 import squarify 
 import plotly.io as pio
 import random
+import seaborn as sns
 
 def report_generation(user_session):
     """
@@ -159,7 +160,7 @@ def report(user_session, e_df, p_df):
         os.makedirs(report_folder)
     
     report_html = os.path.join('Downloads', user_session,f'Report_{user_session}.html')
-    plot_functions = [initial_table, sample_number, pie_and_bar_charts, treemap, projects_size, IDs_dates, geography, wordcloud]
+    plot_functions = [initial_table, sample_number, pie_and_bar_charts, treemap, projects_size, IDs_dates, geography, wordcloud, ridgelines]
     with open(report_html, 'w+') as f:
         for plot in track(plot_functions, description="Generating plots..."):
             plot(report_folder, e_df, p_df, color_palette_rgb, f)     
@@ -637,6 +638,65 @@ def wordcloud(report_folder, e_df, p_df, color_palette_rgb, f):
     except TypeError:
         print('"merged_publications-metadata.tsv" file missing: NO wordcloud generated')   
 
+
+def ridgelines(report_folder, e_df, p_df, color_palette_rgb, f): #si prova...
+
+    try:
+        sns.set_theme(style="white", rc={"axes.facecolor": (0, 0, 0, 0)})
+        paper_n_df = p_df[['project_id', 'journal_yearOfPublication']]
+        paper_n_df = paper_n_df.groupby(['project_id']).value_counts().rename('count').reset_index()
+
+        # we generate a color palette with Seaborn.color_palette()
+        pal = sns.color_palette(palette='coolwarm', n_colors=12)
+
+        # in the sns.FacetGrid class, the 'hue' argument is the one that will be represented by colors with 'palette'
+        g = sns.FacetGrid(paper_n_df, row='project_id', hue='count', aspect=15, height=0.75, palette=pal)
+
+        # then we add the densities kdeplots for each month
+        g.map(sns.kdeplot, 'count', bw_adjust=1, clip_on=False, fill=True, alpha=1, linewidth=1.5)
+
+        # here we add a horizontal line for each plot
+        g.map(plt.axhline, y=0, lw=2, clip_on=False)
+
+        project_dict = paper_n_df.project_id.to_dict()
+        # we loop over the FacetGrid figure axes (g.axes.flat) and add the month as text with the right color
+        # notice how ax.lines[-1].get_color() enables you to access the last line's color in each matplotlib.Axes
+        for i, ax in enumerate(g.axes.flat):
+            ax.text(-15, 0.02, project_dict[i+1], fontweight='bold', fontsize=15)
+
+        # we use matplotlib.Figure.subplots_adjust() function to get the subplots to overlap
+        g.fig.subplots_adjust(hspace=-0.3)
+
+        # eventually we remove axes titles, yticks and spines
+        g.set_titles("")
+        g.set(yticks=[])
+        g.despine(bottom=True, left=True)
+
+        plt.setp(ax.get_xticklabels(), fontsize=15, fontweight='bold')
+        
+        # fig = plt.gcf()
+        # fig.savefig('temp_plot.png', dpi=300, bbox_inches='tight')
+        # image_pil = Image.open(fig)
+        # image_array = image_pil.convert('RGBA')
+
+        # layout = go.Layout(
+        # title={'text': "Ridgelines", 'x':0.5},
+        # title_font=dict(family='Times New Roman', size=40),
+        # hovermode=False)
+
+        # fig = go.Figure(data=go.Image(z='temp_plot.png'), layout=layout)
+        # fig.update_layout({'plot_bgcolor': 'rgba(0, 0, 0, 0)','paper_bgcolor': 'rgba(0, 0, 0, 0)'})
+        # fig.write_image(os.path.join(report_folder, "temp.png"), width=1920, height=1080)
+        # fig.write_html(os.path.join(report_folder, "temp.html"))
+        # f.write(fig.to_html(full_html=False, include_plotlyjs='cdn'))
+
+
+
+
+
+    
+    except TypeError:
+        print('"merged_publications-metadata.tsv" file missing: NO ridgelines plot generated')   
 
 def final_screen(user_session):
     logger = Utilities.log("report_generation_module", user_session)
