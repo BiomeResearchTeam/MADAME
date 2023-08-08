@@ -130,10 +130,4 @@ def publications(e_df, user_session):
     listOfProjectIDs = list(set(study_accession))
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
     GetPublications.mergePublicationsMetadata(user_session)
-    logger = logger = LoggerManager.log(user_session)
-    
-    if os.path.isfile(os.path.join(user_session, f'{study_accession}_merged_publications-metadata.tsv')):
-        print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD PUBLICATIONS METADATA COMPLETED! " + Color.END + "<<<")
-        print('You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
-    'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
-        logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
+    logger = LoggerManager.log(user_session)

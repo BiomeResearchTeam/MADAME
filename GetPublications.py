@@ -377,7 +377,7 @@ class GetPublications:
 
         for projectID in track(listOfProjectIDs, description="Getting text mined terms..."):      
             # Fetching local publications metadata file 
-            publications_metadata = os.path.join(user_session, projectID, f'{projectID}_publications-metadata.tsv') #mod da sara: rimosso download
+            publications_metadata = os.path.join(user_session, projectID, f'{projectID}_publications-metadata.tsv')
 
             if os.path.isfile(publications_metadata):
                 metadata_df = pd.read_csv(publications_metadata, sep='\t')
@@ -473,13 +473,12 @@ class GetPublications:
                 return
 
             merged_dataframe = pd.concat(dataframes)
-            merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t") #mod sara: prima era path, aggiunto os.path.basaname
-
-            # print(f'{user_session}_merged_publications-metadata.tsv' + Color.BOLD + Color.GREEN +  #silenziato da sara
-            #     ' successfully created' + Color.END)
-
-            # return
-
+            merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t")
+            print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD PUBLICATIONS METADATA COMPLETED! " + Color.END + "<<<")
+            print('You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
+                'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
+            logger = LoggerManager.log(user_session)
+            logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
               
 
 GetPublications = GetPublications('GetPublications')

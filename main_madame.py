@@ -106,7 +106,6 @@ def existing_session():
 
     box = Panel(Text.assemble("Which existing session do you want to select?\n\n--- If you want to go back digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " CONTINUE WITH EXISTING SESSION ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
-    print(os.getcwd())
     
     user_session = ''
     while user_session.strip() == '': # preventing empty inputs
