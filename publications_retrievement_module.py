@@ -36,7 +36,7 @@ def publications_retrievement(user_session):
 
             else:
                 logger = LoggerManager.log(user_session)
-                logger.debug(f"[INITIALIZED]")
+                logger.debug(f"[PUBLICATIONS MODULE - INITIALIZED]")
                 if user_publication_input == (1):
                     user_session = os.path.join("Downloads", user_session)
                     logger.debug(f"[OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session")
@@ -130,7 +130,7 @@ def publications(e_df, user_session):
     listOfProjectIDs = list(set(study_accession))
     GetPublications.runGetPublications(listOfProjectIDs, user_session)
     GetPublications.mergePublicationsMetadata(user_session)
-    logger = Utilities.log("publications_retrievement_module", user_session)
+    logger = logger = LoggerManager.log(user_session)
     
     if os.path.isfile(os.path.join(user_session, f'{study_accession}_merged_publications-metadata.tsv')):
         print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD PUBLICATIONS METADATA COMPLETED! " + Color.END + "<<<")

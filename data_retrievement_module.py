@@ -32,7 +32,12 @@ def data_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:
-                if data_download_choice == 2:
+                if data_download_choice == 1:
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session")
+                elif data_download_choice == 2:
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[OPTION-2] - use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
                     user_session = data_user_local(user_session)
                 if user_session != None:
                     files_found = check_files(user_session)
@@ -47,14 +52,18 @@ def check_files(user_session):
     files_found = []
     for file in os.listdir(os.path.join("Downloads", user_session)):
         if file.endswith(("_merged_experiments-metadata.tsv")):
-            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
             files_found.append(file)
+            print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{file}")
+            logger = LoggerManager.log(user_session)
+            logger.debug(f"Found {file}")
 
     while True: 
         if len(files_found) == 0:
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+            logger.debug(f"[ERROR]: found 0 file")
         elif len(files_found) > 1:
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+            logger.debug(f"[ERROR]: found more than 1 file")
         else:
             return files_found
         
@@ -71,15 +80,19 @@ def enaBT_check(files_found):
             enaBT_path = os.path.join(enaBT_read, 'enaDataGet')
             if os.path.isfile(os.path.normpath(enaBT_path)):
                 print(Color.BOLD + Color.GREEN + 'Found' + Color.END + " enaDataGet")
+                logger = LoggerManager.log(user_session)
+                logger.debug("Found enaDataGet")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 return enaBT_path
             else: 
                 if len(enaBT_read) == 0:
                     print('It seems that', Color.BOLD + Color.RED + 'enaBT_path.txt is empty.' + Color.END, 'Remember to', Color.UNDERLINE + 'compile it' + Color.END, 'in order to download data!')
+                    logger.debug(f"[ERROR]: enaBT_path.txt is empty")
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     return
                 else:
                     print(Color.BOLD + Color.RED + "\nenaDataGet not found." + Color.END, "Maybe a typo in enaBT_path.txt? Remember to", Color.UNDERLINE + "compile it" + Color.END, "correctly in order to download data!\n")
+                    logger.debug(f"[ERROR]: enaBT_path.txt not found")
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     return
 
@@ -100,8 +113,8 @@ def data_download(enaBT_path, user_session, files_found):
                 merged_experiments = files_found[0]
                 if merged_experiments.endswith('.tsv'):
                     e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)
-                if merged_experiments.endswith('.csv'):
-                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), infer_datetime_format=True)
+                # if merged_experiments.endswith('.csv'):
+                #     e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), infer_datetime_format=True)
                 print() 
                 SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type)
                 
@@ -132,7 +145,9 @@ def data_user_local(user_session):
             data_local_path = os.sep.join(folders)
 
         if path.isdir(data_local_path) == True:
-            return data_local_path                
+            logger = LoggerManager.log(user_session)
+            logger.debug(f"[PATH-SUBMITTED]: {data_local_path}")
+            return data_local_path
         else:
             print(Color.BOLD + Color.RED + "Folder not found." + Color.END, " Maybe a typo? Try again\n")
             input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")

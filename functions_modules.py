@@ -1,4 +1,4 @@
-from IDlist_mod import GetIDlist
+from IDlist import GetIDlist
 from Utilities import Color, Utilities, LoggerManager
 from Project import Project
 import time 

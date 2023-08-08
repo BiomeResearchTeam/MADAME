@@ -1,10 +1,10 @@
-from IDlist_mod import GetIDlist
+from IDlist import GetIDlist
 from Utilities import Color, Utilities, LoggerManager
 from Project import Project
 from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
 from SampleMetadataDownload import SampleMetadataDownload
 from SampleMetadataParser import SampleMetadataParser
-from functions_modules_mod import *
+from functions_modules import *
 from os import path
 from rich import print as rich_print
 from rich.panel import Panel

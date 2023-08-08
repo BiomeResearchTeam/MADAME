@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 from Utilities import Color, Utilities, LoggerManager
-from metadata_retrievement_module_mod import metadata_retrievement
+from metadata_retrievement_module import metadata_retrievement
 from publications_retrievement_module import publications_retrievement
 from report_generation_module import report_generation
 from data_retrievement_module import data_retrievement
@@ -29,7 +29,6 @@ def main():
         rich_print(box)
 
         while True:
-            print(user_session)
             module_choice = input("  >> Enter your option: ")
             if module_choice.isnumeric():
                 module_choice = int(module_choice)
@@ -171,20 +170,20 @@ def menu(user_session):
 
         if module_choice == 1: 
             logger = LoggerManager.log(user_session)
-            logger.debug(f"[INITIALIZED]")
+            logger.debug(f"[METADATA MODULE - INITIALIZED]")
             metadata_retrievement(user_session)
 
         if module_choice == 2:
             publications_retrievement(user_session)
 
         if module_choice == 3:
-            logger = LoggerManager.log("report_generation_module", user_session)
-            logger.debug(f"[INITIALIZED]")
+            logger = logger = LoggerManager.log(user_session)
+            logger.debug(f"[REPORT MODULE - INITIALIZED]")
             report_generation(user_session)
 
         if module_choice == 4:
-            logger = LoggerManager.log("data_retrievement_module", user_session)
-            logger.debug(f"[INITIALIZED]") 
+            logger = logger = LoggerManager.log(user_session)
+            logger.debug(f"[DATA MODULE - INITIALIZED]") 
             data_retrievement(user_session)
 
 
