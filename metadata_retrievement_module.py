@@ -1,10 +1,10 @@
-from IDlist import GetIDlist
-from Utilities import Color, Utilities
+from IDlist_mod import GetIDlist
+from Utilities import Color, Utilities, LoggerManager
 from Project import Project
 from ExperimentMetadataDownload import Exp_Proj_MetadataDownload
 from SampleMetadataDownload import SampleMetadataDownload
 from SampleMetadataParser import SampleMetadataParser
-from functions_modules import *
+from functions_modules_mod import *
 from os import path
 from rich import print as rich_print
 from rich.panel import Panel
@@ -26,7 +26,7 @@ def metadata_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
             else:
                 if metadata_retrievement_choice == 1:
-                    logger = Utilities.log("metadata_retrievement_module", user_session)
+                    logger = LoggerManager.log(user_session) #
                     logger.debug(f"[OPTION-1]: Doing a query on ENA")  
                     metadata_retrievement_query(user_session)
                     return
@@ -61,7 +61,7 @@ def metadata_retrievement_query(user_session):
                 continue
 
             else:
-                logger = Utilities.log("metadata_retrievement_module", user_session)
+                logger = LoggerManager.log(user_session)
                 logger.debug(f"[OPTION-1] - USER QUERY ON ENA")
 
                 listOfAccessionIDs = UserDataTypeInput(user_query_input, user_data_type, user_session)
@@ -85,7 +85,7 @@ def metadata_retrievement_digit(user_session):
             return
 
         else:
-            logger = Utilities.log("metadata_retrievement_module", user_session)
+            logger = LoggerManager.log(user_session)
             logger.debug(f"[OPTION-2] - USER IDs SUBMISSION")
             listOfAccessionIDs = UserDigitCodesIDlist(user_query_input, user_session)
 
@@ -112,7 +112,7 @@ def metadata_retrievement_file(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                 continue
             else: 
-                logger = Utilities.log("metadata_retrievement_module", user_session)
+                logger = LoggerManager.log(user_session)
                 logger.debug(f"[OPTION-3] - USER FILE SUBMISSION: {csv_file_input}")
     
                 listOfAccessionIDs = UserFileCodesIDlist(csv_file_input)

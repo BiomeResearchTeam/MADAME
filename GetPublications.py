@@ -7,7 +7,7 @@ import os
 import re
 from rich.progress import track
 from io import StringIO
-from Utilities import Color, Utilities  
+from Utilities import Color, Utilities, LoggerManager
 from IDlist import GetIDlist
 
 
@@ -30,7 +30,7 @@ class GetPublications:
             path = os.path.join(user_session, projectID) 
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
-                logger = Utilities.log("GetPublications", user_session)
+                logger = LoggerManager.log(user_session)
                 logger.debug(f"{projectID}_publications-metadata.tsv already exist!")
                 print(f'{projectID}_publications-metadata.tsv', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
 
@@ -39,7 +39,7 @@ class GetPublications:
                 PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, user_session)  
                 
                 if PMC_pd_dataframe.empty:   
-                    logger = Utilities.log("GetPublications", user_session)
+                    logger = LoggerManager.log(user_session)
                     logger.debug(f"No publications were found for {projectID}")
                     print(Color.BOLD + Color.RED +"No publications" + Color.END, f" were found for {projectID}")
                     projects_with_no_publication.append(projectID)
@@ -54,7 +54,7 @@ class GetPublications:
                     else:
                         os.mkdir(path)
                         PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
-                    logger = Utilities.log("GetPublications", user_session)
+                    logger = LoggerManager.log(user_session)
                     logger.debug(f"Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
                 

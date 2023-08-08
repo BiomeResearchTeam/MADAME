@@ -1,6 +1,6 @@
 import os
 import requests as rq
-from Utilities import Utilities
+from Utilities import Utilities, LoggerManager
 from IDlist import GetIDlist
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
@@ -211,7 +211,7 @@ class Exp_Proj_MetadataDownload:
 
     def mergeExperimentsMetadata(self, user_session):
 
-        logger = Utilities.log("ExperimentMetadataDownload", user_session)
+        logger = LoggerManager.log(user_session)
         path = (os.path.join("Downloads", user_session))
         dataframes = []
 

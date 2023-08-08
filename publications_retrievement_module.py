@@ -1,5 +1,5 @@
 from GetPublications import GetPublications
-from Utilities import Color, Utilities
+from Utilities import Color, Utilities, LoggerManager
 from functions_modules import CheckTSV
 import os
 from os import path
@@ -35,7 +35,7 @@ def publications_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
 
             else:
-                logger = Utilities.log("publications-retrievement-module", user_session)
+                logger = LoggerManager.log(user_session)
                 logger.debug(f"[INITIALIZED]")
                 if user_publication_input == (1):
                     user_session = os.path.join("Downloads", user_session)
@@ -79,7 +79,7 @@ def user_report_local(user_session):
         if user_report_local_path.lower() in "back":
             return
         
-        logger = Utilities.log("publications-retrievement-module", user_session)
+        logger = LoggerManager.log(user_session)
         logger.debug(f"[OPTION-2]: use 'merged_experiments-metadata.tsv' file present in any other location of your computer")
         logger.debug(f"[PATH-SUBMITTED]: {user_report_local_path}")
 

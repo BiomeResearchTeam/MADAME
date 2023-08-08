@@ -1,5 +1,5 @@
-from IDlist import GetIDlist
-from Utilities import Color, Utilities
+from IDlist_mod import GetIDlist
+from Utilities import Color, Utilities, LoggerManager
 from Project import Project
 import time 
 import csv
@@ -38,7 +38,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
         print('Do you want to ' + Color.BOLD + 'try again?' + Color.END)
         input("Press " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
     else:
-        logger = Utilities.log("functions-module", user_session)
+        logger = LoggerManager.log(user_session)
         logger.debug(f"{user_session}_listOfAccessionIDs.tsv created")
         print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + Color.END + f"/{user_session}_listOfAccessionIDs.tsv")
         input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
@@ -87,7 +87,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
         print('Do you want to ' + Color.BOLD + 'try again?' + Color.END)
         input("Press " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
     else:
-        logger = Utilities.log("functions-module", user_session)
+        logger = LoggerManager.log(user_session)
         logger.debug(f"{user_session}_listOfAccessionIDs.tsv created")
         print("Now you can find the available accession IDs list here: MADAME/Downloads/" + Color.BOLD + Color.YELLOW + f"{user_session}" + f"/{user_session}_listOfAccessionIDs.tsv" + Color.END)
         input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")

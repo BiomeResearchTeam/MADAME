@@ -1,4 +1,4 @@
-from Utilities import Color, Utilities
+from Utilities import Color, Utilities, LoggerManager
 from Project import Project
 import os
 import pandas as pd
@@ -110,7 +110,7 @@ def available_metadata_files(user_session):
         f1_df = pd.read_csv (f1_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
         if 'study_accession' in f1_df:
             e_df = f1_df
-            logger = Utilities.log("report_generation_module", user_session)
+            logger = LoggerManager.log(user_session)
             logger.debug(f"Found {list_metadata_files[0]}")
             report(user_session, e_df, p_df=None) #mod sara
             final_screen(user_session)
@@ -131,7 +131,7 @@ def available_metadata_files(user_session):
         else:
             p_df = f1_df
             e_df = f2_df
-        logger = Utilities.log("report_generation_module", user_session)
+        logger = LoggerManager.log(user_session)
         logger.debug(f"Found {list_metadata_files[0]} and {list_metadata_files[1]}")
         report(user_session, e_df, p_df)
         final_screen(user_session)
@@ -639,7 +639,7 @@ def wordcloud(report_folder, e_df, p_df, color_palette_rgb, f):
 
 
 def final_screen(user_session):
-    logger = Utilities.log("report_generation_module", user_session)
+    logger = LoggerManager.log(user_session)
     logger.debug(f"[REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/{user_session}")
     print(Color.BOLD + Color.GREEN + '\nReport successfully created.' + Color.END,'You can find the', Color.UNDERLINE + 'Report file in HTML format' + Color.END, 
     'and the', Color.UNDERLINE + 'Report folder' + Color.END,'here:', Color.BOLD + Color.YELLOW + f'Downloads/{user_session}' + Color.END)

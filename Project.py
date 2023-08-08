@@ -6,7 +6,7 @@ import sys
 import xml.etree.ElementTree as ET
 import pandas as pd
 from rich.progress import track
-from Utilities import Utilities, Color
+from Utilities import Utilities, Color, LoggerManager
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
 
@@ -83,7 +83,7 @@ class Project:
 
         print("Available accessions: ", ', '.join(listOfAvailableAccessions), "\n")
 
-        # logger = Utilities.log("Project", user_session)
+        # logger = LoggerManager.log(user_session)
         # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableAccessions}")
 
         return listOfAvailableAccessions
@@ -221,7 +221,7 @@ class Project:
         listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         listOfAccessionIDs.to_csv(os.path.join(path, f'{user_session}_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
-        # logger = Utilities.log("Project", user_session)
+        # logger = LoggerManager.log(user_session)
         # logger.debug(f"[LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/{user_session}/{user_session}_listOfAccessionIDs.tsv")
 
 Project = Project('Project') 
