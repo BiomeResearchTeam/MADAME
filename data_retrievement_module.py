@@ -41,7 +41,7 @@ def data_retrievement(user_session):
                     user_session = data_user_local(user_session)
                 if user_session != None:
                     files_found = check_files(user_session)
-                    enaBT_path = enaBT_check(files_found)
+                    enaBT_path = enaBT_check(files_found, user_session)
                     data_download(enaBT_path, user_session, files_found)
                     user_session = original_user_session
                 else:
@@ -68,7 +68,7 @@ def check_files(user_session):
             return files_found
         
 
-def enaBT_check(files_found):
+def enaBT_check(files_found, user_session):
     if files_found is not None:
         while True:
             with open("enaBT_path.txt","r+") as enaBT_txt:
@@ -110,6 +110,8 @@ def data_download(enaBT_path, user_session, files_found):
                 return
                 
             elif data_download_type in ("fastq", "sra", "submitted"):
+                logger = LoggerManager.log(user_session)
+                logger.debug(f"[DATA-TYPE-SELECTED]: {data_download_type}")
                 merged_experiments = files_found[0]
                 if merged_experiments.endswith('.tsv'):
                     e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)

@@ -26,8 +26,6 @@ def metadata_retrievement(user_session):
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
             else:
                 if metadata_retrievement_choice == 1:
-                    logger = LoggerManager.log(user_session) #
-                    logger.debug(f"[OPTION-1]: Doing a query on ENA")  
                     metadata_retrievement_query(user_session)
                     return
 

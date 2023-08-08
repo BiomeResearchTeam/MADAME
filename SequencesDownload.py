@@ -2,7 +2,7 @@ import os
 import subprocess
 import shutil 
 from Project import Project
-from Utilities import Utilities, Color
+from Utilities import Utilities, Color, LoggerManager
 from rich.console import Console
 from rich import print as rich_print
 from rich.panel import Panel
@@ -48,7 +48,9 @@ class SequencesDownload:
 
         # No available runs across all projects for chosen file_type 
         if bytes_total == 0:
-            print(Color.BOLD + Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format") 
+            print(Color.BOLD + Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format")
+            logger = LoggerManager.log(user_session)
+            logger.debug(f"NO AVAILABLE {file_type} format files")
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
 
@@ -57,7 +59,8 @@ class SequencesDownload:
 
         # No available free space on disk
         if free == 0:
-            print(Color.BOLD + Color.RED + f"\nERROR" + Color.END + ": no available free space on disk") 
+            print(Color.BOLD + Color.RED + f"\nERROR" + Color.END + ": no available free space on disk")
+            logger.debug("[ERROR]: no available free space on disk")
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
         
@@ -80,6 +83,8 @@ class SequencesDownload:
         download_preview = f"[white]Available/Total Projects ({file_type}) = {len(dictOfAvailableProjectIDs)}/{len(listOfProjectIDs)}" + f"\nTotal file size = {Utilities.bytes_converter(bytes_total)}" + f"\nYou are going to occupy {color}{percentage}% of free disk space"
         title = Panel.fit(download_preview, style = "magenta", title=Text.assemble((" ◊", "rgb(0,255,0)"), " DOWNLOAD PREVIEW ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)")
         print()
+        logger = LoggerManager.log(user_session)
+        logger.debug(f"Total file size = {Utilities.bytes_converter(bytes_total)}. You are going to occupy {percentage}% of free disk space")
         rich_print(title)
 
         # # Safe percentage, just press ENTER to loop through available projects and ids in the dictionary
@@ -99,13 +104,15 @@ class SequencesDownload:
         
         # Percentage higher than 1%, user has to digit yes to continue with download
         if percentage >= 1 and percentage <= 95:
-            print(Color.YELLOW + Color.BOLD + "\nWARNING" + Color.END + ": you're gonna occupy" + Color.YELLOW + Color.BOLD + f" {percentage} % " + Color.END + "of your free disk space.")
+            print(Color.YELLOW + Color.BOLD + "\nWARNING" + Color.END + ": you're gonna occupy" + Color.YELLOW + Color.BOLD + f" {percentage} % " + Color.END + "of your free disk space")
+            logger.debug(f"[WARNING]: you're gonna occupy {percentage} % of your free disk space")
             while True: 
                 user_input = ''
                 while user_input.strip() == '': 
                     user_input = str(input("  >> Digit " + Color.BOLD + Color.PURPLE + "yes" + Color.END + " to start downloading, or " + Color.BOLD + Color.PURPLE + "back" + Color.END + " to go back: "))
                     
                     if user_input.lower() in ("yes"):
+                        logger.debug("DOWNLOAD INITIALIZED")
                         for project, runs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
@@ -115,6 +122,7 @@ class SequencesDownload:
 
                                 if download == 0:
                                     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
+                                    logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
                                     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
                                     return 
                         break
@@ -128,13 +136,16 @@ class SequencesDownload:
 
         # Unsafe percentage, cannot proceed with the download
         elif percentage > 95:
-            print(Color.RED + Color.BOLD + f"\nERROR: the selected runs would occupy more than 95% of your free disk space." + Color.END)
+            print(Color.RED + Color.BOLD + f"\nERROR: the selected runs would occupy more than 95% of your free disk space" + Color.END)
+            logger.debug("[ERROR]: the selected runs would occupy more than 95 percent of your free disk space. Download not allowed.")
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
             return 
 
         # Final message
         print("\nSEQUENCES DOWNLOAD completed!")
         print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) 
+        logger.debug("SEQUENCES DOWNLOAD completed!")
+        logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/projectID_{file_type}_files")
         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
         return 
         
@@ -173,10 +184,10 @@ class SequencesDownload:
     def enaBT(self, path, EnaBT_path, runID, file_type):
         
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
+        logger = LoggerManager.log(user_session)
+        logger.debug(f"{command}")
         try:
-            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2) 
-                    # print(os.getcwd())
-                    # subprocess.run([command], check=True, shell=True, stdout=1, stderr=2)
+            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)
                         
         except subprocess.CalledProcessError as error:
  
