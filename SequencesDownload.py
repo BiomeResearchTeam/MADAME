@@ -118,7 +118,7 @@ class SequencesDownload:
                             Utilities.createDirectory(path)
                             
                             for run in runs:
-                                download = self.enaBT(path, EnaBT_path, run, file_type)
+                                download = self.enaBT(user_session, path, EnaBT_path, run, file_type)
 
                                 if download == 0:
                                     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
@@ -181,7 +181,7 @@ class SequencesDownload:
 
 
     
-    def enaBT(self, path, EnaBT_path, runID, file_type):
+    def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
         
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         logger = LoggerManager.log(user_session)
