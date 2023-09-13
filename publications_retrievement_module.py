@@ -128,6 +128,6 @@ def publications(e_df, user_session):
             study_accession.append(values[0])
     
     listOfProjectIDs = list(set(study_accession))
-    GetPublications.runGetPublications(listOfProjectIDs, user_session)
+    GetPublications.runGetPublications(listOfProjectIDs, e_df, user_session)
     GetPublications.mergePublicationsMetadata(user_session)
     logger = LoggerManager.log(user_session)

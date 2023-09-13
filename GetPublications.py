@@ -17,7 +17,7 @@ class GetPublications:
     def __init__(self, name):
         self.name = name 
 
-    def runGetPublications(self, listOfProjectIDs, user_session):
+    def runGetPublications(self, listOfProjectIDs, e_df, user_session):
     # For each project ID, reads from the already downloaded experiments metadata file and
     # creates a list of all the accessions in it. The list of accessions plus the project ID 
     # are given as input to GetPublicatios.PMC_dataframe, which returns a list of dictionaries
@@ -36,7 +36,7 @@ class GetPublications:
 
             else:
                 accessions_list = self.ENA_Xref_check(projectID)          
-                PMC_pd_dataframe = self.PMC_pd_dataframe(projectID, accessions_list, user_session)  
+                PMC_pd_dataframe = self.PMC_pd_dataframe(e_df, projectID, accessions_list, user_session)  
                 
                 if PMC_pd_dataframe.empty:   
                     logger = LoggerManager.log(user_session)
@@ -105,7 +105,7 @@ class GetPublications:
 
         return accessions_list 
 
-    def PMC_pd_dataframe(self, projectID, accessions_list, user_session):
+    def PMC_pd_dataframe(self, e_df, projectID, accessions_list, user_session):
 
         s = rq.session()
         retries = Retry(total=6,
@@ -116,12 +116,15 @@ class GetPublications:
         # dict_list will be filled with a dictionary of labels and values for each publication found.   
         dict_list = [] 
 
-        # Fetching local metadata file and building the accessions list, only if it's None
+        # Fetching merged_metadata file and building the accessions list, only if it's None
         # (so if it's not provided by ENA_Xref_check)
         if not accessions_list:
-                    
-            experiments_metadata = os.path.join(user_session, projectID, f'{projectID}_experiments-metadata.tsv')
-            metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+
+            e_df['grouping_col'] = e_df['study_accession']
+            e_df.loc[e_df['grouping_col'].isna(), 'grouping_col'] = e_df['secondary_study_accession']
+            metadata_df = e_df.loc[e_df['grouping_col'] == projectID]   
+            # experiments_metadata = os.path.join(user_session, projectID, f'{projectID}_experiments-metadata.tsv')
+            # metadata_df = pd.read_csv(experiments_metadata, sep='\t')
             accessions_columns = ['study_accession', 'secondary_study_accession', 'sample_accession', 'secondary_sample_accession', 'experiment_accession', 'run_accession', 'submission_accession']
             accessions_list = []
                 
