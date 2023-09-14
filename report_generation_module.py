@@ -561,7 +561,7 @@ def geography(report_folder, e_df, p_df, color_palette_rgb, f):
     try:
         replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 
                              'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of', 'Brasil': 'Brazil', 'Perugia': 'Italy',
-                             'Indiana': '', 'New Jersey':'United States'}
+                             'Indiana': '', 'New Jersey':'United States', 'Georgia.':'Georgia', 'Georgia':'GA'}
         p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
