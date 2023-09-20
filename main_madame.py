@@ -13,6 +13,10 @@ from rich.text import Text
 from rich.console import Console
 from rich.theme import Theme
 import os.path
+import platform
+if platform.system() != "Windows":
+    import readline
+
 import readline
 
 user_session = ""
