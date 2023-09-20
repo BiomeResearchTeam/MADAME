@@ -17,8 +17,6 @@ import platform
 if platform.system() != "Windows":
     import readline
 
-import readline
-
 user_session = ""
 
 def main():
