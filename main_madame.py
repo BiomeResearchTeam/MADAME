@@ -23,8 +23,9 @@ def main():
 
     while True:
         Utilities.clear()
-        readline.parse_and_bind('tab: complete')
-        readline.set_completer_delims(' \t\n')
+        if platform.system() != "Windows":
+            readline.parse_and_bind('tab: complete')
+            readline.set_completer_delims(' \t\n')
         madame_logo()
 
         box = Panel(Text.assemble(("◊", "rgb(0,255,0)"), " Choose your working session. You will find all your sessions in ", ("MADAME/Downloads/", "rgb(255,255,0)"),"\n\n1 - Create new session\n2 - Continue with existing session\n\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), border_style= "rgb(255,0,255)", padding= (0,1))
