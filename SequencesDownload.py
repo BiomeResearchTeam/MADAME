@@ -8,6 +8,8 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 
+import time
+
 class SequencesDownload:
 
     def __init__(self, name):
@@ -113,6 +115,7 @@ class SequencesDownload:
                     
                     if user_input.lower() in ("yes"):
                         logger.debug("DOWNLOAD INITIALIZED")
+                        t0 = time.time()
                         for project, runs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
@@ -125,6 +128,7 @@ class SequencesDownload:
                                     logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
                                     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
                                     return 
+                        print('total time (s):', time.time() - t0) 
                         break
                     
                     elif user_input.lower() in ("back"):
@@ -182,12 +186,13 @@ class SequencesDownload:
 
     
     def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
-        
+        t0 = time.time()
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         logger = LoggerManager.log(user_session)
         logger.debug(f"{command}")
         try:
             subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)
+            
                         
         except subprocess.CalledProcessError as error:
  

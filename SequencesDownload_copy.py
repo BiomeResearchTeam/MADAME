@@ -9,7 +9,8 @@ from rich.panel import Panel
 from rich.text import Text
 
 import concurrent.futures
-from functools import partial
+
+import time
 
 
 class SequencesDownload:
@@ -102,6 +103,7 @@ class SequencesDownload:
                     
                     if user_input.lower() in ("yes"):
                         logger.debug("DOWNLOAD INITIALIZED")
+                        t0 = time.time()
                         for project, runIDs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
@@ -115,6 +117,7 @@ class SequencesDownload:
                                 #     logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
                                 #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
                                 #     return 
+                        print('time (s):', time.time() - t0)  
                         break
                     
                     elif user_input.lower() in ("back"):
@@ -138,14 +141,14 @@ class SequencesDownload:
         logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/projectID_{file_type}_files")
         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
         return 
-        
+
     
     def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         logger = LoggerManager.log(user_session)
         logger.debug(f"{command}")
         try:
-            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)   
+            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2) 
 
         except subprocess.CalledProcessError as error:    
             return 0
