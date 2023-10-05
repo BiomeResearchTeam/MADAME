@@ -107,7 +107,7 @@ class SequencesDownload:
                         for project, runIDs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
-                            with concurrent.futures.ThreadPoolExecutor() as executor:
+                            with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
                                 executor.map(lambda runID: self.enaBT(user_session, path, EnaBT_path, runID, file_type), runIDs)
 
                                 #download = self.enaBT(user_session, path, EnaBT_path, run, file_type)

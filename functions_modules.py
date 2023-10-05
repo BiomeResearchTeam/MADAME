@@ -14,7 +14,7 @@ from rich.console import Console
 
 def UserQueryENAInput(user_session):
 
-    box = Panel(Text.assemble("Examples of queries:\n\n1) skin microbiome\n2) monkeypox\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " QUERY ON ENA ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Examples of queries:\n\n1) skin microbiome\n2) monkeypox\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA retrieval MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " QUERY ON ENA ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
 
 
@@ -50,7 +50,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
 def UserDigitCodesInput(user_session):
 
-    box = Panel(Text.assemble("Digit the accession codes you are interested in, separated by comma.\n\nExamples of accession codes:\n1) PRJNA689547\n2) ERP107880, DRP004449, SRP187334\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DIGIT LIST OF ACCESSION CODES ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Digit the accession codes you are interested in, separated by comma.\n\nExamples of accession codes:\n1) PRJNA689547\n2) ERP107880, DRP004449, SRP187334\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA retrieval MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DIGIT LIST OF ACCESSION CODES ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
 
     user_query_input = ''
@@ -100,7 +100,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
 def UserFileCodesInput(user_session):
     Utilities.clear()
 
-    box = Panel(Text.assemble("Load a file containing the accession codes you are interested in. File format must be .csv or .tsv\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " INPUT ACCESSION CODES FILE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Load a file containing the accession codes you are interested in. File format must be .csv or .tsv\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the METADATA retrieval MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " INPUT ACCESSION CODES FILE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
 
         

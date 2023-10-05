@@ -169,7 +169,7 @@ class SequencesDownload:
             #         if download == 0:
             #             print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
             #             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            #             return #goes back to data retrievement module
+            #             return #goes back to data retrieval module
                 
             #     #####
             #     # INSERIRE QUI UN CHECK SUI FILE SCARICATI (PUO' SUCCEDERE CHE ALCUNI VENGANO SALTATI)
@@ -178,7 +178,7 @@ class SequencesDownload:
             #     print("\nSEQUENCES DOWNLOAD completed!")
             #     print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) # messaggio da modificare ?
             #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            #     return #goes back to data retrievement module - should go back to main menu..
+            #     return #goes back to data retrieval module - should go back to main menu..
 
             # else:
             #     print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare ?

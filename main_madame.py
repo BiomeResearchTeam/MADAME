@@ -1,10 +1,10 @@
 #!/usr/bin/python
 
 from Utilities import Color, Utilities, LoggerManager
-from metadata_retrievement_module import metadata_retrievement
-from publications_retrievement_module import publications_retrievement
+from metadata_retrieval_module import metadata_retrieval
+from publications_retrieval_module import publications_retrieval
 from report_generation_module import report_generation
-from data_retrievement_module import data_retrievement
+from data_retrieval_module import data_retrieval
 import os
 from rich.tree import Tree
 from rich import print as rich_print
@@ -146,7 +146,7 @@ def menu(user_session):
         Utilities.clear()
         madame_logo()
 
-        box = Panel(Text.assemble("Which module do you want to use?\n\n1 - Metadata retrievement module: metadata search and download\n2 - Publication retrievement module: metadata- and data- associated publications download\n3 - Report generation module: explore metadata and publication retrivement outputs\n4 - Data retrievement module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " MAIN MENU ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Which module do you want to use?\n\n1 - Metadata retrieval module: metadata search and download\n2 - Publication retrieval module: metadata- and data- associated publications download\n3 - Report generation module: explore metadata and publication retrieval outputs\n4 - Data retrieval module: metadata-associated data download\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to change session digit: ", ("change", "rgb(255,0,255)")," ---\n--- If you want to close MADAME digit: ", ("exit", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " MAIN MENU ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         while True:
@@ -173,10 +173,10 @@ def menu(user_session):
         if module_choice == 1: 
             logger = LoggerManager.log(user_session)
             logger.debug(f"[METADATA MODULE - INITIALIZED]")
-            metadata_retrievement(user_session)
+            metadata_retrieval(user_session)
 
         if module_choice == 2:
-            publications_retrievement(user_session)
+            publications_retrieval(user_session)
 
         if module_choice == 3:
             logger = logger = LoggerManager.log(user_session)
@@ -186,7 +186,7 @@ def menu(user_session):
         if module_choice == 4:
             logger = logger = LoggerManager.log(user_session)
             logger.debug(f"[DATA MODULE - INITIALIZED]") 
-            data_retrievement(user_session)
+            data_retrieval(user_session)
 
 
 

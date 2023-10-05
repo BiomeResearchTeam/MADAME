@@ -10,13 +10,13 @@ from rich.text import Text
 import json
 
 
-def publications_retrievement(user_session):
+def publications_retrieval(user_session):
     
     while True:
         Utilities.clear()
         original_user_session = user_session
 
-        box = Panel(Text.assemble("Retrieve the publications that include the projects of your interest.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present in the current session\n2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Retrieve the publications that include the projects of your interest.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present in the current session\n2 - Use '*_merged_experiments-metadata.tsv' file present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         user_publication_input = input("\n  >> Enter your choice: ").strip()
@@ -71,7 +71,7 @@ def user_report_local(user_session):
     Utilities.clear()
     while True:
 
-        box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the PUBLICATIONS RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nThe '_merged_publications-metadata.tsv' will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the PUBLICATIONS retrieval menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " PUBLICATIONS retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
         
         user_report_local_path = input("\n  >> Digit the path: ").strip()

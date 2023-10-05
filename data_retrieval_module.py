@@ -1,5 +1,5 @@
 from Utilities import Color, Utilities
-from SequencesDownload_copy import SequencesDownload ##
+from SequencesDownload import SequencesDownload ##
 from os import path
 import os
 import pandas as pd
@@ -8,12 +8,12 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 
-def data_retrievement(user_session):
+def data_retrieval(user_session):
 
     while True:
         Utilities.clear() 
         original_user_session = user_session
-        box = Panel(Text.assemble("Download the data associated to the previously downloaded metadata.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present the current session\n2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Download the data associated to the previously downloaded metadata.\n\nChoose one of the following options:\n\n1 - Use '*_merged_experiments-metadata.tsv' file present the current session\n2 - Use '*_merged_experiments-metadata.tsv' files present in any other location of your computer\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         data_download_choice = input("\n  >> Enter your choice: ").strip()
@@ -102,7 +102,7 @@ def data_download(enaBT_path, user_session, files_found):
         while True:
             Utilities.clear()
 
-            box = Panel(Text.assemble("What data format do you want to download? ", ("fastq", "u"), " , ", ("sra", "u"), " , or ", ("submitted", "u"), "\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+            box = Panel(Text.assemble("What data format do you want to download? ", ("fastq", "u"), " , ", ("sra", "u"), " , or ", ("submitted", "u"), "\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA retrieval menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
             rich_print(box)
     
             data_download_type = input("\n  >> Enter your choice: ").strip().lower()
@@ -127,13 +127,13 @@ def data_download(enaBT_path, user_session, files_found):
 
 #DATA FROM LOCAL PATH
 def data_user_local(user_session):
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    title = Panel(Text("DATA retrieval MODULE", style = "b magenta", justify="center"), style = "b magenta")
     rich_print(title)
 
     while True:
         Utilities.clear()
 
-        box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nData will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA RETRIEVEMENT menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("Enter the path for '*_merged_experiments-metadata.tsv' file.\n\nData will be downloaded in the folder indicated.\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the DATA retrieval menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " DATA retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
         data_local_path = input("\n  >> Digit the path: ").strip()
