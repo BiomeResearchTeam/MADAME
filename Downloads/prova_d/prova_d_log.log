@@ -541,3 +541,178 @@
 2023-10-04 12:20:02,449 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq ERR4233759 -d Downloads/prova_d/PRJEB37496/PRJEB37496_fastq_files
 2023-10-04 12:20:08,297 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq ERR4233769 -d Downloads/prova_d/PRJEB37496/PRJEB37496_fastq_files
 2023-10-04 12:20:11,909 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq ERR4233779 -d Downloads/prova_d/PRJEB37496/PRJEB37496_fastq_files
+2023-10-05 15:45:08,847 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:45:08,854 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:45:10,424 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:45:11,363 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:45:11,364 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:45:11,374 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:45:13,257 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:45:13,394 - Downloads/prova_d - Total file size = 4.37 GB. You are going to occupy 2% of free disk space
+2023-10-05 15:45:13,398 - Downloads/prova_d - [WARNING]: you're gonna occupy 2 % of your free disk space
+2023-10-05 15:45:15,848 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 15:45:15,860 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946900 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,865 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947000 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,874 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946901 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,883 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947001 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,892 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946902 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,900 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947002 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,906 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946903 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,915 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947003 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,925 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946904 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,944 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947004 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:15,972 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946905 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:16,027 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947005 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:27,797 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946906 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:29,354 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947006 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:29,632 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946907 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:31,533 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947007 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:32,523 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946908 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:33,163 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947008 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,568 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946909 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,569 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947009 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,631 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946910 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,647 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947010 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,667 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946911 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,683 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947011 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,690 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946912 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,691 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947012 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,695 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946913 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,698 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947013 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,701 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946914 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:45:38,705 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947014 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:07,296 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:48:07,298 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:48:08,405 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:48:09,308 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:48:09,309 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:48:09,310 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:48:11,230 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:48:11,343 - Downloads/prova_d - Total file size = 4.37 GB. You are going to occupy 2% of free disk space
+2023-10-05 15:48:11,348 - Downloads/prova_d - [WARNING]: you're gonna occupy 2 % of your free disk space
+2023-10-05 15:48:13,160 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 15:48:13,167 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946900 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,177 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947000 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,183 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946901 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,190 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947001 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,200 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946902 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,201 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947002 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,211 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946903 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,228 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947003 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,239 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946904 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,256 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947004 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,323 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946905 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:13,403 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947005 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,718 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946906 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,768 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947006 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,769 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946907 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,769 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947007 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,779 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946908 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:14,788 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947008 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:15,997 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946909 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,000 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947009 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,012 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946910 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,107 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947010 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,127 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946911 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,136 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947011 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,146 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946912 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,170 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947012 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,184 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946913 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,216 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947013 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,229 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946914 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:16,246 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947014 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:30,894 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946915 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:33,073 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16947015 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:48:33,223 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946916 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:51:51,554 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:51:51,555 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:51:54,076 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:51:54,930 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:51:54,931 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:51:54,932 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:51:58,029 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:51:58,119 - Downloads/prova_d - Total file size = 4.37 GB. You are going to occupy 2% of free disk space
+2023-10-05 15:51:58,123 - Downloads/prova_d - [WARNING]: you're gonna occupy 2 % of your free disk space
+2023-10-05 15:52:00,533 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 15:54:54,665 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:54:54,666 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:55:04,311 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:55:05,354 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:55:05,354 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:55:05,355 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:55:10,012 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:55:10,090 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy <1% of free disk space
+2023-10-05 15:55:43,638 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:55:43,640 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:55:44,445 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:55:44,982 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:55:44,983 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:55:44,984 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:55:47,015 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:55:47,103 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy <1% of free disk space
+2023-10-05 15:56:25,925 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:56:25,926 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:56:26,827 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:56:27,168 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:56:27,169 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:56:27,170 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:56:28,849 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:56:28,969 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy <1% of free disk space
+2023-10-05 15:57:09,639 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:57:09,640 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:57:10,734 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:57:10,932 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:57:10,933 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:57:10,934 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:57:13,098 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:57:13,166 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy 0% of free disk space
+2023-10-05 15:57:13,170 - Downloads/prova_d - [WARNING]: you're gonna occupy 0 % of your free disk space
+2023-10-05 15:57:25,027 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 15:57:25,041 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946893 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:57:25,043 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946896 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:57:25,048 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946898 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:58:29,301 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:58:29,302 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:58:30,284 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:58:30,463 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:58:30,463 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:58:30,464 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:58:48,953 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:58:48,954 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:58:49,935 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 15:58:50,202 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 15:58:50,203 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 15:58:50,204 - Downloads/prova_d - Found enaDataGet
+2023-10-05 15:58:53,810 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 15:58:53,897 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy 0% of free disk space
+2023-10-05 15:58:53,902 - Downloads/prova_d - [WARNING]: you're gonna occupy 0 % of your free disk space
+2023-10-05 15:58:56,317 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 15:58:56,329 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946893 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:58:56,331 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946896 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:58:56,339 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946898 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 15:59:57,965 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 15:59:57,966 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 15:59:59,699 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 16:00:00,194 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 16:00:00,195 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 16:00:00,196 - Downloads/prova_d - Found enaDataGet
+2023-10-05 16:00:01,830 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 16:00:01,888 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy 0% of free disk space
+2023-10-05 16:00:01,892 - Downloads/prova_d - [WARNING]: you're gonna occupy 0 % of your free disk space
+2023-10-05 16:00:05,488 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 16:00:05,498 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946893 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 16:00:05,501 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946896 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 16:00:05,509 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946898 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 16:01:49,615 - Downloads/prova_d - [MADAME INITIALIZED]
+2023-10-05 16:01:49,616 - Downloads/prova_d - [PRE-EXISTING-USER-SESSION-CHOSEN]: MADAME/Downloads/prova_d
+2023-10-05 16:01:50,485 - Downloads/prova_d - [DATA MODULE - INITIALIZED]
+2023-10-05 16:01:50,702 - Downloads/prova_d - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2023-10-05 16:01:50,703 - Downloads/prova_d - Found prova_d_merged_experiments-metadata.tsv
+2023-10-05 16:01:50,704 - Downloads/prova_d - Found enaDataGet
+2023-10-05 16:01:58,025 - Downloads/prova_d - [DATA-TYPE-SELECTED]: fastq
+2023-10-05 16:01:58,097 - Downloads/prova_d - Total file size = 18.31 MB. You are going to occupy 0% of free disk space
+2023-10-05 16:01:58,100 - Downloads/prova_d - [WARNING]: you're gonna occupy 0 % of your free disk space
+2023-10-05 16:01:59,495 - Downloads/prova_d - DOWNLOAD INITIALIZED
+2023-10-05 16:01:59,505 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946893 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 16:01:59,514 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946896 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
+2023-10-05 16:01:59,517 - Downloads/prova_d - /root/tools/enaBrowserTools-1.1.0/python3/enaDataGet -f fastq SRR16946898 -d Downloads/prova_d/PRJNA780434/PRJNA780434_fastq_files
