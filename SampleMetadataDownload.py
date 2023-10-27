@@ -50,18 +50,31 @@ class SampleMetadataDownload:
             ' successfully downloaded\n' + Color.END)  
 
 
-    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder):
+    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder, user_session):
     # Download sample metadata file
+
+        logger = LoggerManager.log(user_session)
         s = rq.session()
+        print(sampleID)
         retries = Retry(total=5,
                     backoff_factor=0.1,
                     status_forcelist=[500, 502, 503, 504])
-        s.mount('https://', HTTPAdapter(max_retries=retries)) 
+        s.mount('https://', HTTPAdapter(max_retries=retries))
 
         url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
         headers = {"User-Agent": generate_user_agent()}
-        download = s.get(url, headers=headers, allow_redirects=True)
-        with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
-            file.write(download.content)
+        logger.debug(f"sampleID: {sampleID}")
+        try:
+            download = s.get(url, headers=headers, allow_redirects=True)
+            with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
+                file.write(download.content)
+        except rq.exceptions.ChunkedEncodingError as e:
+            print(f"ChunkedEncodingError: {e}")
+            logger.debug(f"ChunkedEncodingError: {e}")
+                # Puoi catturare l'eccezione IncompleteRead e stampare i dettagli
+            if isinstance(e.__cause__, IncompleteRead):
+                incomplete_read_exception = e.__cause__
+                print(f"IncompleteRead Exception: {incomplete_read_exception}")
+                logger.debug(f"IncompleteRead Exception: {incomplete_read_exception}")
 
 SampleMetadataDownload = SampleMetadataDownload('SampleMetadataDownload')
