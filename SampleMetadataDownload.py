@@ -1,7 +1,7 @@
 import os
 import requests as rq
 import pandas as pd
-from Utilities import Utilities, Color
+from Utilities import Utilities, Color, LoggerManager
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
 from rich.progress import track
@@ -40,12 +40,12 @@ class SampleMetadataDownload:
                             if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
                                 pass
                             else:
-                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
+                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
                     else:
                         if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
                             pass
                         else:
-                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
+                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
                 print(f'{projectID} samples metadata files were' + Color.BOLD + Color.GREEN + 
             ' successfully downloaded\n' + Color.END)  
 
@@ -55,7 +55,6 @@ class SampleMetadataDownload:
 
         logger = LoggerManager.log(user_session)
         s = rq.session()
-        print(sampleID)
         retries = Retry(total=5,
                     backoff_factor=0.1,
                     status_forcelist=[500, 502, 503, 504])
@@ -71,7 +70,6 @@ class SampleMetadataDownload:
         except rq.exceptions.ChunkedEncodingError as e:
             print(f"ChunkedEncodingError: {e}")
             logger.debug(f"ChunkedEncodingError: {e}")
-                # Puoi catturare l'eccezione IncompleteRead e stampare i dettagli
             if isinstance(e.__cause__, IncompleteRead):
                 incomplete_read_exception = e.__cause__
                 print(f"IncompleteRead Exception: {incomplete_read_exception}")
