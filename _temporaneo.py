@@ -47,13 +47,13 @@ def bars():
 def panel():
     from rich import print
     from rich.panel import Panel
-    print(Panel("[bold center purple]DATA RETRIEVEMENT MODULE"))
+    print(Panel("[bold center purple]DATA retrieval MODULE"))
     print("[link https://google.com]:computer: GitHub")
 
     from rich import print
     from rich.panel import Panel
     from rich.text import Text
-    title = Panel(Text("DATA RETRIEVEMENT MODULE", style = "b magenta", justify="center"), style = "b magenta")
+    title = Panel(Text("DATA retrieval MODULE", style = "b magenta", justify="center"), style = "b magenta")
     print(title)
 
 

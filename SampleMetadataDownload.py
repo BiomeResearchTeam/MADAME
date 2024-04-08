@@ -1,7 +1,7 @@
 import os
 import requests as rq
 import pandas as pd
-from Utilities import Utilities, Color
+from Utilities import Utilities, Color, LoggerManager
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
 from rich.progress import track
@@ -40,28 +40,39 @@ class SampleMetadataDownload:
                             if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
                                 pass
                             else:
-                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
+                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
                     else:
                         if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
                             pass
                         else:
-                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder)
+                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
                 print(f'{projectID} samples metadata files were' + Color.BOLD + Color.GREEN + 
             ' successfully downloaded\n' + Color.END)  
 
 
-    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder):
+    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder, user_session):
     # Download sample metadata file
+
+        logger = LoggerManager.log(user_session)
         s = rq.session()
         retries = Retry(total=5,
                     backoff_factor=0.1,
                     status_forcelist=[500, 502, 503, 504])
-        s.mount('https://', HTTPAdapter(max_retries=retries)) 
+        s.mount('https://', HTTPAdapter(max_retries=retries))
 
         url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
         headers = {"User-Agent": generate_user_agent()}
-        download = s.get(url, headers=headers, allow_redirects=True)
-        with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
-            file.write(download.content)
+        logger.debug(f"sampleID: {sampleID}")
+        try:
+            download = s.get(url, headers=headers, allow_redirects=True)
+            with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
+                file.write(download.content)
+        except rq.exceptions.ChunkedEncodingError as e:
+            print(f"ChunkedEncodingError: {e}")
+            logger.debug(f"ChunkedEncodingError: {e}")
+            if isinstance(e.__cause__, IncompleteRead):
+                incomplete_read_exception = e.__cause__
+                print(f"IncompleteRead Exception: {incomplete_read_exception}")
+                logger.debug(f"IncompleteRead Exception: {incomplete_read_exception}")
 
 SampleMetadataDownload = SampleMetadataDownload('SampleMetadataDownload')

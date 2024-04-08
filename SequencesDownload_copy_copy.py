@@ -8,7 +8,10 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 
+import concurrent.futures
+
 import time
+
 
 class SequencesDownload:
 
@@ -78,9 +81,9 @@ class SequencesDownload:
         elif percentage >= 80:
             color = "[red]"
 
-        # For printing very little percentages:
-        if percentage < 1:
-            percentage = "<1"
+        # # For printing very little percentages:
+        # if percentage < 1:
+        #     percentage = "<1"
 
         download_preview = f"[white]Available/Total Projects ({file_type}) = {len(dictOfAvailableProjectIDs)}/{len(listOfProjectIDs)}" + f"\nTotal file size = {Utilities.bytes_converter(bytes_total)}" + f"\nYou are going to occupy {color}{percentage}% of free disk space"
         title = Panel.fit(download_preview, style = "magenta", title=Text.assemble((" ◊", "rgb(0,255,0)"), " DOWNLOAD PREVIEW ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)")
@@ -89,23 +92,8 @@ class SequencesDownload:
         logger.debug(f"Total file size = {Utilities.bytes_converter(bytes_total)}. You are going to occupy {percentage}% of free disk space")
         rich_print(title)
 
-        # # Safe percentage, just press ENTER to loop through available projects and ids in the dictionary
-        # if percentage < 50:
-        #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to continue with the download")
-        #     for project, runs in dictOfAvailableProjectIDs.items():
-        #         path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
-        #         Utilities.createDirectory(path)
-            
-        #         for run in runs:
-        #             download = self.enaBT(path, EnaBT_path, run, file_type)
-
-        #             if download == 0:
-        #                 print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-        #                 input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
-        #                 return 
-        
         # Percentage higher than 1%, user has to digit yes to continue with download
-        if percentage >= 1 and percentage <= 95:
+        if percentage >= 0 and percentage <= 95:
             print(Color.YELLOW + Color.BOLD + "\nWARNING" + Color.END + ": you're gonna occupy" + Color.YELLOW + Color.BOLD + f" {percentage} % " + Color.END + "of your free disk space")
             logger.debug(f"[WARNING]: you're gonna occupy {percentage} % of your free disk space")
             while True: 
@@ -116,19 +104,86 @@ class SequencesDownload:
                     if user_input.lower() in ("yes"):
                         logger.debug("DOWNLOAD INITIALIZED")
                         t0 = time.time()
-                        for project, runs in dictOfAvailableProjectIDs.items():
+
+                        failed_runs = []
+
+                        for project, runIDs in dictOfAvailableProjectIDs.items():
                             path = os.path.join("Downloads", user_session, project, f'{project}_{file_type}_files')
                             Utilities.createDirectory(path)
-                            
-                            for run in runs:
-                                download = self.enaBT(user_session, path, EnaBT_path, run, file_type)
 
-                                if download == 0:
-                                    print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-                                    logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
-                                    input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
-                                    return 
-                        print('total time (s):', time.time() - t0) 
+                            with concurrent.futures.ThreadPoolExecutor() as executor:
+                                futures = {executor.submit(self.enaBT, user_session, path, EnaBT_path, runID, file_type): runID for runID in runIDs}
+                                print(futures)
+
+                                for future in concurrent.futures.as_completed(futures):
+                                    runID = futures[future]
+                                    try:
+                                        success = future.result()
+                                        print(success)
+                                        if not success:
+                                            print(f"Failed to process runID {runID}. Retrying...")
+                                            retry_success = self.retry_enaBT(user_session, path, EnaBT_path, runID, file_type)
+                                            if not retry_success:
+                                                print(f"Failed to retry runID {runID}")
+                                                failed_runs.append(runID)
+                                    except Exception as e:
+                                        print(f"Error processing run {runID}: {e}")
+                                        logger.debug(f"Error processing run {runID}: {e}")
+                        
+                        if len(failed_runs) > 0:
+                            logger.debug(f'WARNING! List of runs that were not downloaded: {failed_runs}')
+                        else:
+                            logger.debug('SUCCESS! All runs were downloaded')
+
+
+                        #-------------------------#
+
+                        # results = []
+                        # with concurrent.futures.ThreadPoolExecutor() as executor:
+                        #     while max_retries > 0:
+                        #         future_to_runID = {
+                        #             executor.submit(self.enaBT, user_session, path, EnaBT_path, runID, file_type): runID
+                        #             for runID, file_type in runIDs
+                        #         }
+
+                        #         for future in concurrent.futures.as_completed(future_to_runID):
+                        #             runID = future_to_runID[future]
+                        #             try:
+                        #                 result = future.result()
+                        #                 if result[1] is not None:
+                        #                     print(f"Successfully processed runID: {runID}")
+                        #                     # Aggiungi il risultato alla lista dei risultati validi
+                        #                     results.append(result)
+                        #                 else:
+                        #                     print(f"Failed to process runID {runID}: {result[1]}")
+                        #                     # Riduci il numero di tentativi rimanenti
+                        #                     max_retries -= 1
+                        #                     if max_retries > 0:
+                        #                         print(f"Retrying runID {runID} after 5 seconds...")
+                        #                         time.sleep(5)
+                        #                         # Ritenta il download
+                        #                         future_retry = executor.submit(self.enaBT, user_session, path, EnaBT_path, runID, file_type)
+                        #                         future_to_runID[future_retry] = runID
+                        #             except Exception as e:
+                        #                 print(f"Error processing runID {runID}: {e}")
+
+
+
+
+                            # with concurrent.futures.ThreadPoolExecutor() as executor:
+                            #     executor.map(lambda runID: self.enaBT(user_session, path, EnaBT_path, runID, file_type), runIDs)
+
+                                #download = self.enaBT(user_session, path, EnaBT_path, run, file_type)
+
+                                # if download == 0:
+                                #     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
+                                #     logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
+                                #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
+                                #     return 
+
+                        #------------------------------#
+
+                        print('time (s):', time.time() - t0)  
                         break
                     
                     elif user_input.lower() in ("back"):
@@ -152,57 +207,33 @@ class SequencesDownload:
         logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/projectID_{file_type}_files")
         input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
         return 
-        
-            # if available_runs:
-                
-            #     # Create main files directory (only if it doesn't exist yet)
-            #     path = os.path.join("Downloads", user_session, projectID, f'{projectID}_{file_type}_files')
-            #     Utilities.createDirectory(path)
-
-
-            #     # RICH TRACK NOT COMPATIBLE WITH ENABT STDOUT (the bar is printed again for each new output line on screen)
-            #     #for runID in track(available_runs, description=f"Downloading selected runs for {projectID}..."):
-            #     for runID in available_runs:
-            #         download = self.enaBT(path, EnaBT_path, runID, file_type) #silenziato da sara
-            #         #download = self.enaBT_path(path, runID, file_type)
-
-            #         if download == 0:
-            #             print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-            #             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            #             return #goes back to data retrieval module
-                
-            #     #####
-            #     # INSERIRE QUI UN CHECK SUI FILE SCARICATI (PUO' SUCCEDERE CHE ALCUNI VENGANO SALTATI)
-            #     #####
-
-            #     print("\nSEQUENCES DOWNLOAD completed!")
-            #     print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) # messaggio da modificare ?
-            #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            #     return #goes back to data retrieval module - should go back to main menu..
-
-            # else:
-            #     print(f"No available {file_type} format files for {projectID}. Skipping") # messaggio da modificare ?
-
 
     
     def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
-        t0 = time.time()
+        print('ok')
         command = f'{EnaBT_path} -f {file_type} {runID} -d {path}'
         logger = LoggerManager.log(user_session)
         logger.debug(f"{command}")
         try:
-            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2)
-            
-                        
+            subprocess.run(command, check=True, shell=True, stdout=1, stderr=2) 
+            return True  
         except subprocess.CalledProcessError as error:
- 
-            return 0
+            return False
+
+
+    def retry_enaBT(self, user_session, path, EnaBT_path, runID, file_type, max_retries=3, retry_interval=5):
+        max_retries = 3
+        for _ in range(max_retries):
+            time.sleep(5)
+            success = self.enaBT(user_session, path, EnaBT_path, runID, file_type)
+            if success:
+                return True
+        return False 
 
 
     def check_available_disk_space(self, bytes_total):
-        
-        #hd_corrente = os.path.abspath(os.getcwd()).split(os.path.sep)[0]+os.path.sep
-        total, used, free = shutil.disk_usage(os.getcwd)
+           
+        total, used, free = shutil.disk_usage("/")
    
         try:
             return free, round((bytes_total / free) * 100)

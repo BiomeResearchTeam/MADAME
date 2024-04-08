@@ -10,31 +10,31 @@ from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
 
-def metadata_retrievement(user_session):
+def metadata_retrieval(user_session):
     while True:
         Utilities.clear()
-        box = Panel(Text.assemble("How do you want to retrieve metadata? Choose one of the following options:\n\n1 - Doing a query on ENA\n2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma\n3 - Load a file input (tsv or csv) containing a list of accession codes, created by the user\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA RETRIEVEMENT MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+        box = Panel(Text.assemble("How do you want to retrieve metadata? Choose one of the following options:\n\n1 - Doing a query on ENA\n2 - Digit the list of accession codes (of projects, runs, studies, and samples) separated by comma\n3 - Load a file input (tsv or csv) containing a list of accession codes, created by the user\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to return to the main menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA retrieval MODULE ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
         rich_print(box)
 
-        metadata_retrievement_choice = input("\n  >> Enter your choice: ")
-        if metadata_retrievement_choice.lower() in "back":
+        metadata_retrieval_choice = input("\n  >> Enter your choice: ")
+        if metadata_retrieval_choice.lower() in "back":
             return
-        elif metadata_retrievement_choice.isnumeric():
-            metadata_retrievement_choice = int(metadata_retrievement_choice)
-            if metadata_retrievement_choice not in (1,2,3):
+        elif metadata_retrieval_choice.isnumeric():
+            metadata_retrieval_choice = int(metadata_retrieval_choice)
+            if metadata_retrieval_choice not in (1,2,3):
                 print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
                 input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
             else:
-                if metadata_retrievement_choice == 1:
-                    metadata_retrievement_query(user_session)
+                if metadata_retrieval_choice == 1:
+                    metadata_retrieval_query(user_session)
                     return
 
-                if metadata_retrievement_choice == 2:
-                    metadata_retrievement_digit(user_session)
+                if metadata_retrieval_choice == 2:
+                    metadata_retrieval_digit(user_session)
                     return                    
 
-                if metadata_retrievement_choice == 3:
-                    metadata_retrievement_file(user_session)
+                if metadata_retrieval_choice == 3:
+                    metadata_retrieval_file(user_session)
                     return
         else:
             print(Color.BOLD + Color.RED + "Error" + Color.END, "enter a valid choice!\n")
@@ -42,7 +42,7 @@ def metadata_retrievement(user_session):
                     
 
 
-def metadata_retrievement_query(user_session):
+def metadata_retrieval_query(user_session):
     
     while True:
         Utilities.clear()
@@ -73,7 +73,7 @@ def metadata_retrievement_query(user_session):
                     
 
 
-def metadata_retrievement_digit(user_session):
+def metadata_retrieval_digit(user_session):
     
     while True:
         Utilities.clear()
@@ -95,7 +95,7 @@ def metadata_retrievement_digit(user_session):
                 return
 
 
-def metadata_retrievement_file(user_session):
+def metadata_retrieval_file(user_session):
     
     while True:
         Utilities.clear()
@@ -126,7 +126,7 @@ def metadata_download(listOfAvailableAccessions, user_session):
 
     Utilities.clear()
 
-    box = Panel(Text.assemble("Choose one of the following options:\n\n1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)\n2 - Download Project and Experiment metadata of the available projects\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to the METADATA RETRIEVEMENT MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA DOWNLOAD ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
+    box = Panel(Text.assemble("Choose one of the following options:\n\n1 - Download Project and Experiment metadata, and download and parse Sample metadata of the available projects (recommended option)\n2 - Download Project and Experiment metadata of the available projects\n\n>>> Your current session is ", (f"{user_session}", "rgb(255,255,0)"), " <<<\n\n--- If you want to the METADATA retrieval MODULE menu digit: ", ("back", "rgb(255,0,255)")," ---", style = None, justify="left"), title=Text.assemble((" ◊", "rgb(0,255,0)"), " METADATA DOWNLOAD ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)", padding= (0,1))
     rich_print(box)
 
     user_metadata_input = input("\n  >> Enter your choice: ")

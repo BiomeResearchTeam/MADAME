@@ -112,7 +112,7 @@ def available_metadata_files(user_session):
             e_df = f1_df
             logger = LoggerManager.log(user_session)
             logger.debug(f"Found {list_metadata_files[0]}")
-            report(user_session, e_df, p_df=None) #mod sara
+            report(user_session, e_df, p_df=None)
             final_screen(user_session)
         else:
             print(Color.BOLD + Color.RED + "\nError the found file seems to lack some of the expected information" + Color.END, f" Is it the correct file? Try again")
@@ -142,6 +142,12 @@ def report(user_session, e_df, p_df):
     report generation based on how many '*_merged_<experiment or publication>-metadata.tsv' files are present in the folder.
     create a report folder that will contain all plots in png format, create a single html that will contain all plots 
     """
+    
+    #set e_df by creating the column to refer in plots generating. If PRJ is missing, consider [D,E,S]RP
+    e_df['grouping_col'] = e_df['study_accession']
+    e_df.loc[e_df['grouping_col'].isna(), 'grouping_col'] = e_df['secondary_study_accession']
+
+    
     color_palette_rgb = ['rgb(41, 24, 107)', 'rgb(42, 30, 138)', 'rgb(38, 41, 159)', 'rgb(22, 62, 155)', 
         'rgb(16, 79, 150)', 'rgb(18, 92, 143)', 'rgb(27, 105, 140)', 'rgb(39, 117, 137)', 'rgb(47, 129, 136)', 
         'rgb(56, 140, 135)', 'rgb(62, 153, 134)', 'rgb(71, 165, 130)', 'rgb(80, 177, 124)', 'rgb(97, 189, 115)', 
@@ -178,14 +184,14 @@ def initial_table(report_folder, e_df, p_df, color_palette_rgb, f):
     second_column = []
     
     
-    for column in ['study_accession', 'fastq_bytes', 'run_accession','scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout', 'first_public', 'last_updated']:
+    for column in ['grouping_col', 'fastq_bytes', 'run_accession','scientific_name', 'library_source','library_strategy','instrument_platform', 'library_layout', 'first_public', 'last_updated']:#
         if pd.Series(column).isin(e_df.columns).all():
             if column == 'fastq_bytes':
                 subset = e_df[['fastq_bytes','submitted_bytes','sra_bytes']]
                 e_df['bytes_availability'] = subset.isna().all(axis=1) #check if the cells of all the columns are empty
                 non_available_data_projs = e_df.query("bytes_availability==True")["study_accession"].tolist() #get project corresponding to empty cells
                 non_available_data_projs_norep = [*set(non_available_data_projs)] #remove replicates
-                all_data_projs = e_df['study_accession'].nunique()
+                all_data_projs = e_df['grouping_col'].nunique()#
                 available_data_projs =  all_data_projs- len(non_available_data_projs_norep)
                 second_column.append(available_data_projs)
             elif column == 'run_accession':
@@ -208,7 +214,7 @@ def initial_table(report_folder, e_df, p_df, color_palette_rgb, f):
 
     for column in ['sra_bytes']:
         if pd.Series(column).isin(e_df.columns).all():
-            IDs =  e_df['study_accession'].unique().tolist()
+            IDs =  e_df['grouping_col'].unique().tolist()#
             fastq_bytes_list = []
             submitted_bytes_list = []
             sra_bytes_list = []
@@ -301,7 +307,7 @@ def sample_number(report_folder, e_df, p_df, color_palette_rgb, f):
     color_palette_rgb_r = list(reversed(color_palette_rgb))
     color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
 
-    sample_number_series = e_df.groupby(['study_accession'])['run_accession'].count()
+    sample_number_series = e_df.groupby(['grouping_col'])['run_accession'].count()#
     sample_number_df = pd.DataFrame(sample_number_series).reset_index()
     sample_number_df.columns = ['Project', 'Number of samples']
     sample_number_df = sample_number_df.sort_values("Number of samples", ascending=False)
@@ -331,7 +337,7 @@ def pie_and_bar_charts(report_folder, e_df, p_df, color_palette_rgb, f):
             column_name = column.capitalize().replace('_', ' ')
             df_pie.columns = [column_name, 'Count']
 
-            column_count_IDs_df = e_df.groupby(['study_accession'])[column].value_counts() #df for bar
+            column_count_IDs_df = e_df.groupby(['grouping_col'])[column].value_counts() #df for bar            #
             df_bar = column_count_IDs_df.rename('count').reset_index()
             column_name = column.capitalize().replace('_', ' ')
             df_bar.columns = ['Project', column_name, 'Count']
@@ -427,7 +433,7 @@ def projects_size(report_folder, e_df, p_df, color_palette_rgb, f):
     color_palette_rgb_r = list(reversed(color_palette_rgb))
     color_palette_scale_rgb_r = px.colors.make_colorscale(color_palette_rgb_r)
 
-    IDs =  e_df['study_accession'].unique().tolist()
+    IDs =  e_df['grouping_col'].unique().tolist()#
     ids_list = []
     bytes_list = []
     size_list = []
@@ -479,13 +485,13 @@ def IDs_dates(report_folder, e_df, p_df, color_palette_rgb, f):
     generate bubble plot based on first and last update year for each project
     """
     if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
-        collapsed_e_df = e_df.groupby('study_accession').first().reset_index()
+        collapsed_e_df = e_df.groupby('grouping_col').first().reset_index() #
         collapsed_e_df = collapsed_e_df.sort_values(by=['first_public'], ascending=True)
-        collapsed_e_df_f = collapsed_e_df[['study_accession', 'first_public_year']]
-        collapsed_e_df_l = collapsed_e_df[['study_accession', 'last_updated_year']]
-        collapsed_e_list_f_x = collapsed_e_df_f.study_accession.values.tolist()
+        collapsed_e_df_f = collapsed_e_df[['grouping_col', 'first_public_year']] #
+        collapsed_e_df_l = collapsed_e_df[['grouping_col', 'last_updated_year']] #
+        collapsed_e_list_f_x = collapsed_e_df_f.grouping_col.values.tolist() #
         collapsed_e_list_f_y = collapsed_e_df_f.first_public_year.values.tolist()
-        collapsed_e_list_l_x = collapsed_e_df_l.study_accession.values.tolist()
+        collapsed_e_list_l_x = collapsed_e_df_l.grouping_col.values.tolist() #
         collapsed_e_list_l_y = collapsed_e_df_l.last_updated_year.values.tolist()
         
         fig = go.Figure()
@@ -555,7 +561,7 @@ def geography(report_folder, e_df, p_df, color_palette_rgb, f):
     try:
         replace_countries = {'USA': 'United States', 'South Korea': 'Korea, Republic of', 'South Corea': 'Korea, Republic of', 
                              'South korea': 'Korea, Republic of', 'Korea':'Korea, Republic of', 'Brasil': 'Brazil', 'Perugia': 'Italy',
-                             'Indiana': ''}
+                             'Indiana': '', 'New Jersey':'United States', 'Georgia.':'Georgia', 'Georgia':'GA', 'UK':'United Kingdom', 'Taiwan':'Taiwan, Province of China'}
         p_df['affiliation'] = p_df['affiliation'].replace(replace_countries, regex=True)
         country_list = []
         affiliation_list = p_df['affiliation'].tolist()
