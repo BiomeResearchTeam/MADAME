@@ -195,8 +195,9 @@ class SequencesDownload:
 
 
     def check_available_disk_space(self, bytes_total):
-           
-        total, used, free = shutil.disk_usage("/")
+        
+        #hd_corrente = os.path.abspath(os.getcwd()).split(os.path.sep)[0]+os.path.sep
+        total, used, free = shutil.disk_usage(os.getcwd)
    
         try:
             return free, round((bytes_total / free) * 100)
