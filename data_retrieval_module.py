@@ -114,7 +114,7 @@ def data_download(enaBT_path, user_session, files_found):
                 logger.debug(f"[DATA-TYPE-SELECTED]: {data_download_type}")
                 merged_experiments = files_found[0]
                 if merged_experiments.endswith('.tsv'):
-                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True)
+                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str)
                 # if merged_experiments.endswith('.csv'):
                 #     e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), infer_datetime_format=True)
                 print() 

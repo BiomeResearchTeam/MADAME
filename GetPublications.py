@@ -69,7 +69,7 @@ class GetPublications:
         s = rq.session()
         retries = Retry(total=6,
                         backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
+                        status_forcelist=[429, 500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
 
         # Create an empty accessions_list
@@ -82,7 +82,7 @@ class GetPublications:
         data = StringIO(response.text)
 
         # Read dataframe online:
-        df = pd.read_csv(data, sep='\t', keep_default_na=False) #keep_default_na=False is for avoiding pandas adding .0 to numbers
+        df = pd.read_csv(data, sep='\t', dtype=str, keep_default_na=False) #keep_default_na=False is for avoiding pandas adding .0 to numbers
         # If df is empty, return accessions_list as it is (empty)
         if df.empty:
             return accessions_list
@@ -110,7 +110,7 @@ class GetPublications:
         s = rq.session()
         retries = Retry(total=6,
                         backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
+                        status_forcelist=[429, 500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
 
         # dict_list will be filled with a dictionary of labels and values for each publication found.   
@@ -383,7 +383,7 @@ class GetPublications:
             publications_metadata = os.path.join(user_session, projectID, f'{projectID}_publications-metadata.tsv')
 
             if os.path.isfile(publications_metadata):
-                metadata_df = pd.read_csv(publications_metadata, sep='\t')
+                metadata_df = pd.read_csv(publications_metadata, sep='\t', dtype=str)
                 metadata_df_filtered = metadata_df.loc[metadata_df["hasTextMinedTerms"] == "Y"]
 
                 if len(metadata_df_filtered.columns) != 0:
@@ -400,7 +400,7 @@ class GetPublications:
                         s = rq.session()
                         retries = Retry(total=5,
                                         backoff_factor=0.1,
-                                        status_forcelist=[500, 502, 503, 504])
+                                        status_forcelist=[429, 500, 502, 503, 504])
                         s.mount('https://', HTTPAdapter(max_retries=retries))
                         headers = {"User-Agent": generate_user_agent()}
                         response = s.get(url, headers=headers).content
@@ -468,7 +468,7 @@ class GetPublications:
                     tsv = f'{dir}_publications-metadata.tsv'
                     tsv_path = os.path.join(user_session, dir, tsv) #mod sara: prima era path
                     if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
-                        dataframes.append(pd.read_csv(tsv_path, sep='\t').loc[:, 'project_id':])
+                        dataframes.append(pd.read_csv(tsv_path, sep='\t', dtype=str).loc[:, 'project_id':])
 
             # stop if dataframes list is empty
             if not dataframes:

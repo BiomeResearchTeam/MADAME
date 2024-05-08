@@ -113,7 +113,7 @@ def check_files(user_session):
 #open tsv
 def read_experiments(user_session, merged_experiments):
     path = os.path.join(user_session, merged_experiments)
-    e_df = pd.read_csv(path, delimiter='\t', infer_datetime_format=True)
+    e_df = pd.read_csv(path, delimiter='\t', dtype=str, infer_datetime_format=True)
     return e_df
 
 def publications(e_df, user_session):

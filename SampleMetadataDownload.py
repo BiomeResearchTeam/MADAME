@@ -29,7 +29,7 @@ class SampleMetadataDownload:
             else:
                 samples_metadata_xml_folder = os.path.join(path, "samples-metadata_xml")
                 Utilities.createDirectory(samples_metadata_xml_folder)
-                experiments_metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+                experiments_metadata_df = pd.read_csv(experiments_metadata, sep='\t', dtype=str)
                 sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
 
                 for sampleID in track(sample_ids, description=f"Downloading {projectID} [{listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}] sample metadata: "):
@@ -57,7 +57,7 @@ class SampleMetadataDownload:
         s = rq.session()
         retries = Retry(total=5,
                     backoff_factor=0.1,
-                    status_forcelist=[500, 502, 503, 504])
+                    status_forcelist=[429, 500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
 
         url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{sampleID}?download=true"
@@ -70,7 +70,7 @@ class SampleMetadataDownload:
         except rq.exceptions.ChunkedEncodingError as e:
             print(f"ChunkedEncodingError: {e}")
             logger.debug(f"ChunkedEncodingError: {e}")
-            if isinstance(e.__cause__, IncompleteRead):
+            if isinstance(e.__cause__, IncompleteRead): #?
                 incomplete_read_exception = e.__cause__
                 print(f"IncompleteRead Exception: {incomplete_read_exception}")
                 logger.debug(f"IncompleteRead Exception: {incomplete_read_exception}")

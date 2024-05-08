@@ -144,10 +144,11 @@ def metadata_download(listOfAvailableAccessions, user_session):
         else:
             if user_metadata_input == 1:
 
-                # Exp_Proj_MetadataDownload needs a list of available accessions, this can also be a mixed
+                # Exp_Proj_MetadataDownload needs a list/dict of available accessions, this can also be a mixed
                 # accessions list; SampleMetadataDownload and Parser need the corresponding list of projects
 
                 listOfProjectIDs = Exp_Proj_MetadataDownload.runDownloadMetadata(listOfAvailableAccessions, user_session)
+
                 SampleMetadataDownload.runDownloadMetadata(listOfProjectIDs, user_session)
                 SampleMetadataParser.runParseMetadata(listOfProjectIDs, user_session)
                 final_screen(user_session)

@@ -1,9 +1,15 @@
 import re
 import io
 import requests as rq
-from Utilities import Color, Utilities, LoggerManager
+from Utilities import Color, LoggerManager
 import time
 import pandas as pd
+from requests.adapters import HTTPAdapter, Retry
+from user_agent import generate_user_agent
+from rich import print as rich_print
+from rich.console import Console
+from rich.table import Table
+from rich import box
 
 # Class for getting the ID list from query or user input/file and for printing accessions details
 
@@ -46,15 +52,23 @@ class GetIDlist:
         elif self.data_type == "projects":
             domain = "domain=project&query="
         
-        # Query URL assembly
+        # Query 
         url = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
-        getlist = rq.get(url + domain + self.user_query.replace(" ", "%20"), allow_redirects=True)
+        headers = {"User-Agent": generate_user_agent()}
+
+        s = rq.session()
+        retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[429, 500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+        
+        getlist = s.get(url + domain + self.user_query.replace(" ", "%20"), headers=headers, allow_redirects=True)
 
         # String decoding for returning self.queryresult, also to be used later in QueryDetails
         self.queryresult = getlist.content.decode("utf-8", "ignore")
 
         # Fetch accession IDs from first column of ENA's tsv response
-        queryresult_df = pd.read_csv(io.StringIO(self.queryresult), sep='\t')
+        queryresult_df = pd.read_csv(io.StringIO(self.queryresult), sep='\t', dtype=str)
         listOfAccessionIDs = queryresult_df['accession'].unique().tolist()
 
         logger = LoggerManager.log(user_session)
@@ -164,103 +178,163 @@ class GetIDlist:
         return listOfAccessionIDs, dictionaryOfAccessionIDs
 
     
-    def QueryDetails(self, user_session, listOfAccessionIDs):
-    # Prints output for the query search. Has to be called after GetIDlist.Query()
+    def QueryDetails(self, user_session, listOfAccessionIDs, umbrella_projects=[]):
+    # Prints output for the query search as a table with clickable accession links. Umbrella Projects, if present, are printed in yellow and next to the "☂" character.
            
         total_of_accessions = (len(listOfAccessionIDs))
         
         if total_of_accessions == 0:
-            print(f"\n  >> There are " + Color.BOLD + Color.RED + f"no {self.data_type}" 
-            + Color.END, f"for the query: '{self.user_query}'\n")
+            print(f"\n  >> There are [bold red]no {self.data_type}[/bold red] for the query: '[rgb(255,0,255)]{self.user_query}[/rgb(255,0,255)]'\n")
+
+            #logger
             logger = LoggerManager.log(user_session)
             logger.debug(f"[QUERY-DETAILS]: no {self.data_type} found")
 
-        else:
-            print(f"\n  >> For the query '{self.user_query}', a total of " + Color.BOLD + Color.GREEN + f"{total_of_accessions} {self.data_type}" + Color.END, f"was found:\n{self.queryresult}")
+        else:  
+            rich_print(f"\n  >> For the query '[rgb(255,0,255)]{self.user_query}[/rgb(255,0,255)]', a total of [rgb(0,255,0)]{total_of_accessions}[/rgb(0,255,0)] {self.data_type} was found.\n")
+
+            #logger
             logger = LoggerManager.log(user_session)
             logger.debug(f"[QUERY-DETAILS]: found {total_of_accessions} {self.data_type}:")
-            for line in self.queryresult.split("\n"):
-                if line != "" or "accession\tdescription":
-                    logger.debug(f"[QUERY-DETAILS]: {line}")
 
+            df = pd.read_csv(io.StringIO(self.queryresult), sep='\t', dtype=str)
+            table = Table(row_styles=["", "rgb(204,153,255)"], header_style="", box=box.ROUNDED)
+            table.add_column("Accession", justify="left", no_wrap=True)
+            table.add_column("Description", justify="left")
 
-    def IDlistFromUserInputDetails(self, dictionaryOfAccessionIDs):
-    #Prints output for the user-submitted accessions. Has to be called after GetIDlist.IDlistFromUserInput()
-        results = []
+            for row in df.index:
+                if df['accession'][row] in umbrella_projects:
+                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{df['accession'][row]}][yellow]☂ {df['accession'][row]}[/yellow][/link]", f"{df['description'][row]}")
 
-        def text_search(ena_domain):
-            # For each accession type submitted, a different query to ENA db is needed.
-            # Then, all results (without the first line) are joined together and printed.
-            domain = f"domain={ena_domain}&query="
-            # Query URL assembling. 
-            url_base = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
-            complete_url = url_base + domain + "%20OR%20".join(accessions)
-            
-            request = rq.get(complete_url, allow_redirects=True)
-            # String decoding
-            converted = request.content.decode("utf-8", "ignore").split("\n")[1:-1]
-            results.extend(converted)
+                    #logger
+                    logger.debug(f"[QUERY-DETAILS]: ☂ {df['accession'][row]} → {df['description'][row]}")
+
+                else:
+                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{df['accession'][row]}]{df['accession'][row]}[/link]", f"{df['description'][row]}")
+
+                    #logger
+                    logger.debug(f"[QUERY-DETAILS]: {df['accession'][row]} → {df['description'][row]}")
+                
+            console = Console()
+            console.print(table)
+
+    def IDlistFromUserInputDetails(self, user_session, dictionaryOfAccessionIDs, umbrella_projects=[]):
+    # Prints output for the user-submitted accessions as a table with clickable accession links. Umbrella Projects, if present, are printed in yellow and next to the "☂" character.
+
+        results_dataframe = pd.DataFrame(columns=['accession','description'])
+
+        #logger
+        logger = LoggerManager.log(user_session)
+
+        def text_search(ena_domain, results_dataframe):
+
+            # Spinner for showing MADAME is working (this process can be lenghty)
+            console = Console()
+            with console.status("\n⍗ Fetching details of entered accessions from ENA browser API, please wait...") as status:
+                # For each accession type submitted, a different query to ENA db is needed.
+
+                domain = f"domain={ena_domain}&query="
+
+                # Query URL assembling. 
+                url_base = "https://www.ebi.ac.uk/ena/browser/api/tsv/textsearch?"
+                complete_url = url_base + domain + "%20OR%20".join(accessions)
+                headers = {"User-Agent": generate_user_agent()}
+
+                s = rq.session()
+                retries = Retry(total=5,
+                                backoff_factor=0.1,
+                                status_forcelist=[429, 500, 502, 503, 504])
+                s.mount('https://', HTTPAdapter(max_retries=retries))
+                
+                request = s.get(complete_url, headers=headers, allow_redirects=True)
+
+                # String decoding
+                decoded = request.content.decode("utf-8", "ignore")
+
+                # Read the string as a pandas dataframe and merge with results_dataframe
+                df = pd.read_csv(io.StringIO(decoded), sep='\t', dtype=str)
+                if not df.empty:
+                    results_dataframe = pd.concat([results_dataframe, df], ignore_index=True)
+
+                    return results_dataframe
         
         # Query ENA db only if accession codes are present, check each list.
         if dictionaryOfAccessionIDs["runs"]:
             accessions = dictionaryOfAccessionIDs["runs"]
-            text_search("sra-run")
+            results_dataframe = text_search("sra-run", results_dataframe)
         
         if dictionaryOfAccessionIDs["runs_range"]:
             for range in dictionaryOfAccessionIDs["runs_range"]:
                 accessions = self.expand_accessions_range(range)
-                text_search("sra-run")
+                results_dataframe = text_search("sra-run", results_dataframe)
 
         if dictionaryOfAccessionIDs["experiments"]:
             accessions = dictionaryOfAccessionIDs["experiments"]
-            text_search("sra-experiment")
+            results_dataframe = text_search("sra-experiment", results_dataframe)
 
         if dictionaryOfAccessionIDs["experiments_range"]:
             for range in dictionaryOfAccessionIDs["experiments_range"]:
                 accessions = self.expand_accessions_range(range)
-                text_search("sra-experiment")
+                results_dataframe = text_search("sra-experiment", results_dataframe)
 
         if dictionaryOfAccessionIDs["samples"]:
             accessions = dictionaryOfAccessionIDs["samples"]
-            text_search("sra-sample")
+            results_dataframe = text_search("sra-sample", results_dataframe)
 
         if dictionaryOfAccessionIDs["samples_range"]:
             for range in dictionaryOfAccessionIDs["samples_range"]:
                 accessions = self.expand_accessions_range(range)
-                text_search("sra-sample")
+                results_dataframe = text_search("sra-sample", results_dataframe)
 
         if dictionaryOfAccessionIDs["biosamples"]:
             accessions = dictionaryOfAccessionIDs["biosamples"]
-            text_search("sra-sample")
+            results_dataframe = text_search("sra-sample", results_dataframe)
 
         if dictionaryOfAccessionIDs["biosamples_range"]:
             for range in dictionaryOfAccessionIDs["biosamples_range"]:
                 accessions = self.expand_accessions_range(range)
-                text_search("sra-sample")
+                results_dataframe = text_search("sra-sample", results_dataframe)
 
         if dictionaryOfAccessionIDs["studies"]:
             accessions = dictionaryOfAccessionIDs["studies"]
-            text_search("sra-study")
+            results_dataframe = text_search("sra-study", results_dataframe)
         
         if dictionaryOfAccessionIDs["projects"]:
             accessions = dictionaryOfAccessionIDs["projects"]
-            text_search("project")
+            results_dataframe = text_search("project", results_dataframe)
 
-        if len(results) == 0:
+        if results_dataframe.empty:
             print('Please try again\n')
             time.sleep(2)
             
         else:
-            joined_results = "\n".join(results)
-            print("\n" + Color.BOLD + "Details of entered accessions:" + Color.END 
-            + f"\naccession\tdescription\n{joined_results}")
+            rich_print(f"\n  >> Details of [bold]entered accessions[/bold]:\n")
+
+            table = Table(row_styles=["", "rgb(204,153,255)"], header_style="", box=box.ROUNDED)
+            table.add_column("Accession", justify="left", no_wrap=True)
+            table.add_column("Description", justify="left")
+
+            for row in results_dataframe.index:
+                if results_dataframe['accession'][row] in umbrella_projects:
+                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}][yellow]☂ {results_dataframe['accession'][row]}[/yellow][/link]", f"{results_dataframe['description'][row]}")
+
+                    #logger
+                    logger.debug(f"[ACCESSION-DETAILS]: ☂ {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
+
+                else:
+                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}]{results_dataframe['accession'][row]}[/link]", f"{results_dataframe['description'][row]}")
+
+                    #logger
+                    logger.debug(f"[ACCESSION-DETAILS]: {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
+                
+            console = Console()
+            console.print(table)
 
 
     def expand_accessions_range(self, accessions_range):
         # Takes an accessions range string such as "SRR16946893-SRR16946910" as input and 
         # returns a complete list of all the accessions in the range. If the range is not valid
         # (e.g. "SRR16946893-SRR16946800") it returns an empty list.
-
 
         letters = (re.search(r'[a-zA-Z]+', accessions_range)).group(0)
         numbers = list(map(int, re.findall(r'\d+', accessions_range)))  

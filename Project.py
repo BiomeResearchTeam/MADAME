@@ -23,23 +23,20 @@ class Project:
         s = rq.session()
         retries = Retry(total=5,
                         backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
+                        status_forcelist=[429, 500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
 
         url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
         headers = {"User-Agent": generate_user_agent()}
      
-
         # If metadata is not available, the report dataframe will be empty
         content = s.get(url, headers=headers, allow_redirects=True).content
-        df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t')
-
+        df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t', dtype=str)
 
         if df.empty:
             return False
         else:
             return True
-
 
     def getAvailableAccessions(self, user_session, listOfAccessionIDs):
     # Input is the full list of accession IDs, output is the list of the available accessions.
@@ -47,6 +44,7 @@ class Project:
 
         GENERIC_RANGE_PATTERN = r'^[a-zA-Z0-9]+-[a-zA-Z0-9]+$'
         listOfAvailableAccessions = []
+        listOfUnvailableAccessions = []
 
         for accessionID in track(listOfAccessionIDs, description= "Checking for availability..."):
             
@@ -57,7 +55,7 @@ class Project:
                 second_id_availability = self.getAccessionAvailability(range_ids[1])
 
                 if first_id_availability and second_id_availability == False:
-                    continue
+                    listOfUnvailableAccessions.append(accessionID)
 
                 elif first_id_availability and second_id_availability == True:
                     # If they are both available, check if they are part of the same project (it is possible they are not)
@@ -76,20 +74,69 @@ class Project:
             else:
                 if self.getAccessionAvailability(accessionID) == True:
                     listOfAvailableAccessions.append(accessionID)
+                elif self.getAccessionAvailability(accessionID) == False:
+                    listOfUnvailableAccessions.append(accessionID)
 
+        return listOfAvailableAccessions, listOfUnvailableAccessions
+
+    def checkUmbrella(self, projectID):
+    #Check if a project is an umbrella project or not, by reading the project metadata xml
+
+        s = rq.session()
+        retries = Retry(total=5,
+                        backoff_factor=0.1,
+                        status_forcelist=[429, 500, 502, 503, 504])
+        s.mount('https://', HTTPAdapter(max_retries=retries))
+
+        url = f"https://www.ebi.ac.uk/ena/browser/api/xml/{projectID}"
+        headers = {"User-Agent": generate_user_agent(), "accept": "application/xml"}
+        content = s.get(url, headers=headers).content.decode('utf-8')
+
+        if "UMBRELLA_PROJECT" in content:
+            return True
+        else:
+            return False
         
-        print("\nThere are:", Color.BOLD + Color.GREEN + str(len(listOfAvailableAccessions)), 
-        "out of", str(len(listOfAccessionIDs)) + Color.END ,"available accessions.")
+    def getCheckedUmbrellaList(self, listOfAccessionIDs):
+    #Returns two lists of accessions, umbrella projects and single projects
 
-        if len(listOfAvailableAccessions) > 0:
-            print("Available accessions: ", ', '.join(listOfAvailableAccessions), "\n")
+        umbrella_projects = []
+        projects = []
 
-        # logger = LoggerManager.log(user_session)
-        # logger.debug(f"[AVAILABLE-ACCESSIONS]: {listOfAvailableAccessions}")
+        for projectID in listOfAccessionIDs:
+            if self.checkUmbrella(projectID):
+                umbrella_projects.append(projectID)
+            else: 
+                projects.append(projectID)
+        
+        return umbrella_projects, projects
+    
+    def getComponentProjects(self, projectID, source, user_session):
+    # Get the list of component projects from an umbrella accession ID
+    # Source can be local or online
 
-        return listOfAvailableAccessions
+        if source == "online":
+            s = rq.session()
+            retries = Retry(total=5,
+                            backoff_factor=0.1,
+                            status_forcelist=[429, 500, 502, 503, 504])
+            s.mount('https://', HTTPAdapter(max_retries=retries))
 
+            url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={projectID}&result=read_run&fields=study_accession,sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp&format=tsv&download=true&limit=0"
+            headers = {"User-Agent": generate_user_agent()}
 
+            metadata = s.get(url, headers=headers, allow_redirects=True).content
+            df = pd.read_csv(io.StringIO(metadata.decode('utf-8')), sep='\t', dtype=str)
+
+        if source == "local":
+            metadata = os.path.join("Downloads", user_session, projectID, f"{projectID}_experiments-metadata.tsv")
+            df = pd.read_csv(metadata, sep='\t', keep_default_na=False, dtype=str)
+        
+        component_projects = df['study_accession'].unique().tolist()
+
+        return component_projects
+
+    
     def getProjectBytes(self, projectID, e_df, file_type): 
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
@@ -113,8 +160,7 @@ class Project:
         # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
         # Split the two numbers and add them to each other, before calculating the total of the column. 
         else:
-            df3 = df2[bytes_column].apply(lambda x: sum(int(float(num)) for num in x.split(';'))) #sara
-            #df3 = df2[bytes_column].apply(lambda x: sum(map(int, x.split(';')))) #silenziata da sara
+            df3 = df2[bytes_column].apply(lambda x: sum(int(float(num)) for num in x.split(';')))
             bytes = df3.sum()
 
         return bytes
@@ -200,13 +246,13 @@ class Project:
         s = rq.session()
         retries = Retry(total=5,
                         backoff_factor=0.1,
-                        status_forcelist=[500, 502, 503, 504])
+                        status_forcelist=[429, 500, 502, 503, 504])
         s.mount('https://', HTTPAdapter(max_retries=retries))
 
         url = f"https://www.ebi.ac.uk/ena/portal/api/filereport?accession={accessionID}&result=read_run&fields=study_accession,secondary_study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession&format=tsv&download=true&limit=0"
         headers = {"User-Agent": generate_user_agent()}
         content = s.get(url, headers=headers, allow_redirects=True).content
-        incoming_df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t').reset_index(drop=True)
+        incoming_df = pd.read_csv(io.StringIO(content.decode('utf-8')), sep='\t', dtype=str).reset_index(drop=True)
         projectID = incoming_df.loc[incoming_df.index[0], 'study_accession']
         if pd.isna(projectID):
             projectID = incoming_df.loc[incoming_df.index[0], 'secondary_study_accession']
@@ -222,7 +268,7 @@ class Project:
         listOfAccessionIDs = pd.DataFrame({"accession_ids":listOfProjectIDs})
         listOfAccessionIDs.to_csv(os.path.join(path, f'{user_session}_listOfAccessionIDs.tsv'), sep="\t", index=False)
 
-        # logger = LoggerManager.log(user_session)
-        # logger.debug(f"[LIST-OF-ACCESSIONS-SAVED]: MADAME/Downloads/{user_session}/{user_session}_listOfAccessionIDs.tsv")
 
 Project = Project('Project') 
+
+
