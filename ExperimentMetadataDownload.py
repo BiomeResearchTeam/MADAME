@@ -164,8 +164,11 @@ class Exp_Proj_MetadataDownload:
                 df['umbrella_project'] = f'{projectID}'
                 df.to_csv(os.path.join(path, f'{projectID}_experiments-metadata.tsv'), sep="\t").reset_index(drop=True)
 
-            print(f'{projectID}_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
-            ' successfully downloaded' + Color.END)
+            if umbrella == True:
+                rich_print(f'[yellow]☂[/yellow] {projectID}_experiments-metadata.tsv [rgb(0,255,0)]successfully downloaded[/rgb(0,255,0)]')
+            else:
+                rich_print(f'{projectID}_experiments-metadata.tsv [rgb(0,255,0)]successfully downloaded[/rgb(0,255,0)]')
+
 
     def experimentsMetadataDownload_other(self, accessionID, user_session):
     # Download experiments metadata file only if it doesn't exist - other accession code version
