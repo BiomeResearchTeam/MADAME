@@ -78,7 +78,10 @@ class Exp_Proj_MetadataDownload:
         path = os.path.join("Downloads", user_session, projectID)
         if os.path.isfile(os.path.join(path, f'{projectID}_project-metadata.xml')):
             if print_message == True:
-                print(f'{projectID}_project-metadata.xml', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
+                if umbrella == True:
+                    rich_print(f'[yellow]☂[/yellow] {projectID}_project-metadata.xml [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
+                else:
+                    rich_print(f'{projectID}_project-metadata.xml [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
         else:
             s = rq.session()
             retries = Retry(total=5,
@@ -134,7 +137,11 @@ class Exp_Proj_MetadataDownload:
         Utilities.createDirectory(path)
 
         if os.path.isfile(os.path.join(path, f'{projectID}_experiments-metadata.tsv')):
-            print(f'{projectID}_experiments-metadata.tsv', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
+            if umbrella == True:
+                rich_print(f'[yellow]☂[/yellow] {projectID}_experiments-metadata.tsv [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
+            else:
+                rich_print(f'{projectID}_experiments-metadata.tsv [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
+
         else:
             s = rq.session()
             retries = Retry(total=5,
@@ -155,7 +162,7 @@ class Exp_Proj_MetadataDownload:
                 metadata = os.path.join("Downloads", user_session, projectID, f"{projectID}_experiments-metadata.tsv")
                 df = pd.read_csv(metadata, sep='\t', keep_default_na=False, dtype=str)
                 df['umbrella_project'] = f'{projectID}'
-                df.to_csv(os.path.join(path, f'{projectID}_experiments-metadata.tsv'), sep="\t")
+                df.to_csv(os.path.join(path, f'{projectID}_experiments-metadata.tsv'), sep="\t").reset_index(drop=True)
 
             print(f'{projectID}_experiments-metadata.tsv' + Color.BOLD + Color.GREEN + 
             ' successfully downloaded' + Color.END)
