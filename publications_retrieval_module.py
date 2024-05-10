@@ -114,20 +114,30 @@ def check_files(user_session):
 def read_experiments(user_session, merged_experiments):
     path = os.path.join(user_session, merged_experiments)
     e_df = pd.read_csv(path, delimiter='\t', dtype=str, infer_datetime_format=True)
+
+    if 'umbrella_project' in e_df.columns:
+        e_df = pd.read_csv(path, delimiter='\t', dtype=str, infer_datetime_format=True, keep_default_na=False)
+
     return e_df
 
 def publications(e_df, user_session):
-    e_df_project = e_df[["study_accession", "secondary_study_accession"]]
-    d = e_df_project.T.to_dict(orient='list')
+
+    if 'umbrella_project' in e_df.columns:
+        listOfProjectIDs = e_df['study_accession'].unique().tolist()
     
-    study_accession = []
-    for values in d.values():
-        if pd.isnull(values[0]):
-            study_accession.append(values[1])
-        if not pd.isnull(values[0]):
-            study_accession.append(values[0])
+    else:
+        e_df_project = e_df[["study_accession", "secondary_study_accession"]]
+        d = e_df_project.T.to_dict(orient='list')
     
-    listOfProjectIDs = list(set(study_accession))
+        study_accession = []
+        for values in d.values():
+            if pd.isnull(values[0]):
+                study_accession.append(values[1])
+            if not pd.isnull(values[0]):
+                study_accession.append(values[0])
+
+        listOfProjectIDs = list(set(study_accession))
+
     GetPublications.runGetPublications(listOfProjectIDs, e_df, user_session)
     GetPublications.mergePublicationsMetadata(user_session)
     logger = LoggerManager.log(user_session)

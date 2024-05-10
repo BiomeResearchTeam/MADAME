@@ -192,3 +192,59 @@ def ecc():
     console = Console()
     console.print(table)
 
+
+e_df = pd.read_csv('~/MADAME/Downloads/7 maggio/7 maggio_merged_experiments-metadata.tsv', sep='\t', dtype=str, keep_default_na=False)
+
+def publication(e_df):
+
+    listOfProjectIDs = e_df['study_accession'].unique().tolist()
+    
+    if 'umbrella_project' in e_df.columns:
+        # List of umbrella projects in e_df, filtered to remove empty strings
+        umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
+        # List of component projects in e_df
+        component_projects = e_df.loc[e_df['umbrella_project'] != '', 'study_accession'].unique().tolist()
+        # List of umbrella + not umbrella projects, without the component projects
+        listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects] + umbrella_projects
+
+    return umbrella_projects, component_projects, listOfProjectIDs
+
+
+#from Project import Project
+#effective = Project.getComponentProjects("PRJNA43021", "online", "7 maggio")
+#local = Project.getComponentProjects("PRJNA43021", "local", "7 maggio")
+
+#print(len(effective))
+#print(len(local))
+
+
+e_df['grouping_col'] = e_df['study_accession']
+e_df.loc[e_df['grouping_col'].isna(), 'grouping_col'] = e_df['secondary_study_accession']
+metadata_df = e_df.loc[e_df['grouping_col'] == "PRJNA48477"]   
+metadata_df = metadata_df.iloc[7:10]
+
+# experiments_metadata = os.path.join(user_session, projectID, f'{projectID}_experiments-metadata.tsv')
+# metadata_df = pd.read_csv(experiments_metadata, sep='\t')
+accessions_columns = ['sample_accession']
+accessions_list = []
+    
+for column in accessions_columns:
+    accessions = metadata_df[column].unique().tolist()
+
+    # clean list from nan values
+    accessions = [x for x in accessions if str(x) != 'nan']
+
+    # split merged ids, if present
+    for accession in accessions:
+        
+        if ";" in accession:
+            splitted_accessions = accession.split(";")
+            accessions = [i for i in accessions if i != accession]
+            accessions.extend(splitted_accessions)
+
+    accessions_list.extend(accessions)
+
+print(len(accessions_list))
+for x in accessions_list:
+    print(x)
+

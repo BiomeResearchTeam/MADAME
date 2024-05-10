@@ -9,6 +9,9 @@ from rich.progress import track
 from io import StringIO
 from Utilities import Color, Utilities, LoggerManager
 from IDlist import GetIDlist
+from rich import print as rich_print
+from rich.console import Console
+from rich.panel import Panel
 
 
 # Class for finding publications from sequences' accessions.
@@ -25,23 +28,142 @@ class GetPublications:
     # a pandas dataframe and then saved as a .tsv file to the corresponding project directory.
 
         projects_with_no_publication = []  
+        umbrella_projects = []
+        ######
+        user_choice = False
 
+        # Check if there's umbrella projects in merged publications metadata
+        if 'umbrella_project' in e_df.columns:
+            
+            # List of all umbrella projects in e_df, filtered to remove empty strings
+            umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
+            # List of all component projects in e_df
+            component_projects = e_df.loc[e_df['umbrella_project'] != '', 'study_accession'].unique().tolist()
+            # List of not umbrella and not component projects
+            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects]
+            # List of umbrella + not umbrella projects, without all the component projects
+            listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
+            
+            # logger
+            logger = LoggerManager.log(user_session)
+            logger.debug(f"[FOUND-UMBRELLA-PROJECTS]: {umbrella_projects}")
+
+            # Print warning to console
+            session_name = str(user_session).split('/')[1]
+            rich_print(f"\n[yellow]WARNING[/yellow] - {session_name}_merged_experiments-metadata.tsv contains [rgb(0,255,0)]{len(listOfProjectIDs_full)}[/rgb(0,255,0)] projects, but [rgb(0,255,0)]{len(umbrella_projects)}[/rgb(0,255,0)] of them are [yellow]UMBRELLA projects[/yellow]:")
+
+            # Print details about each umbrella (read experiment metadata online).
+            # → Project IDs are clickable
+
+            for projectID in umbrella_projects:
+
+                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                
+                rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(components)}[/rgb(0,255,0)] component projects")
+
+                # logger
+                logger = LoggerManager.log(user_session)
+                logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(components)} component projects")
+
+            # Print info box and let the user decide how to proceed
+            print()
+            console = Console()
+            box = console.print(Panel(("Instead of holding data, umbrella projects group together multiple component projects that are part of the same research motivation or collaboration.\n→ Each umbrella can contain [yellow]a few to thousands[/yellow] of other projects, and this [yellow]can significantly prolong[/yellow] the publication research.\nMore info on [link=https://ena-docs.readthedocs.io/en/latest/retrieval/ena-project.html]ENA's documentation here[/link]."), title=(":umbrella: Umbrella Projects - Info Box"), border_style= "rgb(255,255,0)", padding= (0,1), title_align="left"))
+
+            rich_print("\n  [rgb(255,0,255)]1[/rgb(255,0,255)] - Exclude umbrella projects\n  [rgb(255,0,255)]2[/rgb(255,0,255)] - Include umbrella projects")
+
+            while True:
+                    
+                user_choice = input("\n  >> How do you want to proceed? Enter your option: ")
+                if user_choice.isnumeric():
+                    user_choice = int(user_choice)
+                    if user_choice not in (1, 2):
+                        rich_print("[bold red]Error[/bold red], enter a valid choice!")
+                        continue
+                    break
+                else:
+                    print("[bold red]Error[/bold red], expected a numeric input. Try again.\n")
+
+
+            # Proceed excluding umbrella projects
+            if user_choice == 1:            
+                listOfProjectIDs = listOfProjectIDs
+
+                # logger
+                logger = LoggerManager.log(user_session)
+                logger.debug(f"[OPTION-1]: - EXCLUDE UMBRELLA PROJECTS")
+
+            # Proceed including umbrella projects  
+            if user_choice == 2:            
+
+                # logger
+                logger = LoggerManager.log(user_session)
+                logger.debug(f"[OPTION-2]: - INCLUDE UMBRELLA PROJECTS")
+
+                listOfProjectIDs = listOfProjectIDs_full   
+
+
+        # Queries loop
+        print()
         for projectID in track(listOfProjectIDs, description="Searching for publications..."):
+
             path = os.path.join(user_session, projectID) 
             publications_metadata = os.path.join(path, f'{projectID}_publications-metadata.tsv')
             if os.path.isfile(publications_metadata):
-                logger = LoggerManager.log(user_session)
-                logger.debug(f"{projectID}_publications-metadata.tsv already exist!")
-                print(f'{projectID}_publications-metadata.tsv', Color.BOLD + Color.GREEN + 'already exist!' + Color.END)
+                # Print different message whether the project is an umbrella or not
+                if projectID in umbrella_projects:
+                    rich_print(f'[yellow]☂[/yellow] {projectID}_publications-metadata.tsv [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
+                    #logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[GET-PUBLICATIONS]: ☂ {projectID}_publications-metadata.tsv already exist!")
+                else:
+                    rich_print(f'{projectID}_publications-metadata.tsv [rgb(0,255,0)]already exist![/rgb(0,255,0)]')
+                    #logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[GET-PUBLICATIONS]: {projectID}_publications-metadata.tsv already exist!")
 
             else:
-                accessions_list = self.ENA_Xref_check(projectID)          
-                PMC_pd_dataframe = self.PMC_pd_dataframe(e_df, projectID, accessions_list, user_session)  
+                # Project ID is an umbrella
+                if projectID in umbrella_projects: 
+
+                    umbrella_dataframe_list = []
+
+                    #Search publication for the umbrella project ID
+                    u_accessions_list = self.ENA_Xref_check(projectID)          
+                    umbrella_dataframe = self.PMC_pd_dataframe(e_df, projectID, u_accessions_list, user_session, umbrella = True)
+                    umbrella_dataframe_list.append(umbrella_dataframe)
+
+                    #Search publication for each component of the umbrella
+                    components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                    for component in components:
+                        c_accessions_list = self.ENA_Xref_check(component)          
+                        component_dataframe = self.PMC_pd_dataframe(e_df, component, c_accessions_list, user_session, umbrella = projectID, component = True, components = components, umbrella_dataframe_list = umbrella_dataframe_list)
+                        if not component_dataframe.empty:
+                            umbrella_dataframe_list.append(component_dataframe)
+
+                    #Merge all obtained dataframes in a single dataframe and add the umbrella_project column
+                    PMC_pd_dataframe = pd.concat(umbrella_dataframe_list).reset_index(drop=True)
+                    PMC_pd_dataframe['umbrella_project'] = f'{projectID}'
+
+                # Project ID is not an umbrella
+                else:
+                    accessions_list = self.ENA_Xref_check(projectID)          
+                    PMC_pd_dataframe = self.PMC_pd_dataframe(e_df, projectID, accessions_list, user_session)  
                 
                 if PMC_pd_dataframe.empty:   
-                    logger = LoggerManager.log(user_session)
-                    logger.debug(f"No publications were found for {projectID}")
-                    print(Color.BOLD + Color.RED +"No publications" + Color.END, f" were found for {projectID}")
+
+                    if projectID in umbrella_projects:
+                        rich_print(f'[b red]No publications[/b red] were found for [yellow]☂[/yellow] {projectID}')
+                        #logger
+                        logger = LoggerManager.log(user_session)
+                        logger.debug(f"[GET-PUBLICATIONS]: No publications were found for ☂ {projectID}")
+                    else:
+                        rich_print(f'[b red]No publications[/b red] were found for {projectID}')
+                        #logger
+                        logger = LoggerManager.log(user_session)
+                        logger.debug(f"[GET-PUBLICATIONS]: No publications were found for {projectID}")
+
+
                     projects_with_no_publication.append(projectID)
                     if not os.path.exists(path):
                         os.mkdir(path) 
@@ -55,7 +177,7 @@ class GetPublications:
                         os.mkdir(path)
                         PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
                     logger = LoggerManager.log(user_session)
-                    logger.debug(f"Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
+                    logger.debug(f"[GET-PUBLICATIONS]: Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
                 
             
@@ -105,7 +227,7 @@ class GetPublications:
 
         return accessions_list 
 
-    def PMC_pd_dataframe(self, e_df, projectID, accessions_list, user_session):
+    def PMC_pd_dataframe(self, e_df, projectID, accessions_list, user_session, umbrella = False, component = False, components = [], umbrella_dataframe_list = []):
 
         s = rq.session()
         retries = Retry(total=6,
@@ -136,14 +258,23 @@ class GetPublications:
                 for accession in accessions:
                     if ";" in accession:
                         splitted_accessions = accession.split(";")
-                        accessions.remove(accession)
+                        # remove every instance of accession inside accessions list
+                        accessions = [i for i in accessions if i != accession] 
                         accessions.extend(splitted_accessions)
 
                 accessions_list.extend(accessions)
+
+            # Remove duplicates
+            accessions_list = list(dict.fromkeys(accessions_list))
         
-      
         for queried_accession_id in accessions_list:
-            print(f"{projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})") 
+            # Print message and counter according to project ID type
+            if umbrella == True:
+                rich_print(f"[yellow]☂[/yellow] {projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})")
+            elif component == True:
+                rich_print(f"[yellow]☂[/yellow] {umbrella} → component project {projectID} ({components.index(projectID)+1}/{len(components)}): querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})")
+            else:
+                rich_print(f"{projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})") 
 
             query = f"https://www.ebi.ac.uk/europepmc/webservices/rest/search?query={queried_accession_id}&format=xml&resultType=core" 
             # a random user-agent is generated for each query
@@ -213,8 +344,39 @@ class GetPublications:
                         # Check: if the unique article identifier "id" it's already in dict_list,
                         # skip to the next query, without parsing anything.
                         pub_id = children.find("id").text
-                        if any(d.get('id') == pub_id for d in dict_list):
+                        if any(d.get('id') == pub_id for d in dict_list) and not umbrella_dataframe_list:
+
+                            #logger
+                            logger = LoggerManager.log(user_session)
+                            logger.debug(f"[GET-PUBLICATIONS]: {projectID} → {queried_accession_id} returned publication with id {pub_id}. ALREADY FOUND, SKIPPING")
+
                             break
+
+                        # Check for umbrella projects loop: if the unique article identifier "id" it's already in any of the dataframes in umbrella_dataframe_list; if it is, skip to the next query without parsing anything.
+                        elif umbrella_dataframe_list and any(pub_id in df["id"].values for df in umbrella_dataframe_list):
+                            
+                            #logger
+                            logger = LoggerManager.log(user_session)
+                            logger.debug(f"[GET-PUBLICATIONS]: ☂ {umbrella} → component project {projectID} → {queried_accession_id} returned publication with id {pub_id}. ALREADY FOUND, SKIPPING")
+
+                            break
+
+                        else:
+                            
+                            # Log according to project ID type
+                            if umbrella == True:
+                                #logger
+                                logger = LoggerManager.log(user_session)
+                                logger.debug(f"[GET-PUBLICATIONS]: ☂ {projectID} → {queried_accession_id} returned publication with id {pub_id}.")
+                            elif component == True:
+                                #logger
+                                logger = LoggerManager.log(user_session)
+                                logger.debug(f"[GET-PUBLICATIONS]: ☂ {umbrella} → component project {projectID} → {queried_accession_id} returned publication with id {pub_id}.")
+                            else:
+                                #logger
+                                logger = LoggerManager.log(user_session)
+                                logger.debug(f"[GET-PUBLICATIONS]: {projectID} → {queried_accession_id} returned publication with id {pub_id}.")
+                        
 
                         # Project ID column
                         labels.append("project_id")
@@ -376,7 +538,9 @@ class GetPublications:
         
         return PMC_pd_dataframe
 
-    def getTextMinedTerms(self, listOfProjectIDs, user_session):
+    def getTextMinedTerms(self, listOfProjectIDs, user_session): 
+    #does not support umbrella projects at the moment.
+    #FUNCTION NOT INCLUDED IN THE PIPELINE! 
 
         for projectID in track(listOfProjectIDs, description="Getting text mined terms..."):      
             # Fetching local publications metadata file 
@@ -465,23 +629,29 @@ class GetPublications:
             dataframes = []
 
             for dir in os.listdir(user_session): #mod sara: prima era path
-                    tsv = f'{dir}_publications-metadata.tsv'
-                    tsv_path = os.path.join(user_session, dir, tsv) #mod sara: prima era path
-                    if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
-                        dataframes.append(pd.read_csv(tsv_path, sep='\t', dtype=str).loc[:, 'project_id':])
+                tsv = f'{dir}_publications-metadata.tsv'
+                tsv_path = os.path.join(user_session, dir, tsv) #mod sara: prima era path
+                if os.path.isfile(tsv_path) and os.path.getsize(tsv_path) > 0:
+                    dataframes.append(pd.read_csv(tsv_path, sep='\t', dtype=str).loc[:, 'project_id':])
 
             # stop if dataframes list is empty
             if not dataframes:
                 print(f"\nError: couldn't create {user_session}_merged_publications-metadata.tsv: " + Color.BOLD + Color.RED + "no publications-metadata.tsv file found." + Color.END) 
                 return
 
-            merged_dataframe = pd.concat(dataframes)
-            merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t")
+            merged_dataframe = pd.concat(dataframes).reset_index(drop=True)
+
+            # Drop extra column 'Unnamed 0' if it exists
+            if 'Unnamed: 0' in merged_dataframe.columns:
+                merged_dataframe = merged_dataframe.drop('Unnamed: 0', axis=1)
+
+            merged_dataframe.to_csv(os.path.join(user_session, f'{os.path.basename(user_session)}_merged_publications-metadata.tsv'), sep="\t", index=False)
             print("\n>>>"+ Color.BOLD + Color.GREEN + " DOWNLOAD PUBLICATIONS METADATA COMPLETED! " + Color.END + "<<<")
             print('You can find the', Color.UNDERLINE + f'{os.path.basename(user_session)}_merged_publications-metadata.tsv' + Color.END, 
                 'here:', Color.BOLD + Color.YELLOW + f'{user_session}' + Color.END)
             logger = LoggerManager.log(user_session)
-            logger.debug(f"{os.path.basename(user_session)}_merged_publications-metadata.tsv created")
+            logger.debug(f"[GET-PUBLICATIONS]: {os.path.basename(user_session)}_merged_publications-metadata.tsv created")
               
 
 GetPublications = GetPublications('GetPublications')
+
