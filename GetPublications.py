@@ -172,10 +172,10 @@ class GetPublications:
 
                 else:
                     if os.path.exists(path):
-                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t", index=False) 
                     else:
                         os.mkdir(path)
-                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t") 
+                        PMC_pd_dataframe.to_csv(os.path.join(path, f'{projectID}_publications-metadata.tsv'), sep="\t", index=False) 
                     logger = LoggerManager.log(user_session)
                     logger.debug(f"[GET-PUBLICATIONS]: Publications metadata was downloaded as {projectID}_publications-metadata.tsv")
                     print(Color.BOLD + Color.GREEN + 'Publications metadata was downloaded' + Color.END, f'as {projectID}_publications-metadata.tsv')  
