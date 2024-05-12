@@ -116,7 +116,9 @@ def data_download(enaBT_path, user_session, files_found):
                 logger.debug(f"[DATA-TYPE-SELECTED]: {data_download_type}")
                 merged_experiments = files_found[0]
                 if merged_experiments.endswith('.tsv'):
-                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str, keep_default_na=False)
+                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str)
+                    if 'umbrella_project' in e_df.columns:
+                        e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str, keep_default_na=False)
 
                 print() 
                 SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type)

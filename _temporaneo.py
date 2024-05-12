@@ -217,34 +217,41 @@ def publication(e_df):
 #print(len(effective))
 #print(len(local))
 
+def getProjectBytes(projectID, e_df, file_type, umbrella = False): 
+        # file_type can only be 'sra' or 'fastq'.
+        bytes_column = f'{file_type}_bytes'
+        ftp_column = f'{file_type}_ftp'  
+ 
+        if umbrella == True:
+            df = e_df.loc[e_df['umbrella_project'] == projectID]
+        else:
+            df = e_df.loc[e_df['study_accession'] == projectID]
 
-e_df['grouping_col'] = e_df['study_accession']
-e_df.loc[e_df['grouping_col'].isna(), 'grouping_col'] = e_df['secondary_study_accession']
-metadata_df = e_df.loc[e_df['grouping_col'] == "PRJNA48477"]   
-metadata_df = metadata_df.iloc[7:10]
+        # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
+        df1 = df[df[bytes_column].notna()]
 
-# experiments_metadata = os.path.join(user_session, projectID, f'{projectID}_experiments-metadata.tsv')
-# metadata_df = pd.read_csv(experiments_metadata, sep='\t')
-accessions_columns = ['sample_accession']
-accessions_list = []
-    
-for column in accessions_columns:
-    accessions = metadata_df[column].unique().tolist()
+        # Group by fastq_ftp and then fastq_bytes columns: so if a file is repeated in multiple
+        # lines (e.g. multiple samples for the same run), we count it only one time
+        df2 = df1.groupby([ftp_column, bytes_column])[bytes_column].count().to_frame(name = 'count').reset_index()
 
-    # clean list from nan values
-    accessions = [x for x in accessions if str(x) != 'nan']
+        # Filter na for umbrella dataframes
+        df2 = df2[df2.fastq_bytes != ""]
 
-    # split merged ids, if present
-    for accession in accessions:
-        
-        if ";" in accession:
-            splitted_accessions = accession.split(";")
-            accessions = [i for i in accessions if i != accession]
-            accessions.extend(splitted_accessions)
+        # If files are single-end, values in fastq_bytes will be integers -> df.sum()
+        if df2[bytes_column].dtypes == 'int64':
+            bytes = df2[bytes_column].sum()
 
-    accessions_list.extend(accessions)
+        elif df2[bytes_column].dtypes == 'float64':
+            bytes = df2[bytes_column].sum()
+        # If files are paired-end, values in fastq_bytes will be a string, like '716429859;741556367'. 
+        # Split the two numbers and add them to each other, before calculating the total of the column. 
+        else:
+            df3 = df2[bytes_column].apply(lambda x: sum(int(float(num)) for num in x.split(';')))
+            bytes = df3.sum()
 
-print(len(accessions_list))
-for x in accessions_list:
-    print(x)
+        return bytes
 
+print(getProjectBytes("PRJNA43021", e_df, "fastq", umbrella = True))
+
+#c_df = pd.read_csv('~/MADAME/Downloads/cutaneous_microbiome/cutaneous_microbiome_merged_experiments-metadata.tsv', sep='\t', dtype=str, keep_default_na=False)
+#print(getProjectBytes("PRJNA476386", c_df, "fastq", umbrella = False))

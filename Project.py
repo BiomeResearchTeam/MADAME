@@ -154,6 +154,9 @@ class Project:
         # lines (e.g. multiple samples for the same run), we count it only one time
         df2 = df1.groupby([ftp_column, bytes_column])[bytes_column].count().to_frame(name = 'count').reset_index()
 
+        # Filter na for umbrella dataframes
+        df2 = df2[df2[bytes_column] != ""]
+
         # If files are single-end, values in fastq_bytes will be integers -> df.sum()
         if df2[bytes_column].dtypes == 'int64':
             bytes = df2[bytes_column].sum()
@@ -191,6 +194,7 @@ class Project:
         else:
             df = e_df.loc[e_df['study_accession'] == projectID]
         df1 = df[df[f'{file_type}_bytes'].notna()]
+        df1 = df1[df1[f'{file_type}_bytes'] != ""]
         df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
         available_runs = df2['run_accession'].to_list() 
 

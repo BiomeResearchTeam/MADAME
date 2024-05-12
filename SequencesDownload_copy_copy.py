@@ -131,10 +131,10 @@ class SequencesDownload:
                     
                     if projectID in umbrella_projects:
                         bytes = Project.getProjectBytes(projectID, e_df, file_type, umbrella = True)
-                        size_to_print.append(f"[yellow]☂[/yellow] {projectID} → {Utilities.bytes_converter(bytes)}")
+                        size_to_print.append(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → {Utilities.bytes_converter(bytes)}")
                     else:
                         bytes = Project.getProjectBytes(projectID, e_df, file_type)
-                        size_to_print.append(f"{projectID} → {Utilities.bytes_converter(bytes)}")
+                        size_to_print.append(f"[link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → {Utilities.bytes_converter(bytes)}")
 
                     bytes_total += bytes
                     
@@ -144,11 +144,13 @@ class SequencesDownload:
 
         # Print to screen project name and project size
         print()
+        rich_print("[rgb(255,0,255)]Projects size summary[rgb(255,0,255)]")
         for line in size_to_print:
             rich_print(line)
 
         # No available runs across all projects for chosen file_type 
         if bytes_total == 0:
+            print()
             print(Color.BOLD + Color.RED + f"NO AVAILABLE {file_type} format files." + Color.END + " Try selecting a different file format")
             logger = LoggerManager.log(user_session)
             logger.debug(f"NO AVAILABLE {file_type} format files")
@@ -167,7 +169,20 @@ class SequencesDownload:
         
         # Print message for not available projects, if there's any
         if not_available:
-            print(Color.BOLD + Color.RED + "\nNo available " + Color.END + f"{file_type} format files for projectIDs: {not_available}")
+            # The loop prints each accession one next to each other, they can be clicked and the last item (else) is printed differently, without the comma. If it's a list of projects comprehensive of umbrella projects, they are printed in yellow and next to the "☂" character.
+            print()
+            rich_print(f"[b red]No available[/b red] {file_type} format files for projectIDs → ", end="")
+            for accession in not_available[:-1]:
+                if accession in umbrella_projects:
+                    rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{accession}][yellow]☂ {accession}[/yellow][/link], ", end="")
+                else:
+                    rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{accession}]{accession}[/link], ", end="")
+            else:
+                if not_available[-1] in umbrella_projects:
+                    rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{not_available[-1]}][yellow]☂ {not_available[-1]}[/yellow][/link].\n")
+                else:
+                    rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{not_available[-1]}]{not_available[-1]}[/link].\n")
+            
             logger.debug(f"[WARNING]: no available {file_type} format files for projectIDs: {not_available}")
 
         # Setting color for printing the preview
@@ -181,7 +196,6 @@ class SequencesDownload:
         # # For printing very little percentages:
         # if percentage < 1:
         #     percentage = "<1"
-        print()
         download_preview = f"[white]Available/Total Projects ({file_type}) = {len(dictOfAvailableProjectIDs)}/{len(listOfProjectIDs)}" + f"\nTotal file size = {Utilities.bytes_converter(bytes_total)}" + f"\nYou are going to occupy {color}{percentage}% of free disk space"
         title = Panel.fit(download_preview, style = "magenta", title=Text.assemble((" ◊", "rgb(0,255,0)"), " DOWNLOAD PREVIEW ", ("◊ ", "rgb(0,255,0)")), border_style= "rgb(255,0,255)")
         print()
