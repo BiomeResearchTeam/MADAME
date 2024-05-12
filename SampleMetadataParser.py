@@ -2,7 +2,8 @@ import os
 import pandas as pd
 import xml.etree.ElementTree as ET
 from rich.progress import track
-from Utilities import Color
+from Utilities import Color, Utilities
+from Project import Project
 
 # Class for parsing sample metadata (from xml to tsv) using ElementTree.
 
@@ -13,24 +14,58 @@ class SampleMetadataParser:
     
     
     def runParseMetadata(self, listOfProjectIDs, user_session):
-    # For each projectID in listOfProjectIDs, enters the project folder,
-    # runs the parser on samples-metadata_xml's files, exits to main folder.
-    # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
-        for projectID in track(listOfProjectIDs, description="Parsing samples metadata files..."):
+    # For each projectID in listOfProjectIDs runs the parser on samples-metadata_xml's files
+
+        print(listOfProjectIDs)
+
+        projects_list = listOfProjectIDs
+        cyan = "rgb(0,255,255)"
+        
+        # Determining if there's umbrella projects from listOfAccessionIDs' type
+        if type(listOfProjectIDs) is dict:
+            projects_list = list(listOfProjectIDs.keys())
+
+        
+        for projectID in projects_list:  
+
             path = os.path.join("Downloads", user_session, projectID)
 
-            # Pass if .tsv parsed file already exists
-            if os.path.isfile(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv')):
-                pass 
-            else:      
-                self.sampleMetadataParser(user_session, projectID)
+            # If projectID is an umbrella project
+            if type(listOfProjectIDs) is dict and listOfProjectIDs[f'{projectID}'] == True:
+                component_parsed_folder = os.path.join(path, "component_parsed-samples-metadata")
+                Utilities.createDirectory(component_parsed_folder)
+
+                # Obtain list of component projects
+                component_projects = Project.getComponentProjects(projectID, "local", user_session)
+
+                for component in component_projects:
+
+                    for component in track(component_projects, description=f"Parsing [yellow]☂[/yellow] {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] → {component} \[component [{cyan}]{component_projects.index(component)+1}[/{cyan}]/[{cyan}]{len(component_projects)}[/{cyan}]] samples metadata files..."):
+
+                        # Pass if .tsv parsed file already exists
+                        if os.path.isfile(os.path.join(component_parsed_folder, f'{component}_parsed-samples-metadata.tsv')):
+                            pass 
+                        else:      
+                            self.sampleMetadataParser(user_session, projectID, component, umbrella = True)
+
+            # If projectID is NOT an umbrella project
+            else:
+
+                for projectID in track(projects_list, description=f"Parsing {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] samples metadata files..."):
+
+                    # Pass if .tsv parsed file already exists
+                    if os.path.isfile(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv')):
+                        pass 
+                    else:      
+                        self.sampleMetadataParser(user_session, projectID)
 
         print("Parsing was " + Color.BOLD + Color.GREEN + "successfully completed\n" + Color.END)
 
 
-    def sampleMetadataParser(self, user_session, projectID):
+    def sampleMetadataParser(self, user_session, projectID, component = "", umbrella = False):
 
         path = os.path.join("Downloads", user_session, projectID)
+
         ##################### CUSTOM PARSER START #####################
 
         def enaSampleIterator(tag_1, tag_2, tag_3=None, mode='value'): 
@@ -97,7 +132,10 @@ class SampleMetadataParser:
         ##################### CUSTOM PARSER END #####################
 
         # Build list of sample xml files, initialize empty dataframe 
-        sample_xml_directory = os.path.join(path, "samples-metadata_xml")
+        if umbrella == True:
+            sample_xml_directory = os.path.join(path, "component_samples-metadata_xml", f'{component}_samples-metadata_xml')
+        else:
+            sample_xml_directory = os.path.join(path, "samples-metadata_xml")
 
         # Exit function if sample_xml_directory doesn't exist
         if not os.path.isdir(sample_xml_directory):
@@ -134,8 +172,11 @@ class SampleMetadataParser:
         # Convert into dataframe
         df = pd.DataFrame(empty_df)
 
-
         # Save as parsed-samples-metadata.tsv 
-        df.to_csv(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv'), sep="\t", index=None)
+        if umbrella == True:
+            component_parsed_folder = os.path.join(path, "component_parsed-samples-metadata")
+            df.to_csv(os.path.join(component_parsed_folder, f'{component}_parsed-samples-metadata.tsv'), sep="\t", index=None)
+        else:
+            df.to_csv(os.path.join(path, f'{projectID}_parsed-samples-metadata.tsv'), sep="\t", index=None)
 
 SampleMetadataParser = SampleMetadataParser("SampleMetadataParser") 

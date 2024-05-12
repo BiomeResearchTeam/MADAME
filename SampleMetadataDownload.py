@@ -5,6 +5,8 @@ from Utilities import Utilities, Color, LoggerManager
 from user_agent import generate_user_agent
 from requests.adapters import HTTPAdapter, Retry
 from rich.progress import track
+from rich import print as rich_print
+from Project import Project
 
 # Class for downloading sample metadata.
 
@@ -17,37 +19,87 @@ class SampleMetadataDownload:
     # samples-metadata_xml folder, extracts sample ids from previously downloaded experiments metadata,
     # downloads sample metadata (xml) in samples-metadata_xml folder, exits to main dir.
     # WARNING : it needs a list of the AVAILABLE PROJECTS (IDlist.getAvailableProjects(listOfProjectIDs))
+
+        projects_list = listOfProjectIDs
+        cyan = "rgb(0,255,255)"
         
-        for projectID in listOfProjectIDs:  
+        # Determining if there's umbrella projects from listOfAccessionIDs' type
+        if type(listOfProjectIDs) is dict:
+            projects_list = list(listOfProjectIDs.keys())
+
+        
+        for projectID in projects_list:  
 
             path = os.path.join("Downloads", user_session, projectID)
             # Read metadata file and check if it's empty or not
             experiments_metadata = os.path.join(path , f'{projectID}_experiments-metadata.tsv')
 
+            # Print according to project type
             if os.path.getsize(experiments_metadata) == 0:
-                print(f'Metadata file for {projectID} is empty. Skipping.')  # no samples column!
+                if type(listOfProjectIDs) is dict and listOfProjectIDs[f'{projectID}'] == True:
+                    rich_print(f'Metadata file for [yellow]☂[/yellow] {projectID} is empty. Skipping.')
+                else:
+                    rich_print(f'Metadata file for {projectID} is empty. Skipping.')  
             else:
-                samples_metadata_xml_folder = os.path.join(path, "samples-metadata_xml")
-                Utilities.createDirectory(samples_metadata_xml_folder)
                 experiments_metadata_df = pd.read_csv(experiments_metadata, sep='\t', dtype=str)
-                sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
+                
+                # If projectID is an umbrella project
+                if type(listOfProjectIDs) is dict and listOfProjectIDs[f'{projectID}'] == True:
+                    component_samples_metadata_xml_folder = os.path.join(path, "component_samples-metadata_xml")
+                    Utilities.createDirectory(component_samples_metadata_xml_folder)
 
-                for sampleID in track(sample_ids, description=f"Downloading {projectID} [{listOfProjectIDs.index(projectID)+1} out of {len(listOfProjectIDs)}] sample metadata: "):
-                    # Checking the file existence before downloading
-                    if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
-                        single_sampleID = sampleID.split(";")
-                        for sampleID in single_sampleID:
-                            if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
+                    # Obtain list of component projects
+                    component_projects = Project.getComponentProjects(projectID, "local", user_session)
+                    
+                    for project in component_projects:
+                        sample_ids = experiments_metadata_df.loc[experiments_metadata_df['study_accession'] == f'{project}', 'sample_accession'].unique().tolist()
+
+                        samples_metadata_xml_folder = os.path.join(component_samples_metadata_xml_folder, f'{project}_samples-metadata_xml')
+                        Utilities.createDirectory(samples_metadata_xml_folder)
+
+                        for sampleID in track(sample_ids, description=f"Downloading [yellow]☂[/yellow] {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] → {project} \[component [{cyan}]{component_projects.index(project)+1}[/{cyan}]/[{cyan}]{len(component_projects)}[/{cyan}]] sample metadata: "):
+
+                            # Checking the file existence before downloading
+                            if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
+                                single_sampleID = sampleID.split(";")
+                                for sampleID in single_sampleID:
+                                    if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
+                                        pass
+                                    else:
+                                        self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                            else:
+                                if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
+                                    pass
+                                else:
+                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+
+                    rich_print(f'[yellow]☂[/yellow] {projectID} → {project} samples metadata files were [b rgb(0,255,0)]successfully downloaded[/b rgb(0,255,0)]\n')
+
+    
+                
+                # If projectID is NOT an umbrella project
+                else:
+                    samples_metadata_xml_folder = os.path.join(path, "samples-metadata_xml")
+                    Utilities.createDirectory(samples_metadata_xml_folder)
+
+                    sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
+
+                    for sampleID in track(sample_ids, description=f"Downloading {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] sample metadata: "):
+                        # Checking the file existence before downloading
+                        if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
+                            single_sampleID = sampleID.split(";")
+                            for sampleID in single_sampleID:
+                                if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
+                                    pass
+                                else:
+                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                        else:
+                            if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
                                 pass
                             else:
                                 self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
-                    else:
-                        if os.path.isfile(os.path.join(path, 'samples-metadata_xml', f'{sampleID}.xml')):
-                            pass
-                        else:
-                            self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
-                print(f'{projectID} samples metadata files were' + Color.BOLD + Color.GREEN + 
-            ' successfully downloaded\n' + Color.END)  
+
+                    rich_print(f'{projectID} samples metadata files were [b rgb(0,255,0)]successfully downloaded[/b rgb(0,255,0)]\n')
 
 
     def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder, user_session):

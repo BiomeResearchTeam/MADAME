@@ -27,6 +27,8 @@ class Exp_Proj_MetadataDownload:
         study_accession = []
 
         accessions_list = listOfAccessionIDs
+
+        # Determining if there's umbrella projects from listOfAccessionIDs' type
         if type(listOfAccessionIDs) is dict:
             accessions_list = list(listOfAccessionIDs.keys())
 
@@ -69,7 +71,15 @@ class Exp_Proj_MetadataDownload:
         # Removing duplicates to return a clean list for sample metadata download
         study_accession = list(dict.fromkeys(study_accession)) 
 
-        return study_accession
+        # Return output for SampleMetadataDownload
+        if type(listOfAccessionIDs) is dict:
+            keys = study_accession
+            values = list(listOfAccessionIDs.values())
+            study_accession = dict(zip(keys, values))
+            return study_accession
+        
+        else:
+            return study_accession
 
   
     def projectMetadataDownload(self, projectID, user_session, print_message = True, umbrella = False):

@@ -29,10 +29,9 @@ class GetPublications:
 
         projects_with_no_publication = []  
         umbrella_projects = []
-        ######
         user_choice = False
 
-        # Check if there's umbrella projects in merged publications metadata
+        # Check if there's umbrella projects in merged experiment metadata
         if 'umbrella_project' in e_df.columns:
             
             # List of all umbrella projects in e_df, filtered to remove empty strings
