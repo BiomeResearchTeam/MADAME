@@ -137,12 +137,15 @@ class Project:
         return component_projects
 
     
-    def getProjectBytes(self, projectID, e_df, file_type): 
+    def getProjectBytes(self, projectID, e_df, file_type, umbrella = False): 
         # file_type can only be 'sra' or 'fastq'.
         bytes_column = f'{file_type}_bytes'
         ftp_column = f'{file_type}_ftp'  
  
-        df = e_df.loc[e_df['study_accession'] == projectID]
+        if umbrella == True:
+            df = e_df.loc[e_df['umbrella_project'] == projectID]
+        else:
+            df = e_df.loc[e_df['study_accession'] == projectID]
 
         # Only read df lines which are not NaN in the bytes_column (so, they are available runs)
         df1 = df[df[bytes_column].notna()]
@@ -180,10 +183,13 @@ class Project:
         return all_runs
 
     # GET AVAILABLE RUNS FOR A CERTAIN FILE TYPE
-    def getAvailableRuns(self, projectID, e_df, file_type): 
+    def getAvailableRuns(self, projectID, e_df, file_type, umbrella = False): 
         # Accepted file_types: {submitted,fastq,sra}
 
-        df = e_df.loc[e_df['study_accession'] == projectID]
+        if umbrella == True:
+            df = e_df.loc[e_df['umbrella_project'] == projectID]
+        else:
+            df = e_df.loc[e_df['study_accession'] == projectID]
         df1 = df[df[f'{file_type}_bytes'].notna()]
         df2 = df1.groupby([f'{file_type}_ftp',f'{file_type}_bytes','run_accession'])[f'{file_type}_bytes'].count().to_frame(name = 'count').reset_index()
         available_runs = df2['run_accession'].to_list() 

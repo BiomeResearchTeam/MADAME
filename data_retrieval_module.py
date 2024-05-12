@@ -1,5 +1,5 @@
 from Utilities import Color, Utilities
-from SequencesDownload_copy_copy import SequencesDownload ##
+from SequencesDownload_copy_copy import SequencesDownload 
 from os import path
 import os
 import pandas as pd
@@ -87,11 +87,13 @@ def enaBT_check(files_found, user_session):
             else: 
                 if len(enaBT_read) == 0:
                     print('It seems that', Color.BOLD + Color.RED + 'enaBT_path.txt is empty.' + Color.END, 'Remember to', Color.UNDERLINE + 'compile it' + Color.END, 'in order to download data!')
+                    logger = LoggerManager.log(user_session)
                     logger.debug(f"[ERROR]: enaBT_path.txt is empty")
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     return
                 else:
                     print(Color.BOLD + Color.RED + "\nenaDataGet not found." + Color.END, "Maybe a typo in enaBT_path.txt? Remember to", Color.UNDERLINE + "compile it" + Color.END, "correctly in order to download data!\n")
+                    logger = LoggerManager.log(user_session)
                     logger.debug(f"[ERROR]: enaBT_path.txt not found")
                     input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
                     return
@@ -114,9 +116,8 @@ def data_download(enaBT_path, user_session, files_found):
                 logger.debug(f"[DATA-TYPE-SELECTED]: {data_download_type}")
                 merged_experiments = files_found[0]
                 if merged_experiments.endswith('.tsv'):
-                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str)
-                # if merged_experiments.endswith('.csv'):
-                #     e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), infer_datetime_format=True)
+                    e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', infer_datetime_format=True, dtype=str, keep_default_na=False)
+
                 print() 
                 SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type)
                 
