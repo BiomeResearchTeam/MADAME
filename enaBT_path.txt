@@ -1,1 +1,1 @@
-Path to enaBrowserTools: /root/tools/enaBrowserTools-1.1.0/python3
+Path to enaBrowserTools: 

@@ -1,5 +1,5 @@
 from Utilities import Color, Utilities
-from SequencesDownload_copy_copy import SequencesDownload 
+from SequencesDownload import SequencesDownload 
 from os import path
 import os
 import pandas as pd
