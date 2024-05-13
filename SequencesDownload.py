@@ -80,7 +80,7 @@ class SequencesDownload:
                         continue
                     break
                 else:
-                    print("[bold red]Error[/bold red], expected a numeric input. Try again.\n")
+                    rich_print("[bold red]Error[/bold red], expected a numeric input. Try again.\n")
 
 
             # Proceed excluding umbrella projects
