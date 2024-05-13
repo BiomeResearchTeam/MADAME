@@ -7,6 +7,7 @@ from rich.console import Console
 from rich import print as rich_print
 from rich.panel import Panel
 from rich.text import Text
+import pandas as pd
 
 import concurrent.futures
 
@@ -23,7 +24,7 @@ class SequencesDownload:
     # Accepted file_types: {submitted,fastq,sra}
     # It needs enaBrowserTools scripts already installed: 
     # https://github.com/enasequence/enaBrowserTools#installing-and-running-the-scripts
-        
+
         # Get Project IDs from the merged experiments dataframe
         listOfProjectIDs = e_df['study_accession'].unique().tolist()
         umbrella_projects = []
@@ -267,6 +268,7 @@ class SequencesDownload:
                                 # Print message for not available component projects, if there's any
                                 if unavailable_components:
                                     rich_print(f"\n[b red]No available[/b red] {file_type} format files for these [yellow]☂[/yellow] {project}'s components: {unavailable_components}")
+                                    # logger
                                     logger.debug(f"[WARNING]: no available {file_type} format files for these ☂ {project}'s components: {unavailable_components}")
 
                             # If the project is not an umbrella
@@ -299,8 +301,10 @@ class SequencesDownload:
                                     failed_runs[project] = failed
                         
                         if failed_runs:
+                            rich_print(f"\n[b red]WARNING[/b red]! Some runs were not downloaded. You can find  a detailed list in the log file.")
                             logger.debug(f'WARNING! List of runs that were not downloaded: {failed_runs}')
                         else:
+                            print(Color.BOLD + Color.GREEN + "SUCCESS! All runs were downloaded\n" + Color.END)
                             logger.debug('SUCCESS! All runs were downloaded')
 
 
@@ -352,6 +356,7 @@ class SequencesDownload:
                         #------------------------------#
 
                         print('time (s):', time.time() - t0)  
+                    
                         break
                     
                     elif user_input.lower() in ("back"):
@@ -378,7 +383,7 @@ class SequencesDownload:
 
     
     def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
-        #print('ok')
+        
         # Give execution permission to enaBT
         os.chmod(EnaBT_path, 0o755)
 

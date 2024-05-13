@@ -193,7 +193,7 @@ def ecc():
     console.print(table)
 
 
-e_df = pd.read_csv('~/MADAME/Downloads/7 maggio/7 maggio_merged_experiments-metadata.tsv', sep='\t', dtype=str, keep_default_na=False)
+e_df = pd.read_csv('~/MADAME/Downloads/7 maggio/7 maggio_merged_experiments-metadata_corretto.tsv', sep='\t', dtype=str, keep_default_na=False)
 
 def publication(e_df):
 
@@ -251,7 +251,11 @@ def getProjectBytes(projectID, e_df, file_type, umbrella = False):
 
         return bytes
 
-print(getProjectBytes("PRJNA43021", e_df, "fastq", umbrella = True))
+#print(getProjectBytes("PRJNA43021", e_df, "fastq", umbrella = True))
 
 #c_df = pd.read_csv('~/MADAME/Downloads/cutaneous_microbiome/cutaneous_microbiome_merged_experiments-metadata.tsv', sep='\t', dtype=str, keep_default_na=False)
 #print(getProjectBytes("PRJNA476386", c_df, "fastq", umbrella = False))
+
+
+e_df = pd.concat([e_df.iloc[35910:35920, 0:], e_df.iloc[315:320, 0:]])
+print(e_df)
