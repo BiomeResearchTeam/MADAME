@@ -67,7 +67,7 @@ class GetPublications:
             # Print info box and let the user decide how to proceed
             print()
             console = Console()
-            box = console.print(Panel(("Instead of holding data, umbrella projects group together multiple component projects that are part of the same research motivation or collaboration.\n→ Each umbrella can contain [yellow]a few to thousands[/yellow] of other projects, and this [yellow]can significantly prolong[/yellow] the publication research.\nMore info on [link=https://ena-docs.readthedocs.io/en/latest/retrieval/ena-project.html]ENA's documentation here[/link]."), title=(":umbrella: Umbrella Projects - Info Box"), border_style= "rgb(255,255,0)", padding= (0,1), title_align="left"))
+            box = console.print(Panel(("Instead of holding data, umbrella projects group together multiple component projects that are part of the same research motivation or collaboration.\n→ Each umbrella can contain [yellow]a few to thousands[/yellow] of other projects, and this [yellow]can significantly prolong[/yellow] the publication research.\nMore info on [link=https://ena-docs.readthedocs.io/en/latest/retrieval/ena-project.html]ENA's documentation[/link]."), title=(":umbrella: Umbrella Projects - Info Box"), border_style= "rgb(255,255,0)", padding= (0,1), title_align="left"))
 
             rich_print("\n  [rgb(255,0,255)]1[/rgb(255,0,255)] - Exclude umbrella projects\n  [rgb(255,0,255)]2[/rgb(255,0,255)] - Include umbrella projects")
 

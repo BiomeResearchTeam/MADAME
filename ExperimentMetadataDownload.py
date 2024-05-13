@@ -170,9 +170,9 @@ class Exp_Proj_MetadataDownload:
             # Add umbrella column to metadata, if it's an umbrella project
             if umbrella == True: 
                 metadata = os.path.join("Downloads", user_session, projectID, f"{projectID}_experiments-metadata.tsv")
-                df = pd.read_csv(metadata, sep='\t', keep_default_na=False, dtype=str)
+                df = pd.read_csv(metadata, sep='\t', keep_default_na=False, dtype=str).reset_index(drop=True)
                 df['umbrella_project'] = f'{projectID}'
-                df.to_csv(os.path.join(path, f'{projectID}_experiments-metadata.tsv'), sep="\t").reset_index(drop=True)
+                df.to_csv(os.path.join(path, f'{projectID}_experiments-metadata.tsv'), sep="\t", index=False)
 
             if umbrella == True:
                 rich_print(f'[yellow]☂[/yellow] {projectID}_experiments-metadata.tsv [rgb(0,255,0)]successfully downloaded[/rgb(0,255,0)]')
