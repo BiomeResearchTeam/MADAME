@@ -145,9 +145,15 @@ class SequencesDownload:
 
         # Print to screen project name and project size
         print()
-        rich_print("[b rgb(255,0,255)]Projects size summary[/b rgb(255,0,255)]")
-        for line in size_to_print:
-            rich_print(line)
+        if size_to_print:
+            rich_print("[b rgb(255,0,255)]Projects size summary[/b rgb(255,0,255)]")
+            for line in size_to_print:
+                rich_print(line)
+
+                #logger
+                logger = LoggerManager.log(user_session)
+                logger.debug(f"[PROJECT-SIZE]: {line}")
+
 
         # No available runs across all projects for chosen file_type 
         if bytes_total == 0:
