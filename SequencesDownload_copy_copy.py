@@ -144,7 +144,7 @@ class SequencesDownload:
 
         # Print to screen project name and project size
         print()
-        rich_print("[rgb(255,0,255)]Projects size summary[rgb(255,0,255)]")
+        rich_print("[b rgb(255,0,255)]Projects size summary[/b rgb(255,0,255)]")
         for line in size_to_print:
             rich_print(line)
 
