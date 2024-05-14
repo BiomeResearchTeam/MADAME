@@ -16,8 +16,6 @@ class SampleMetadataParser:
     def runParseMetadata(self, listOfProjectIDs, user_session):
     # For each projectID in listOfProjectIDs runs the parser on samples-metadata_xml's files
 
-        print(listOfProjectIDs)
-
         projects_list = listOfProjectIDs
         cyan = "rgb(0,255,255)"
         
