@@ -110,6 +110,7 @@ class SequencesDownload:
         with console.status("Checking available runs and total file size...") as status:
 
             size_to_print = []
+            size_debug = []
 
             for projectID in listOfProjectIDs:
 
@@ -133,9 +134,11 @@ class SequencesDownload:
                     if projectID in umbrella_projects:
                         bytes = Project.getProjectBytes(projectID, e_df, file_type, umbrella = True)
                         size_to_print.append(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → {Utilities.bytes_converter(bytes)}")
+                        size_debug.append(f"☂ {projectID} → {Utilities.bytes_converter(bytes)}")
                     else:
                         bytes = Project.getProjectBytes(projectID, e_df, file_type)
                         size_to_print.append(f"[link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → {Utilities.bytes_converter(bytes)}")
+                        size_debug.append(f"{projectID} → {Utilities.bytes_converter(bytes)}")
 
                     bytes_total += bytes
                     
@@ -150,6 +153,7 @@ class SequencesDownload:
             for line in size_to_print:
                 rich_print(line)
 
+            for line in size_debug:
                 #logger
                 logger = LoggerManager.log(user_session)
                 logger.debug(f"[PROJECT-SIZE]: {line}")
