@@ -309,61 +309,26 @@ class SequencesDownload:
                         if failed_runs:
                             rich_print(f"\n[b red]WARNING[/b red]! Some runs were not downloaded. You can find  a detailed list in the log file.")
                             logger.debug(f'WARNING! List of runs that were not downloaded: {failed_runs}')
+                            print("\n>>> SEQUENCES DOWNLOAD completed! <<<")
+                            print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/{projectID}/" + Color.BOLD + Color.YELLOW + f"{projectID}_{file_type}_files" + Color.END) 
+                            logger = LoggerManager.log(user_session)
+                            logger.debug("SEQUENCES DOWNLOAD completed!")
+                            logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/{projectID}/{projectID}_{file_type}_files")
+                            input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                            return percentage
                         else:
                             print(Color.BOLD + Color.GREEN + "SUCCESS! All runs were downloaded\n" + Color.END)
                             logger.debug('SUCCESS! All runs were downloaded')
+                            print("\n>>> SEQUENCES DOWNLOAD completed! <<<")
+                            print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) 
+                            logger = LoggerManager.log(user_session)
+                            logger.debug("SEQUENCES DOWNLOAD completed!")
+                            logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/projectID_{file_type}_files")
+                            input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
+                            return percentage
 
-
-                        #-------------------------#
-
-                        # results = []
-                        # with concurrent.futures.ThreadPoolExecutor() as executor:
-                        #     while max_retries > 0:
-                        #         future_to_runID = {
-                        #             executor.submit(self.enaBT, user_session, path, EnaBT_path, runID, file_type): runID
-                        #             for runID, file_type in runIDs
-                        #         }
-
-                        #         for future in concurrent.futures.as_completed(future_to_runID):
-                        #             runID = future_to_runID[future]
-                        #             try:
-                        #                 result = future.result()
-                        #                 if result[1] is not None:
-                        #                     print(f"Successfully processed runID: {runID}")
-                        #                     # Aggiungi il risultato alla lista dei risultati validi
-                        #                     results.append(result)
-                        #                 else:
-                        #                     print(f"Failed to process runID {runID}: {result[1]}")
-                        #                     # Riduci il numero di tentativi rimanenti
-                        #                     max_retries -= 1
-                        #                     if max_retries > 0:
-                        #                         print(f"Retrying runID {runID} after 5 seconds...")
-                        #                         time.sleep(5)
-                        #                         # Ritenta il download
-                        #                         future_retry = executor.submit(self.enaBT, user_session, path, EnaBT_path, runID, file_type)
-                        #                         future_to_runID[future_retry] = runID
-                        #             except Exception as e:
-                        #                 print(f"Error processing runID {runID}: {e}")
-
-
-
-
-                            # with concurrent.futures.ThreadPoolExecutor() as executor:
-                            #     executor.map(lambda runID: self.enaBT(user_session, path, EnaBT_path, runID, file_type), runIDs)
-
-                                #download = self.enaBT(user_session, path, EnaBT_path, run, file_type)
-
-                                # if download == 0:
-                                #     print(Color.RED + "\nSomething went wrong with your download (internet connection, or ENA server overload)." + Color.END) # messaggio da modificare ? 
-                                #     logger.debug("[ERROR]: Something went wrong with your download (internet connection, or ENA server overload)")
-                                #     input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu")
-                                #     return 
-
-                        #------------------------------#
-
-                        print('time (s):', time.time() - t0)  
-                    
-                        break
+                        # print('time (s):', time.time() - t0)  
+                        # break
                     
                     elif user_input.lower() in ("back"):
                         return 
@@ -377,15 +342,7 @@ class SequencesDownload:
             print(Color.RED + Color.BOLD + f"\nERROR: the selected runs would occupy more than 95% of your free disk space" + Color.END)
             logger.debug("[ERROR]: the selected runs would occupy more than 95 percent of your free disk space. Download not allowed.")
             input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-            return 
-
-        # Final message
-        print("\nSEQUENCES DOWNLOAD completed!")
-        print(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/" + Color.BOLD + Color.YELLOW + f"projectID_{file_type}_files" + Color.END) 
-        logger.debug("SEQUENCES DOWNLOAD completed!")
-        logger.debug(f"Now you can find the {file_type} files divided by projects. Example path: MADAME/Downloads/projectID/projectID_{file_type}_files")
-        input("\nPress " + Color.BOLD + Color.PURPLE + "ENTER" + Color.END + " to return to the main menu ")
-        return 
+            return percentage
 
     
     def enaBT(self, user_session, path, EnaBT_path, runID, file_type):
