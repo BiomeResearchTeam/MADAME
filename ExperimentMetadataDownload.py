@@ -104,8 +104,11 @@ class Exp_Proj_MetadataDownload:
             download = s.get(url, headers=headers, allow_redirects=True)
             with open((os.path.join(path, f'{projectID}_project-metadata.xml')), 'wb') as file: 
                 file.write(download.content)
-            print(f'{projectID}_project-metadata.xml ' + Color.BOLD + Color.GREEN + 
-            ' successfully downloaded' + Color.END)
+
+            if umbrella == True:
+                rich_print(f'[yellow]☂[/yellow] {projectID}_project-metadata.xml [rgb(0,255,0)]successfully downloaded[/rgb(0,255,0)]')
+            else:
+                rich_print(f'{projectID}_project-metadata.xml [rgb(0,255,0)]successfully downloaded[/rgb(0,255,0)]')
 
         # If it's an umbrella project, download project metadata for all component projects in a dedicated subfolder
         if umbrella == True: 
@@ -115,7 +118,7 @@ class Exp_Proj_MetadataDownload:
             # Obtain list of component projects
             component_projects = Project.getComponentProjects(projectID, "local", user_session)
 
-            rich_print(f"Downloading project metadata for the component projects of the umbrella project [yellow]☂ {projectID}[/yellow] ...")
+            rich_print(f"Downloading project metadata for the component projects of the umbrella project [yellow]☂[/yellow] {projectID}...")
                        
             for project in component_projects:
                 
