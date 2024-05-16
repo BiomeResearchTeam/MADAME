@@ -44,9 +44,9 @@ def data_retrieval(user_session):
                     enaBT_path = enaBT_check(files_found, user_session)
                     disk_percentage = data_download(enaBT_path, user_session, files_found)
                     user_session = original_user_session
-                    if disk_percentage >= 0 and disk_percentage <= 95:
-                        return disk_percentage
-                    else: 
+                    if disk_percentage != None:
+                        return
+                    else:
                         continue
                 else:
                     user_session = original_user_session
