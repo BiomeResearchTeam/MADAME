@@ -42,12 +42,9 @@ def data_retrieval(user_session):
                 if user_session != None:
                     files_found = check_files(user_session)
                     enaBT_path = enaBT_check(files_found, user_session)
-                    disk_percentage = data_download(enaBT_path, user_session, files_found)
+                    data_download(enaBT_path, user_session, files_found)
                     user_session = original_user_session
-                    if disk_percentage != None:
-                        return
-                    else:
-                        continue
+                    return
                 else:
                     user_session = original_user_session
 
@@ -125,11 +122,8 @@ def data_download(enaBT_path, user_session, files_found):
                         e_df = pd.read_csv(os.path.join("Downloads", user_session, merged_experiments), delimiter='\t', dtype=str, keep_default_na=False)
 
                 print() 
-                disk_percentage = SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type)
-                if disk_percentage >= 0 and disk_percentage <= 95:
-                    return disk_percentage
-                else: 
-                    continue
+                SequencesDownload.runDownloadData(enaBT_path, user_session, e_df, file_type = data_download_type)
+                return
                 
             else:
                 print(Color.BOLD + Color.RED +"\nWrong input " + Color.END, "Digit <fastq>, <sra>, <submitted>, or digit <back> to go back (without <>).\n")
