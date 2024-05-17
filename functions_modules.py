@@ -31,6 +31,8 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
     user_choice = False
     umbrella_projects = []
+    listOfAvailableAccessions = []
+    listOfUnvailableAccessions = []
 
     console = Console()
     # Spinner for showing MADAME is working (this process can be lenghty)
@@ -116,14 +118,15 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
     # Fetch and print query details
     if user_choice == False or user_choice == 1:
-        GetIDlist.QueryDetails(user_session, listOfAccessionIDs) 
+        total_of_accessions = GetIDlist.QueryDetails(user_session, listOfAccessionIDs) 
     if user_choice == 2: 
-        GetIDlist.QueryDetails(user_session, listOfAccessionIDs, umbrella_projects)
+        total_of_accessions = GetIDlist.QueryDetails(user_session, listOfAccessionIDs, umbrella_projects)
 
-    # Check Accession availability and print details
-    listOfAvailableAccessions, listOfUnvailableAccessions = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
+    if total_of_accessions > 1:
+        # Check Accession availability and print details, 
+        listOfAvailableAccessions, listOfUnvailableAccessions = Project.getAvailableAccessions(user_session, listOfAccessionIDs)
 
-    rich_print(f"\n  >> [rgb(0,255,0)]{len(listOfAvailableAccessions)}[/rgb(0,255,0)] out of [rgb(0,255,0)]{len(listOfAccessionIDs)}[/rgb(0,255,0)] accessions are available. Check the details below:\n")
+        rich_print(f"\n  >> [rgb(0,255,0)]{len(listOfAvailableAccessions)}[/rgb(0,255,0)] out of [rgb(0,255,0)]{len(listOfAccessionIDs)}[/rgb(0,255,0)] accessions are available. Check the details below:\n")
 
     if len(listOfAvailableAccessions) > 0:
         # The loop prints each accession one next to each other, they can be clicked and the last item (else) is printed differently, without the comma. If it's a list of projects comprehensive of umbrella projects, they are printed in yellow and next to the "☂" character.
@@ -178,7 +181,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
 
 
     # Print warning if there is no available accession
-    if len(listOfAvailableAccessions) == 0:
+    if len(listOfAvailableAccessions) == 0 or total_of_accessions == 0:
         print('Do you want to ' + Color.BOLD + 'try again?' + Color.END)
         input("Press " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
     else:

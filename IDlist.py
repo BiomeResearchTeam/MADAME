@@ -184,7 +184,7 @@ class GetIDlist:
         total_of_accessions = (len(listOfAccessionIDs))
         
         if total_of_accessions == 0:
-            print(f"\n  >> There are [bold red]no {self.data_type}[/bold red] for the query: '[rgb(255,0,255)]{self.user_query}[/rgb(255,0,255)]'\n")
+            rich_print(f"\n  >> There are [bold red]no {self.data_type}[/bold red] for the query: '[rgb(255,0,255)]{self.user_query}[/rgb(255,0,255)]'\n")
 
             #logger
             logger = LoggerManager.log(user_session)
@@ -217,6 +217,8 @@ class GetIDlist:
                 
             console = Console()
             console.print(table)
+
+        return total_of_accessions
 
     def IDlistFromUserInputDetails(self, user_session, dictionaryOfAccessionIDs, umbrella_projects=[]):
     # Prints output for the user-submitted accessions as a table with clickable accession links. Umbrella Projects, if present, are printed in yellow and next to the "☂" character.
