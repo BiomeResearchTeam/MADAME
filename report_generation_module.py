@@ -107,7 +107,7 @@ def available_metadata_files(user_session):
     elif available_metadata_files == 1:
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        f1_df = pd.read_csv (f1_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
+        f1_df = pd.read_csv (f1_path, delimiter='\t',  dtype=str)#
         if 'study_accession' in f1_df:
             e_df = f1_df
             logger = LoggerManager.log(user_session)
@@ -122,9 +122,9 @@ def available_metadata_files(user_session):
         print(Color.BOLD + Color.GREEN + "\nFound" + Color.END, f"{list_metadata_files[0]}")
         print(Color.BOLD + Color.GREEN + "Found" + Color.END, f"{list_metadata_files[1]}")
         f1_path = os.path.join('Downloads', user_session, list_metadata_files[0])
-        f1_df = pd.read_csv(f1_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
+        f1_df = pd.read_csv(f1_path, delimiter='\t', dtype=str)#
         f2_path = os.path.join('Downloads', user_session, list_metadata_files[1])
-        f2_df = pd.read_csv(f2_path, delimiter='\t', infer_datetime_format=True, dtype=str)#
+        f2_df = pd.read_csv(f2_path, delimiter='\t',  dtype=str)#
         if 'study_accession' in f1_df:
             e_df = f1_df
             p_df = f2_df
@@ -198,12 +198,12 @@ def initial_table(report_folder, e_df, p_df, color_palette_rgb, f):
                 value = e_df[column].count()
                 second_column.append(value)
             elif column == 'first_public':
-                e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce', infer_datetime_format=True)
+                e_df['first_public'] = pd.to_datetime(e_df['first_public'],  errors='coerce')
                 e_df['first_public_year'] = e_df['first_public'].dt.year
                 value_f = e_df['first_public_year'].min()
                 second_column.append(value_f)
             elif column == 'last_updated':
-                e_df['last_updated'] = pd.to_datetime(e_df['last_updated'],  errors='coerce', infer_datetime_format=True)
+                e_df['last_updated'] = pd.to_datetime(e_df['last_updated'],  errors='coerce')
                 e_df['last_updated_year'] = e_df['last_updated'].dt.year
                 value_l = e_df['last_updated_year'].max()
                 second_column.append(value_l)
@@ -485,14 +485,24 @@ def IDs_dates(report_folder, e_df, p_df, color_palette_rgb, f):
     generate bubble plot based on first and last update year for each project
     """
     if pd.Series(['first_public', 'last_updated']).isin(e_df.columns).all():
-        collapsed_e_df = e_df.groupby('grouping_col').first().reset_index() #
-        collapsed_e_df = collapsed_e_df.sort_values(by=['first_public'], ascending=True)
-        collapsed_e_df_f = collapsed_e_df[['grouping_col', 'first_public_year']] #
-        collapsed_e_df_l = collapsed_e_df[['grouping_col', 'last_updated_year']] #
-        collapsed_e_list_f_x = collapsed_e_df_f.grouping_col.values.tolist() #
-        collapsed_e_list_f_y = collapsed_e_df_f.first_public_year.values.tolist()
-        collapsed_e_list_l_x = collapsed_e_df_l.grouping_col.values.tolist() #
-        collapsed_e_list_l_y = collapsed_e_df_l.last_updated_year.values.tolist()
+        collapsed_e_df_first = e_df.groupby('grouping_col')['first_public'].min().reset_index()
+        collapsed_e_df_first['first_public'] = pd.to_datetime(collapsed_e_df_first['first_public'])
+        collapsed_e_df_first['first_public_year'] = collapsed_e_df_first['first_public'].dt.year
+        collapsed_e_df_f = collapsed_e_df_first[['grouping_col', 'first_public_year']]
+        collapsed_e_df_f = collapsed_e_df_f.sort_values(by=['first_public_year'], ascending=True)
+
+        collapsed_e_df_last = e_df.groupby('grouping_col')['last_updated'].max().reset_index()
+        collapsed_e_df_last['last_updated'] = pd.to_datetime(collapsed_e_df_last['last_updated'])
+        collapsed_e_df_last['last_updated_year'] = collapsed_e_df_last['last_updated'].dt.year
+        collapsed_e_df_l = collapsed_e_df_last[['grouping_col', 'last_updated_year']]
+
+        combined_df = pd.merge(collapsed_e_df_f, collapsed_e_df_l, on='grouping_col')
+        sorted_combined_df = combined_df.sort_values(by=['first_public_year', 'last_updated_year'], ascending=[True, False])
+
+        collapsed_e_list_f_x = sorted_combined_df.grouping_col.values.tolist() #
+        collapsed_e_list_f_y = sorted_combined_df.first_public_year.values.tolist()
+        collapsed_e_list_l_x = sorted_combined_df.grouping_col.values.tolist() #
+        collapsed_e_list_l_y = sorted_combined_df.last_updated_year.values.tolist()
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(

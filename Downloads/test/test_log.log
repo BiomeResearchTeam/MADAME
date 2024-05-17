@@ -1,0 +1,255 @@
+2024-05-17 12:52:45,917 - Downloads/test - [MADAME INITIALIZED]
+2024-05-17 12:52:45,917 - Downloads/test - [USER-SESSION-CREATED]: MADAME/Downloads/test
+2024-05-17 12:52:50,063 - Downloads/test - [METADATA MODULE - INITIALIZED]
+2024-05-17 12:52:59,397 - Downloads/test - [OPTION-2] - USER IDs SUBMISSION
+2024-05-17 12:52:59,399 - Downloads/test - [USER-SUBMITTED-IDs]: runs[], samples[], studies[DRP004449, SRP187334], projects[]
+2024-05-17 12:52:59,399 - Downloads/test - [ACCESSION-IDS-FOUND]: ['DRP004449', 'SRP187334']
+2024-05-17 12:52:59,915 - Downloads/test - [ACCESSION-DETAILS]: DRP004449 → Skin microbiome by different collection methods
+2024-05-17 12:52:59,915 - Downloads/test - [ACCESSION-DETAILS]: SRP187334 → 16S rDNA based skin bacterial flora from leprosy patients and healthy individuals using Illumina MiSeq sequencing.
+2024-05-17 12:53:00,455 - Downloads/test - test_listOfAccessionIDs.tsv CREATED
+2024-05-17 12:53:05,478 - Downloads/test - test_merged_experiments-metadata.tsv successfully created
+2024-05-17 12:53:05,499 - Downloads/test - sampleID: SAMD00071350
+2024-05-17 12:53:05,707 - Downloads/test - sampleID: SAMD00071344
+2024-05-17 12:53:05,921 - Downloads/test - sampleID: SAMD00071345
+2024-05-17 12:53:06,118 - Downloads/test - sampleID: SAMD00071349
+2024-05-17 12:53:06,318 - Downloads/test - sampleID: SAMD00071346
+2024-05-17 12:53:06,510 - Downloads/test - sampleID: SAMD00071354
+2024-05-17 12:53:06,719 - Downloads/test - sampleID: SAMD00071347
+2024-05-17 12:53:06,909 - Downloads/test - sampleID: SAMD00071355
+2024-05-17 12:53:07,115 - Downloads/test - sampleID: SAMD00071348
+2024-05-17 12:53:07,317 - Downloads/test - sampleID: SAMD00112954
+2024-05-17 12:53:07,585 - Downloads/test - sampleID: SAMD00071351
+2024-05-17 12:53:07,796 - Downloads/test - sampleID: SAMD00112957
+2024-05-17 12:53:07,987 - Downloads/test - sampleID: SAMD00071359
+2024-05-17 12:53:08,184 - Downloads/test - sampleID: SAMD00112961
+2024-05-17 12:53:08,379 - Downloads/test - sampleID: SAMD00112951
+2024-05-17 12:53:08,581 - Downloads/test - sampleID: SAMD00071352
+2024-05-17 12:53:08,777 - Downloads/test - sampleID: SAMD00112963
+2024-05-17 12:53:08,971 - Downloads/test - sampleID: SAMD00112953
+2024-05-17 12:53:09,171 - Downloads/test - sampleID: SAMD00127263
+2024-05-17 12:53:09,411 - Downloads/test - sampleID: SAMD00071353
+2024-05-17 12:53:09,650 - Downloads/test - sampleID: SAMD00112955
+2024-05-17 12:53:09,844 - Downloads/test - sampleID: SAMD00071356
+2024-05-17 12:53:10,040 - Downloads/test - sampleID: SAMD00112956
+2024-05-17 12:53:10,229 - Downloads/test - sampleID: SAMD00071357
+2024-05-17 12:53:10,426 - Downloads/test - sampleID: SAMD00127267
+2024-05-17 12:53:10,622 - Downloads/test - sampleID: SAMD00071358
+2024-05-17 12:53:10,806 - Downloads/test - sampleID: SAMD00112958
+2024-05-17 12:53:11,000 - Downloads/test - sampleID: SAMD00127272
+2024-05-17 12:53:11,195 - Downloads/test - sampleID: SAMD00112949
+2024-05-17 12:53:11,403 - Downloads/test - sampleID: SAMD00127273
+2024-05-17 12:53:11,602 - Downloads/test - sampleID: SAMD00112950
+2024-05-17 12:53:11,795 - Downloads/test - sampleID: SAMD00112960
+2024-05-17 12:53:11,977 - Downloads/test - sampleID: SAMD00112952
+2024-05-17 12:53:12,158 - Downloads/test - sampleID: SAMD00127265
+2024-05-17 12:53:12,344 - Downloads/test - sampleID: SAMD00112959
+2024-05-17 12:53:12,541 - Downloads/test - sampleID: SAMD00127275
+2024-05-17 12:53:12,738 - Downloads/test - sampleID: SAMD00112962
+2024-05-17 12:53:12,941 - Downloads/test - sampleID: SAMD00207742
+2024-05-17 12:53:13,169 - Downloads/test - sampleID: SAMD00127266
+2024-05-17 12:53:13,376 - Downloads/test - sampleID: SAMD00207747
+2024-05-17 12:53:13,573 - Downloads/test - sampleID: SAMD00127270
+2024-05-17 12:53:13,773 - Downloads/test - sampleID: SAMD00112964
+2024-05-17 12:53:14,054 - Downloads/test - sampleID: SAMD00127274
+2024-05-17 12:53:14,257 - Downloads/test - sampleID: SAMD00207750
+2024-05-17 12:53:14,450 - Downloads/test - sampleID: SAMD00127264
+2024-05-17 12:53:14,649 - Downloads/test - sampleID: SAMD00127276
+2024-05-17 12:53:14,869 - Downloads/test - sampleID: SAMD00207754
+2024-05-17 12:53:15,070 - Downloads/test - sampleID: SAMD00127268
+2024-05-17 12:53:15,273 - Downloads/test - sampleID: SAMD00207755
+2024-05-17 12:53:15,468 - Downloads/test - sampleID: SAMD00127269
+2024-05-17 12:53:15,677 - Downloads/test - sampleID: SAMD00207738
+2024-05-17 12:53:15,877 - Downloads/test - sampleID: SAMD00207756
+2024-05-17 12:53:16,072 - Downloads/test - sampleID: SAMD00207739
+2024-05-17 12:53:16,256 - Downloads/test - sampleID: SAMD00127271
+2024-05-17 12:53:16,450 - Downloads/test - sampleID: SAMD00207744
+2024-05-17 12:53:16,639 - Downloads/test - sampleID: SAMD00207740
+2024-05-17 12:53:16,824 - Downloads/test - sampleID: SAMD00207741
+2024-05-17 12:53:17,018 - Downloads/test - sampleID: SAMD00207760
+2024-05-17 12:53:17,221 - Downloads/test - sampleID: SAMD00207745
+2024-05-17 12:53:17,413 - Downloads/test - sampleID: SAMD00207743
+2024-05-17 12:53:17,612 - Downloads/test - sampleID: SAMD00207761
+2024-05-17 12:53:17,822 - Downloads/test - sampleID: SAMD00207748
+2024-05-17 12:53:18,007 - Downloads/test - sampleID: SAMD00207746
+2024-05-17 12:53:18,201 - Downloads/test - sampleID: SAMD00207764
+2024-05-17 12:53:18,387 - Downloads/test - sampleID: SAMD00207751
+2024-05-17 12:53:18,584 - Downloads/test - sampleID: SAMD00207759
+2024-05-17 12:53:18,767 - Downloads/test - sampleID: SAMD00207763
+2024-05-17 12:53:19,160 - Downloads/test - sampleID: SAMD00207749
+2024-05-17 12:53:19,381 - Downloads/test - sampleID: SAMD00207752
+2024-05-17 12:53:19,606 - Downloads/test - sampleID: SAMD00207753
+2024-05-17 12:53:19,853 - Downloads/test - sampleID: SAMD00207757
+2024-05-17 12:53:20,057 - Downloads/test - sampleID: SAMD00207758
+2024-05-17 12:53:20,274 - Downloads/test - sampleID: SAMD00207762
+2024-05-17 12:53:20,550 - Downloads/test - sampleID: SAMN10417297
+2024-05-17 12:53:20,781 - Downloads/test - sampleID: SAMN10417316
+2024-05-17 12:53:20,989 - Downloads/test - sampleID: SAMN10417313
+2024-05-17 12:53:21,207 - Downloads/test - sampleID: SAMN10417314
+2024-05-17 12:53:21,765 - Downloads/test - sampleID: SAMN10417299
+2024-05-17 12:53:22,003 - Downloads/test - sampleID: SAMN10417300
+2024-05-17 12:53:22,186 - Downloads/test - sampleID: SAMN10417238
+2024-05-17 12:53:22,411 - Downloads/test - sampleID: SAMN10417317
+2024-05-17 12:53:22,622 - Downloads/test - sampleID: SAMN10417272
+2024-05-17 12:53:22,822 - Downloads/test - sampleID: SAMN10417301
+2024-05-17 12:53:23,043 - Downloads/test - sampleID: SAMN10417298
+2024-05-17 12:53:23,255 - Downloads/test - sampleID: SAMN10417259
+2024-05-17 12:53:23,452 - Downloads/test - sampleID: SAMN10417258
+2024-05-17 12:53:23,656 - Downloads/test - sampleID: SAMN10417315
+2024-05-17 12:53:24,954 - Downloads/test - sampleID: SAMN10417260
+2024-05-17 12:53:25,140 - Downloads/test - sampleID: SAMN10417307
+2024-05-17 12:53:25,359 - Downloads/test - sampleID: SAMN10417240
+2024-05-17 12:53:25,568 - Downloads/test - sampleID: SAMN10417306
+2024-05-17 12:53:25,753 - Downloads/test - sampleID: SAMN10417241
+2024-05-17 12:53:25,938 - Downloads/test - sampleID: SAMN10417290
+2024-05-17 12:53:26,138 - Downloads/test - sampleID: SAMN10417239
+2024-05-17 12:53:26,334 - Downloads/test - sampleID: SAMN10417289
+2024-05-17 12:53:26,531 - Downloads/test - sampleID: SAMN10417288
+2024-05-17 12:53:26,720 - Downloads/test - sampleID: SAMN10417304
+2024-05-17 12:53:26,906 - Downloads/test - sampleID: SAMN10417303
+2024-05-17 12:53:27,092 - Downloads/test - sampleID: SAMN10417237
+2024-05-17 12:53:27,320 - Downloads/test - sampleID: SAMN10417236
+2024-05-17 12:53:27,512 - Downloads/test - sampleID: SAMN10417230
+2024-05-17 12:53:27,716 - Downloads/test - sampleID: SAMN10417232
+2024-05-17 12:53:27,913 - Downloads/test - sampleID: SAMN10417231
+2024-05-17 12:53:28,116 - Downloads/test - sampleID: SAMN10417233
+2024-05-17 12:53:28,325 - Downloads/test - sampleID: SAMN10417228
+2024-05-17 12:53:28,524 - Downloads/test - sampleID: SAMN10417308
+2024-05-17 12:53:28,795 - Downloads/test - sampleID: SAMN10417234
+2024-05-17 12:53:28,993 - Downloads/test - sampleID: SAMN10417295
+2024-05-17 12:53:29,183 - Downloads/test - sampleID: SAMN10417292
+2024-05-17 12:53:29,386 - Downloads/test - sampleID: SAMN10417245
+2024-05-17 12:53:29,587 - Downloads/test - sampleID: SAMN10417309
+2024-05-17 12:53:29,807 - Downloads/test - sampleID: SAMN10417271
+2024-05-17 12:53:30,015 - Downloads/test - sampleID: SAMN10417311
+2024-05-17 12:53:30,217 - Downloads/test - sampleID: SAMN10417285
+2024-05-17 12:53:30,412 - Downloads/test - sampleID: SAMN10417246
+2024-05-17 12:53:30,655 - Downloads/test - sampleID: SAMN10417256
+2024-05-17 12:53:31,139 - Downloads/test - sampleID: SAMN10417243
+2024-05-17 12:53:31,345 - Downloads/test - sampleID: SAMN10417254
+2024-05-17 12:53:31,539 - Downloads/test - sampleID: SAMN10417249
+2024-05-17 12:53:31,735 - Downloads/test - sampleID: SAMN10417255
+2024-05-17 12:53:31,928 - Downloads/test - sampleID: SAMN10417257
+2024-05-17 12:53:32,134 - Downloads/test - sampleID: SAMN10417262
+2024-05-17 12:53:32,343 - Downloads/test - sampleID: SAMN10417252
+2024-05-17 12:53:32,554 - Downloads/test - sampleID: SAMN10417282
+2024-05-17 12:53:32,761 - Downloads/test - sampleID: SAMN10417253
+2024-05-17 12:53:32,997 - Downloads/test - sampleID: SAMN10417279
+2024-05-17 12:53:33,179 - Downloads/test - sampleID: SAMN10417302
+2024-05-17 12:53:33,638 - Downloads/test - sampleID: SAMN10417280
+2024-05-17 12:53:34,244 - Downloads/test - sampleID: SAMN10417277
+2024-05-17 12:53:34,446 - Downloads/test - sampleID: SAMN10417265
+2024-05-17 12:53:34,677 - Downloads/test - sampleID: SAMN10417283
+2024-05-17 12:53:34,910 - Downloads/test - sampleID: SAMN10417270
+2024-05-17 12:53:35,103 - Downloads/test - sampleID: SAMN10417268
+2024-05-17 12:53:35,291 - Downloads/test - sampleID: SAMN10417269
+2024-05-17 12:53:35,491 - Downloads/test - sampleID: SAMN10417267
+2024-05-17 12:53:35,694 - Downloads/test - sampleID: SAMN10417273
+2024-05-17 12:53:35,900 - Downloads/test - sampleID: SAMN10417242
+2024-05-17 12:53:36,084 - Downloads/test - sampleID: SAMN10417291
+2024-05-17 12:53:36,274 - Downloads/test - sampleID: SAMN10417305
+2024-05-17 12:53:36,456 - Downloads/test - sampleID: SAMN10417287
+2024-05-17 12:53:36,661 - Downloads/test - sampleID: SAMN10417229
+2024-05-17 12:53:36,846 - Downloads/test - sampleID: SAMN10417235
+2024-05-17 12:53:37,048 - Downloads/test - sampleID: SAMN10417296
+2024-05-17 12:53:37,250 - Downloads/test - sampleID: SAMN10417312
+2024-05-17 12:53:37,448 - Downloads/test - sampleID: SAMN10417293
+2024-05-17 12:53:37,640 - Downloads/test - sampleID: SAMN10417294
+2024-05-17 12:53:37,834 - Downloads/test - sampleID: SAMN10417310
+2024-05-17 12:53:38,029 - Downloads/test - sampleID: SAMN10417244
+2024-05-17 12:53:38,219 - Downloads/test - sampleID: SAMN10417247
+2024-05-17 12:53:38,414 - Downloads/test - sampleID: SAMN10417284
+2024-05-17 12:53:38,610 - Downloads/test - sampleID: SAMN10417248
+2024-05-17 12:53:38,799 - Downloads/test - sampleID: SAMN10417250
+2024-05-17 12:53:38,991 - Downloads/test - sampleID: SAMN10417251
+2024-05-17 12:53:39,256 - Downloads/test - sampleID: SAMN10417286
+2024-05-17 12:53:39,534 - Downloads/test - sampleID: SAMN10417275
+2024-05-17 12:53:39,726 - Downloads/test - sampleID: SAMN10417261
+2024-05-17 12:53:39,926 - Downloads/test - sampleID: SAMN10417274
+2024-05-17 12:53:40,109 - Downloads/test - sampleID: SAMN10417264
+2024-05-17 12:53:40,295 - Downloads/test - sampleID: SAMN10417263
+2024-05-17 12:53:40,493 - Downloads/test - sampleID: SAMN10417276
+2024-05-17 12:53:40,682 - Downloads/test - sampleID: SAMN10417278
+2024-05-17 12:53:40,937 - Downloads/test - sampleID: SAMN10417281
+2024-05-17 12:53:41,122 - Downloads/test - sampleID: SAMN10417266
+2024-05-17 12:53:45,483 - Downloads/test - [PUBLICATIONS MODULE - INITIALIZED]
+2024-05-17 12:53:45,483 - Downloads/test - [OPTION-1]: use 'merged_experiments-metadata.tsv' file present in the current session
+2024-05-17 12:53:45,484 - Downloads/test - Found test_merged_experiments-metadata.tsv
+2024-05-17 12:54:15,912 - Downloads/test - [GET-PUBLICATIONS]: PRJDB5459 → DRA006958 returned publication with id 30333815.
+2024-05-17 12:54:16,704 - Downloads/test - [GET-PUBLICATIONS]: PRJDB5459 → DRA009701 returned publication with id 33602131.
+2024-05-17 12:54:16,861 - Downloads/test - [GET-PUBLICATIONS]: Publications metadata was downloaded as PRJDB5459_publications-metadata.tsv
+2024-05-17 12:54:17,352 - Downloads/test - [GET-PUBLICATIONS]: PRJNA505133 → 31641132 returned publication with id 31641132.
+2024-05-17 12:54:17,968 - Downloads/test - [GET-PUBLICATIONS]: PRJNA505133 → 33558598 returned publication with id 33558598.
+2024-05-17 12:54:18,120 - Downloads/test - [GET-PUBLICATIONS]: Publications metadata was downloaded as PRJNA505133_publications-metadata.tsv
+2024-05-17 12:54:18,135 - Downloads/test - [GET-PUBLICATIONS]: test_merged_publications-metadata.tsv created
+2024-05-17 12:54:24,879 - Downloads/test - [REPORT MODULE - INITIALIZED]
+2024-05-17 12:54:25,611 - Downloads/test - Found test_merged_experiments-metadata.tsv and test_merged_publications-metadata.tsv
+2024-05-17 12:54:55,389 - Downloads/test - [REPORT-GENERATION-COMPLETED]: You can find the Report file in HTML format and the Report folder here: Downloads/test
+2024-05-17 12:57:50,093 - Downloads/test - [DATA MODULE - INITIALIZED]
+2024-05-17 12:57:50,806 - Downloads/test - [OPTION-1] - use 'merged_experiments-metadata.tsv' file present in the current session
+2024-05-17 12:57:50,806 - Downloads/test - Found test_merged_experiments-metadata.tsv
+2024-05-17 12:57:50,814 - Downloads/test - Found enaDataGet
+2024-05-17 12:57:53,923 - Downloads/test - [DATA-TYPE-SELECTED]: fastq
+2024-05-17 12:57:53,991 - Downloads/test - [PROJECT-SIZE]: PRJDB5459 → 705.03 MB
+2024-05-17 12:57:53,991 - Downloads/test - [PROJECT-SIZE]: PRJNA505133 → 6.26 GB
+2024-05-17 12:57:53,992 - Downloads/test - Total file size = 6.95 GB. You are going to occupy 3% of free disk space
+2024-05-17 12:57:53,993 - Downloads/test - [WARNING]: you're gonna occupy 3 % of your free disk space
+2024-05-17 12:58:02,316 - Downloads/test - DOWNLOAD INITIALIZED
+2024-05-17 12:58:02,337 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083675 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,342 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083674 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,344 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083676 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,347 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083677 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,348 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083678 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,350 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083679 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,353 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083680 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,359 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083681 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,359 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083682 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,362 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083683 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,380 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083684 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:02,403 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083685 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:17,394 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083686 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:20,247 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083687 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:25,482 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083688 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:27,679 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR083689 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:36,266 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125473 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:36,671 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125474 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:36,796 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125475 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:38,237 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125476 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,698 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125477 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,710 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125478 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,719 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125479 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,727 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125480 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,736 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125481 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,739 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125482 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,743 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125483 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,804 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125484 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,820 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125485 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,829 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125487 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,840 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125488 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:39,870 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR125486 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:41,863 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138642 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:46,965 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138643 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:48,005 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138644 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:48,552 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138645 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:48,751 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138646 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:50,116 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138647 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:51,236 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138648 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:53,083 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138649 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:55,056 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138650 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:55,376 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138651 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:56,156 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138652 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:56,283 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138653 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:56,396 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138654 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:56,669 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR138655 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,141 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212737 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,172 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212738 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,218 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212739 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,242 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212740 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,243 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212741 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,247 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212742 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,276 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212743 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,320 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212744 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,321 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212745 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,330 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212746 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,340 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212747 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:58:58,362 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212748 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
+2024-05-17 12:59:00,474 - Downloads/test - /root/tools/enaBrowserTools-1.7.1/python3/enaDataGet -f fastq DRR212749 -d "Downloads/test/PRJDB5459/PRJDB5459_fastq_files"
