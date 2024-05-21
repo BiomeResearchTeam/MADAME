@@ -224,11 +224,12 @@ class GetIDlist:
     # Prints output for the user-submitted accessions as a table with clickable accession links. Umbrella Projects, if present, are printed in yellow and next to the "☂" character.
 
         results_dataframe = pd.DataFrame(columns=['accession','description'])
+        request_response = [] 
 
         #logger
         logger = LoggerManager.log(user_session)
 
-        def text_search(ena_domain, results_dataframe):
+        def text_search(ena_domain, results_dataframe, request_response):
 
             # Spinner for showing MADAME is working (this process can be lenghty)
             console = Console()
@@ -249,6 +250,7 @@ class GetIDlist:
                 s.mount('https://', HTTPAdapter(max_retries=retries))
                 
                 request = s.get(complete_url, headers=headers, allow_redirects=True)
+                request_response.append(str(request.status_code))
 
                 # String decoding
                 decoded = request.content.decode("utf-8", "ignore")
@@ -263,74 +265,75 @@ class GetIDlist:
         # Query ENA db only if accession codes are present, check each list.
         if dictionaryOfAccessionIDs["runs"]:
             accessions = dictionaryOfAccessionIDs["runs"]
-            results_dataframe = text_search("sra-run", results_dataframe)
+            results_dataframe = text_search("sra-run", results_dataframe, request_response)
         
         if dictionaryOfAccessionIDs["runs_range"]:
             for range in dictionaryOfAccessionIDs["runs_range"]:
                 accessions = self.expand_accessions_range(range)
-                results_dataframe = text_search("sra-run", results_dataframe)
+                results_dataframe = text_search("sra-run", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["experiments"]:
             accessions = dictionaryOfAccessionIDs["experiments"]
-            results_dataframe = text_search("sra-experiment", results_dataframe)
+            results_dataframe = text_search("sra-experiment", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["experiments_range"]:
             for range in dictionaryOfAccessionIDs["experiments_range"]:
                 accessions = self.expand_accessions_range(range)
-                results_dataframe = text_search("sra-experiment", results_dataframe)
+                results_dataframe = text_search("sra-experiment", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["samples"]:
             accessions = dictionaryOfAccessionIDs["samples"]
-            results_dataframe = text_search("sra-sample", results_dataframe)
+            results_dataframe = text_search("sra-sample", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["samples_range"]:
             for range in dictionaryOfAccessionIDs["samples_range"]:
                 accessions = self.expand_accessions_range(range)
-                results_dataframe = text_search("sra-sample", results_dataframe)
+                results_dataframe = text_search("sra-sample", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["biosamples"]:
             accessions = dictionaryOfAccessionIDs["biosamples"]
-            results_dataframe = text_search("sra-sample", results_dataframe)
+            results_dataframe = text_search("sra-sample", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["biosamples_range"]:
             for range in dictionaryOfAccessionIDs["biosamples_range"]:
                 accessions = self.expand_accessions_range(range)
-                results_dataframe = text_search("sra-sample", results_dataframe)
+                results_dataframe = text_search("sra-sample", results_dataframe, request_response)
 
         if dictionaryOfAccessionIDs["studies"]:
             accessions = dictionaryOfAccessionIDs["studies"]
-            results_dataframe = text_search("sra-study", results_dataframe)
+            results_dataframe = text_search("sra-study", results_dataframe, request_response)
         
         if dictionaryOfAccessionIDs["projects"]:
             accessions = dictionaryOfAccessionIDs["projects"]
-            results_dataframe = text_search("project", results_dataframe)
+            results_dataframe = text_search("project", results_dataframe, request_response)
 
         if results_dataframe.empty:
             print('Please try again\n')
             time.sleep(2)
             
         else:
-            rich_print(f"\n  >> Details of [bold]entered accessions[/bold]:\n")
+            if request_response == "200":
+                rich_print(f"\n  >> Details of [bold]entered accessions[/bold]:\n")
 
-            table = Table(row_styles=["", "rgb(204,153,255)"], header_style="", box=box.ROUNDED)
-            table.add_column("Accession", justify="left", no_wrap=True)
-            table.add_column("Description", justify="left")
+                table = Table(row_styles=["", "rgb(204,153,255)"], header_style="", box=box.ROUNDED)
+                table.add_column("Accession", justify="left", no_wrap=True)
+                table.add_column("Description", justify="left")
 
-            for row in results_dataframe.index:
-                if results_dataframe['accession'][row] in umbrella_projects:
-                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}][yellow]☂ {results_dataframe['accession'][row]}[/yellow][/link]", f"{results_dataframe['description'][row]}")
+                for row in results_dataframe.index:
+                    if results_dataframe['accession'][row] in umbrella_projects:
+                        table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}][yellow]☂ {results_dataframe['accession'][row]}[/yellow][/link]", f"{results_dataframe['description'][row]}")
 
-                    #logger
-                    logger.debug(f"[ACCESSION-DETAILS]: ☂ {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
+                        #logger
+                        logger.debug(f"[ACCESSION-DETAILS]: ☂ {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
 
-                else:
-                    table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}]{results_dataframe['accession'][row]}[/link]", f"{results_dataframe['description'][row]}")
+                    else:
+                        table.add_row(f"[link=https://www.ebi.ac.uk/ena/browser/view/{results_dataframe['accession'][row]}]{results_dataframe['accession'][row]}[/link]", f"{results_dataframe['description'][row]}")
 
-                    #logger
-                    logger.debug(f"[ACCESSION-DETAILS]: {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
-                
-            console = Console()
-            console.print(table)
+                        #logger
+                        logger.debug(f"[ACCESSION-DETAILS]: {results_dataframe['accession'][row]} → {results_dataframe['description'][row]}")
+                    
+                console = Console()
+                console.print(table)
 
 
     def expand_accessions_range(self, accessions_range):
