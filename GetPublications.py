@@ -267,6 +267,7 @@ class GetPublications:
             accessions_list = list(dict.fromkeys(accessions_list))
         
         for queried_accession_id in accessions_list:
+
             # Print message and counter according to project ID type
             if umbrella == True:
                 rich_print(f"[yellow]☂[/yellow] {projectID}: querying {queried_accession_id} ({accessions_list.index(queried_accession_id)+1}/{len(accessions_list)})")
@@ -352,8 +353,9 @@ class GetPublications:
                             break
 
                         # Check for umbrella projects loop: if the unique article identifier "id" it's already in any of the dataframes in umbrella_dataframe_list; if it is, skip to the next query without parsing anything.
-                        elif umbrella_dataframe_list and any(pub_id in df["id"].values for df in umbrella_dataframe_list):
-                            
+
+                        elif umbrella_dataframe_list and any(pub_id in df["id"].values for df in [df for df in umbrella_dataframe_list if not df.empty]):
+
                             #logger
                             logger = LoggerManager.log(user_session)
                             logger.debug(f"[GET-PUBLICATIONS]: ☂ {umbrella} → component project {projectID} → {queried_accession_id} returned publication with id {pub_id}. ALREADY FOUND, SKIPPING")
