@@ -33,24 +33,28 @@ class GetPublications:
 
         # Check if there's umbrella projects in merged experiment metadata
         if 'umbrella_project' in e_df.columns:
+
+            # Spinner for showing MADAME is working (this process can be lenghty)
+            console = Console()
+            with console.status("\n☂ Checking for Umbrella Projects, please wait...") as status:
             
-            # List of all umbrella projects in e_df, filtered to remove empty strings
-            umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
+                # List of all umbrella projects in e_df, filtered to remove empty strings
+                umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
 
-            # List of all component projects in e_df
-            component_projects = {}
+                # List of all component projects in e_df
+                component_projects = {}
 
-            for projectID in umbrella_projects:
-                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
-                component_projects[projectID] = components
+                for projectID in umbrella_projects:
+                    components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                    component_projects[projectID] = components
 
-            component_projects_list = [component for components in list(component_projects.values()) for component in components]
+                component_projects_list = [component for components in list(component_projects.values()) for component in components]
 
-            # List of not umbrella and not component projects
-            listOfProjectIDs = e_df.loc[e_df['umbrella_project'] == '', 'study_accession'].unique().tolist()
+                # List of not umbrella and not component projects
+                listOfProjectIDs = e_df.loc[e_df['umbrella_project'] == '', 'study_accession'].unique().tolist()
 
-            # List of umbrella + not umbrella projects, without all the component projects
-            listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
+                # List of umbrella + not umbrella projects, without all the component projects
+                listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
             
             # logger
             logger = LoggerManager.log(user_session)

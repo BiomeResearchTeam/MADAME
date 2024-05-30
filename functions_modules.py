@@ -63,11 +63,13 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
             # Print details about each umbrella (read experiment metadata online).
             # → Project IDs are clickable
 
+            components_dict = {}
             for projectID in umbrella_projects:
 
                 # Spinner for showing MADAME is working (this process can be lenghty)
                 with console.status("\n☂ Calculating the component projects, please wait...") as status:
                     component_projects = Project.getComponentProjects(projectID, "online", user_session)
+                    components_dict[projectID] = component_projects
                 
                 if len(component_projects) == 1:
                     rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
@@ -83,6 +85,8 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
                     # logger
                     logger = LoggerManager.log(user_session)
                     logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+
+            component_projects_list = [component for components in list(components_dict.values()) for component in components]
 
             # Print info box and let the user decide how to proceed
             print()
@@ -119,7 +123,37 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
                 logger = LoggerManager.log(user_session)
                 logger.debug(f"[OPTION-2]: - INCLUDE UMBRELLA PROJECTS")
 
-                listOfAccessionIDs = projects + umbrella_projects      
+                # Check if some of the projects in the list are also component of the umbrella we are including. If they are, they will be removed to avoid duplicate files
+                components_to_remove = []
+                if component_projects_list:
+                    for component in component_projects_list:
+                        if component in projects:
+                            components_to_remove.append(component)
+
+                if components_to_remove:
+
+                    logger.debug(f"[OPTION-2]: - WARNING: {len(components_to_remove)} projects are component projects of umbrella projects already present in your list of accession IDs. To avoid downloading duplicate files, these components will be removed from the list.\nYou will find their metadata and data in their respective umbrella project:")
+                    
+                    if len(components_to_remove) > 1:
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] projects are component projects of [yellow]umbrella projects[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], these components will be [u]removed[/u] from the list.\nYou will find their metadata and data in their respective umbrella project:\n")
+                    else:
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component projects of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
+
+                    for component in components_to_remove:
+                        for key, value in components_dict.items():
+                            if isinstance(value, list) and component in value:
+                                projectID = key
+                        rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{component}]{component}[/link] → [yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link]")
+                        logger.debug(f"{component} → ☂ {projectID}")
+
+                    #Give time to user to read the warning
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+
+                    listOfAccessionIDs = [x for x in projects if x not in components_to_remove] + umbrella_projects
+
+
+                else:
+                    listOfAccessionIDs = projects + umbrella_projects      
 
         # If none of the projects are umbrella
         else:
@@ -267,11 +301,13 @@ def UserDigitCodesIDlist(user_query_input, user_session):
             # Print details about each umbrella (read experiment metadata online).
             # → Project IDs are clickable
 
+            components_dict = {}
             for projectID in umbrella_projects:
 
                 # Spinner for showing MADAME is working (this process can be lenghty)
                 with console.status("\n☂ Calculating the component projects, please wait...") as status:
                     component_projects = Project.getComponentProjects(projectID, "online", user_session)
+                    components_dict[projectID] = component_projects
                 
                 if len(component_projects) == 1:
                     rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
@@ -286,6 +322,8 @@ def UserDigitCodesIDlist(user_query_input, user_session):
                     # logger
                     logger = LoggerManager.log(user_session)
                     logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+
+            component_projects_list = [component for components in list(components_dict.values()) for component in components]
 
             # Print info box and let the user decide how to proceed
             print()
@@ -324,7 +362,37 @@ def UserDigitCodesIDlist(user_query_input, user_session):
                 logger = LoggerManager.log(user_session)
                 logger.debug(f"[OPTION-2]: - INCLUDE UMBRELLA PROJECTS")
 
-                dictionaryOfAccessionIDs["projects"] = projects + umbrella_projects      
+                # Check if some of the projects in the list are also component of the umbrella we are including. If they are, they will be removed to avoid duplicate files
+                components_to_remove = []
+                if component_projects_list:
+                    for component in component_projects_list:
+                        if component in projects:
+                            components_to_remove.append(component)
+
+                if components_to_remove:
+
+                    logger.debug(f"[OPTION-2]: - WARNING: {len(components_to_remove)} projects are component projects of umbrella projects already present in your list of accession IDs. To avoid downloading duplicate files, these components will be removed from the list.\nYou will find their metadata and data in their respective umbrella project:")
+                    
+                    if len(components_to_remove) > 1:
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] projects are component projects of [yellow]umbrella projects[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], these components will be [u]removed[/u] from the list.\nYou will find their metadata and data in their respective umbrella project:\n")
+                    else:
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component projects of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
+
+                    for component in components_to_remove:
+                        for key, value in components_dict.items():
+                            if isinstance(value, list) and component in value:
+                                projectID = key
+                        rich_print(f"[link=https://www.ebi.ac.uk/ena/browser/view/{component}]{component}[/link] → [yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link]")
+                        logger.debug(f"{component} → ☂ {projectID}")
+
+                    #Give time to user to read the warning
+                    input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+
+                    dictionaryOfAccessionIDs["projects"] = [x for x in projects if x not in components_to_remove] + umbrella_projects
+                    listOfAccessionIDs = [x for x in listOfAccessionIDs if x not in components_to_remove]
+                
+                else: 
+                    dictionaryOfAccessionIDs["projects"] = projects + umbrella_projects      
 
         # If none of the projects are umbrella
         else:
