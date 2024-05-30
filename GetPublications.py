@@ -47,7 +47,7 @@ class GetPublications:
             component_projects_list = [component for components in list(component_projects.values()) for component in components]
 
             # List of not umbrella and not component projects
-            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects_list]
+            listOfProjectIDs = e_df.loc[e_df['umbrella_project'] == '', 'study_accession'].unique().tolist()
 
             # List of umbrella + not umbrella projects, without all the component projects
             listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
