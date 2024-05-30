@@ -69,11 +69,20 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
                 with console.status("\n☂ Calculating the component projects, please wait...") as status:
                     component_projects = Project.getComponentProjects(projectID, "online", user_session)
                 
-                rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+                if len(component_projects) == 1:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
 
-                # logger
-                logger = LoggerManager.log(user_session)
-                logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component project")
+
+                
+                else:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
 
             # Print info box and let the user decide how to proceed
             print()
@@ -264,11 +273,19 @@ def UserDigitCodesIDlist(user_query_input, user_session):
                 with console.status("\n☂ Calculating the component projects, please wait...") as status:
                     component_projects = Project.getComponentProjects(projectID, "online", user_session)
                 
-                rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+                if len(component_projects) == 1:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
 
-                # logger
-                logger = LoggerManager.log(user_session)
-                logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component project")
+  
+                else:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
 
             # Print info box and let the user decide how to proceed
             print()
@@ -432,6 +449,7 @@ def UserFileCodesIDlist(csv_file_input):
             list_accession_codes_csv_file = list(csv_file_read)
             listOfProjectIDs = [item for sublist in list_accession_codes_csv_file for item in sublist]
 
+        listOfProjectIDs = list(dict.fromkeys(listOfProjectIDs)) # remove duplicates
         return listOfProjectIDs
 
 

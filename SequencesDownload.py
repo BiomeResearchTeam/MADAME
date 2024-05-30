@@ -35,10 +35,19 @@ class SequencesDownload:
             
             # List of all umbrella projects in e_df, filtered to remove empty strings
             umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
+
             # List of all component projects in e_df
-            component_projects = e_df.loc[e_df['umbrella_project'] != '', 'study_accession'].unique().tolist()
+            component_projects = {}
+
+            for projectID in umbrella_projects:
+                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                component_projects[projectID] = components
+
+            component_projects_list = [component for components in list(component_projects.values()) for component in components]
+
             # List of not umbrella and not component projects
-            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects]
+            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects_list]
+
             # List of umbrella + not umbrella projects, without all the component projects
             listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
             
@@ -53,15 +62,22 @@ class SequencesDownload:
             # Print details about each umbrella (read experiment metadata online).
             # → Project IDs are clickable
 
-            for projectID in umbrella_projects:
+            for projectID in component_projects:
 
-                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
-                
-                rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(components)}[/rgb(0,255,0)] component projects")
+                if len(component_projects[projectID]) == 1:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects[projectID])}[/rgb(0,255,0)] component project")
 
-                # logger
-                logger = LoggerManager.log(user_session)
-                logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(components)} component projects")
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects[projectID])} component project")
+
+               
+                else: 
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects[projectID])}[/rgb(0,255,0)] component projects")
+
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects[projectID])} component projects")
 
             # Print info box and let the user decide how to proceed
             print()
@@ -234,7 +250,7 @@ class SequencesDownload:
                             # If the project is an umbrella
                             if project in umbrella_projects: 
 
-                                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                                components = component_projects[projectID]
 
                                 component_project_files = os.path.join("Downloads", user_session, project, 'component_project_files')
                                 Utilities.createDirectory(component_project_files)

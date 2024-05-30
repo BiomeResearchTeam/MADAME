@@ -94,6 +94,10 @@ class Project:
 
         if "UMBRELLA_PROJECT" in content:
             return True
+        elif "RELATED_PROJECTS" in content:
+            return True
+        elif "CHILD_PROJECT" in content:
+            return True
         else:
             return False
         

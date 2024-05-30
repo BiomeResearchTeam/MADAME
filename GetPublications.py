@@ -36,10 +36,19 @@ class GetPublications:
             
             # List of all umbrella projects in e_df, filtered to remove empty strings
             umbrella_projects = list(filter(None, e_df['umbrella_project'].unique().tolist()))
+
             # List of all component projects in e_df
-            component_projects = e_df.loc[e_df['umbrella_project'] != '', 'study_accession'].unique().tolist()
+            component_projects = {}
+
+            for projectID in umbrella_projects:
+                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                component_projects[projectID] = components
+
+            component_projects_list = [component for components in list(component_projects.values()) for component in components]
+
             # List of not umbrella and not component projects
-            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects]
+            listOfProjectIDs = [x for x in listOfProjectIDs if x not in component_projects_list]
+
             # List of umbrella + not umbrella projects, without all the component projects
             listOfProjectIDs_full = listOfProjectIDs + umbrella_projects
             
@@ -50,19 +59,26 @@ class GetPublications:
             # Print warning to console
             session_name = str(user_session).split('/')[1]
             rich_print(f"\n[yellow]WARNING[/yellow] - {session_name}_merged_experiments-metadata.tsv contains [rgb(0,255,0)]{len(listOfProjectIDs_full)}[/rgb(0,255,0)] projects, but [rgb(0,255,0)]{len(umbrella_projects)}[/rgb(0,255,0)] of them are [yellow]UMBRELLA projects[/yellow]:")
-
+   
             # Print details about each umbrella (read experiment metadata online).
             # → Project IDs are clickable
 
-            for projectID in umbrella_projects:
+            for projectID in component_projects:
 
-                components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
-                
-                rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(components)}[/rgb(0,255,0)] component projects")
+                if len(component_projects[projectID]) == 1:
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects[projectID])}[/rgb(0,255,0)] component project")
 
-                # logger
-                logger = LoggerManager.log(user_session)
-                logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(components)} component projects")
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects[projectID])} component project")
+
+               
+                else: 
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects[projectID])}[/rgb(0,255,0)] component projects")
+
+                    # logger
+                    logger = LoggerManager.log(user_session)
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects[projectID])} component projects")
 
             # Print info box and let the user decide how to proceed
             print()
@@ -133,7 +149,8 @@ class GetPublications:
                     umbrella_dataframe_list.append(umbrella_dataframe)
 
                     #Search publication for each component of the umbrella
-                    components = e_df.loc[e_df['umbrella_project'] == f'{projectID}', 'study_accession'].unique().tolist()
+                    components = component_projects[projectID]
+
                     for component in components:
                         c_accessions_list = self.ENA_Xref_check(component)          
                         component_dataframe = self.PMC_pd_dataframe(e_df, component, c_accessions_list, user_session, umbrella = projectID, component = True, components = components, umbrella_dataframe_list = umbrella_dataframe_list)
