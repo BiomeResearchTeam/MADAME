@@ -137,7 +137,7 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
                     if len(components_to_remove) > 1:
                         rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] projects are component projects of [yellow]umbrella projects[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], these components will be [u]removed[/u] from the list.\nYou will find their metadata and data in their respective umbrella project:\n")
                     else:
-                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component projects of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component project of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
 
                     for component in components_to_remove:
                         for key, value in components_dict.items():
@@ -376,7 +376,7 @@ def UserDigitCodesIDlist(user_query_input, user_session):
                     if len(components_to_remove) > 1:
                         rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] projects are component projects of [yellow]umbrella projects[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], these components will be [u]removed[/u] from the list.\nYou will find their metadata and data in their respective umbrella project:\n")
                     else:
-                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component projects of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
+                        rich_print(f"\n[yellow]WARNING[/yellow] - [rgb(0,255,0)]{len(components_to_remove)}[/rgb(0,255,0)] project is a component project of an [yellow]umbrella project[/yellow] already present in your list of accession IDs. [u]To avoid downloading duplicate files[/u], this component will be [u]removed[/u] from the list.\nYou will find its metadata and data in its umbrella project:\n")
 
                     for component in components_to_remove:
                         for key, value in components_dict.items():
