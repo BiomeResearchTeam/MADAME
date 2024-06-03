@@ -54,14 +54,15 @@ class SampleMetadataDownload:
                     component_projects = Project.getComponentProjects(projectID, "local", user_session)
                     
                     for project in component_projects:
+                        # logger
+                        logger.debug(f"Downloading ☂ {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] → {project} [component {component_projects.index(project)+1}/{len(component_projects)}] sample metadata")
+
                         sample_ids = experiments_metadata_df.loc[experiments_metadata_df['study_accession'] == f'{project}', 'sample_accession'].unique().tolist()
 
                         samples_metadata_xml_folder = os.path.join(component_samples_metadata_xml_folder, f'{project}_samples-metadata_xml')
                         Utilities.createDirectory(samples_metadata_xml_folder)
 
                         for sampleID in track(sample_ids, description=f"Downloading [yellow]☂[/yellow] {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] → {project} \[component [{cyan}]{component_projects.index(project)+1}[/{cyan}]/[{cyan}]{len(component_projects)}[/{cyan}]] sample metadata: "):
-                            # logger
-                            logger.debug(f"Downloading ☂ {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] → {project} [component {component_projects.index(project)+1}/{len(component_projects)}] sample metadata")
 
                             # Checking the file existence before downloading
                             if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
@@ -83,14 +84,15 @@ class SampleMetadataDownload:
                 
                 # If projectID is NOT an umbrella project
                 else:
+                    # logger
+                    logger.debug(f"Downloading {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] sample metadata")
+                    
                     samples_metadata_xml_folder = os.path.join(path, "samples-metadata_xml")
                     Utilities.createDirectory(samples_metadata_xml_folder)
 
                     sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
 
                     for sampleID in track(sample_ids, description=f"Downloading {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] sample metadata: "):
-                        # logger
-                        logger.debug(f"Downloading {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] sample metadata")
 
                         # Checking the file existence before downloading
                         if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
