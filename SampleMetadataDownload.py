@@ -7,6 +7,7 @@ from requests.adapters import HTTPAdapter, Retry
 from rich.progress import track
 from rich import print as rich_print
 from Project import Project
+import time
 
 # Class for downloading sample metadata.
 
@@ -22,6 +23,7 @@ class SampleMetadataDownload:
 
         projects_list = listOfProjectIDs
         cyan = "rgb(0,255,255)"
+        logger = LoggerManager.log(user_session)
         
         # Determining if there's umbrella projects from listOfAccessionIDs' type
         if type(listOfProjectIDs) is dict:
@@ -58,6 +60,8 @@ class SampleMetadataDownload:
                         Utilities.createDirectory(samples_metadata_xml_folder)
 
                         for sampleID in track(sample_ids, description=f"Downloading [yellow]☂[/yellow] {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] → {project} \[component [{cyan}]{component_projects.index(project)+1}[/{cyan}]/[{cyan}]{len(component_projects)}[/{cyan}]] sample metadata: "):
+                            # logger
+                            logger.debug(f"Downloading ☂ {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] → {project} [component {component_projects.index(project)+1}/{len(component_projects)}] sample metadata")
 
                             # Checking the file existence before downloading
                             if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
@@ -66,12 +70,12 @@ class SampleMetadataDownload:
                                     if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
                                         pass
                                     else:
-                                        self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                                        self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, project, user_session)
                             else:
                                 if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
                                     pass
                                 else:
-                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, project, user_session)
 
                     rich_print(f'[yellow]☂[/yellow] {projectID} → {project} samples metadata files were [b rgb(0,255,0)]successfully downloaded[/b rgb(0,255,0)]\n')
 
@@ -85,6 +89,9 @@ class SampleMetadataDownload:
                     sample_ids = experiments_metadata_df['sample_accession'].unique().tolist()
 
                     for sampleID in track(sample_ids, description=f"Downloading {projectID} \[project [{cyan}]{projects_list.index(projectID)+1}[/{cyan}]/[{cyan}]{len(projects_list)}[/{cyan}]] sample metadata: "):
+                        # logger
+                        logger.debug(f"Downloading {projectID} [project {projects_list.index(projectID)+1}/{len(projects_list)}] sample metadata")
+
                         # Checking the file existence before downloading
                         if sampleID.count("SAMN") > 1: #avoid error for multiple samples 
                             single_sampleID = sampleID.split(";")
@@ -92,17 +99,17 @@ class SampleMetadataDownload:
                                 if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
                                     pass
                                 else:
-                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                                    self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, projectID, user_session)
                         else:
                             if os.path.isfile(os.path.join(samples_metadata_xml_folder, f'{sampleID}.xml')):
                                 pass
                             else:
-                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, user_session)
+                                self.sampleMetadataDownload(sampleID, samples_metadata_xml_folder, projectID, user_session)
 
                     rich_print(f'{projectID} samples metadata files were [b rgb(0,255,0)]successfully downloaded[/b rgb(0,255,0)]\n')
 
 
-    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder, user_session):
+    def sampleMetadataDownload(self, sampleID, sample_metadata_xml_folder, projectID, user_session):
     # Download sample metadata file
 
         logger = LoggerManager.log(user_session)
@@ -120,11 +127,20 @@ class SampleMetadataDownload:
             with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
                 file.write(download.content)
         except rq.exceptions.ChunkedEncodingError as e:
-            print(f"ChunkedEncodingError: {e}")
-            logger.debug(f"ChunkedEncodingError: {e}")
-            if isinstance(e.__cause__, IncompleteRead): #?
-                incomplete_read_exception = e.__cause__
-                print(f"IncompleteRead Exception: {incomplete_read_exception}")
-                logger.debug(f"IncompleteRead Exception: {incomplete_read_exception}")
-
+            rich_print(f"[yellow]ChunkedEncodingError: {e}[/yellow] for sampleID {sampleID}. Waiting 3 seconds, then [u]trying again[/u].")
+            logger.debug(f"ChunkedEncodingError: {e} for sampleID {sampleID}. Waiting 3 seconds, then trying again.")
+            time.sleep(3)
+            try:
+                download = s.get(url, headers=headers, allow_redirects=True)
+                with open((os.path.join(sample_metadata_xml_folder, f'{sampleID}.xml')), 'wb') as file:
+                    file.write(download.content)  
+            except rq.exceptions.ChunkedEncodingError as e:
+                rich_print(f"[yellow]ChunkedEncodingError: {e}[/yellow] for sampleID {sampleID}. It is not possible at the moment to download {sampleID}.xml.\nYou will find this information in the log file.")
+                logger.debug(f"ChunkedEncodingError: {e} for sampleID {sampleID}. It is not possible at the moment to download {sampleID}.xml. FILE SKIPPED.")
+            
+            #if isinstance(e.__cause__, IncompleteRead): 
+                #incomplete_read_exception = e.__cause__
+                #print(f"IncompleteRead Exception: {incomplete_read_exception}")
+                #logger.debug(f"IncompleteRead Exception: {incomplete_read_exception}")
+    
 SampleMetadataDownload = SampleMetadataDownload('SampleMetadataDownload')

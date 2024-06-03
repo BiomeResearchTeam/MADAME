@@ -72,19 +72,19 @@ def UserDataTypeInput(user_query_input, user_data_type, user_session):
                     components_dict[projectID] = component_projects
                 
                 if len(component_projects) == 1:
-                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] available component project")
 
                     # logger
                     logger = LoggerManager.log(user_session)
-                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component project")
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} available component project")
 
                 
                 else:
-                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] available component projects")
 
                     # logger
                     logger = LoggerManager.log(user_session)
-                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} available component projects")
 
             component_projects_list = [component for components in list(components_dict.values()) for component in components]
 
@@ -310,18 +310,18 @@ def UserDigitCodesIDlist(user_query_input, user_session):
                     components_dict[projectID] = component_projects
                 
                 if len(component_projects) == 1:
-                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component project")
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] available component project")
 
                     # logger
                     logger = LoggerManager.log(user_session)
-                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component project")
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} available component project")
   
                 else:
-                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] component projects")
+                    rich_print(f"[yellow]☂[/yellow] [link=https://www.ebi.ac.uk/ena/browser/view/{projectID}]{projectID}[/link] → [rgb(0,255,0)]{len(component_projects)}[/rgb(0,255,0)] available component projects")
 
                     # logger
                     logger = LoggerManager.log(user_session)
-                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} component projects")
+                    logger.debug(f"[UMBRELLA-PROJECT]: {projectID} → {len(component_projects)} available component projects")
 
             component_projects_list = [component for components in list(components_dict.values()) for component in components]
 
