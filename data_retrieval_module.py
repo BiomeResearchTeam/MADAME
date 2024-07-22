@@ -61,10 +61,16 @@ def check_files(user_session):
     while True: 
         if len(files_found) == 0:
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found 0 file. Are you sure the file is called '*_merged_experiments-metadata.tsv'? If not, please rename it\n")
+            logger = LoggerManager.log(user_session)
             logger.debug(f"[ERROR]: found 0 file")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to go back to the main menu ")
+            return
         elif len(files_found) > 1:
             print(Color.BOLD + Color.RED + "\nError" + Color.END, "found too many files. Please choose a folder containing only 1 '*_merged_experiments-metadata.tsv'")
+            logger = LoggerManager.log(user_session)
             logger.debug(f"[ERROR]: found more than 1 file")
+            input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to go back to the main menu ")
+            return
         else:
             return files_found
         
