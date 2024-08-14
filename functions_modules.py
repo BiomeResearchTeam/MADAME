@@ -502,10 +502,12 @@ def UserFileCodesIDlist(csv_file_input):
     
     with open(csv_file_input, 'r') as r:
         csv_file_extension = os.path.splitext(csv_file_input)
+        listOfProjectIDs = []
 
         if csv_file_extension[1] not in ('.csv', '.tsv'):
-            print(Color.BOLD + Color.RED + "File extension not .csv or .tsv" + Color.END, " please use the right format")
-            return
+            print(Color.BOLD + Color.RED + "ERROR" + Color.END, " - File extension must be .csv or .tsv! Please specify the path to a file with the right format.")
+            input("\n\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue.")
+            return listOfProjectIDs
 
         if csv_file_extension[1] == '.csv':
             csv_file_read = csv.reader(r, delimiter=',')

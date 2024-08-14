@@ -118,8 +118,13 @@ def metadata_retrieval_file(user_session):
                     continue
                 else: 
                     listOfAvailableAccessions = UserDigitCodesIDlist(listOfAccessionIDs, user_session)
-                    metadata_download(listOfAvailableAccessions, user_session)
-                    return
+                    if len(listOfAvailableAccessions) == 0:
+                        print(Color.BOLD + Color.RED + "WARNING" + Color.END, " - The specified file does not contain any available accessions. Please select a different file.\n")
+                        input("\nPress " + Color.BOLD + Color.PURPLE + f"ENTER" + Color.END + " to continue ")
+                        continue
+                    else:
+                        metadata_download(listOfAvailableAccessions, user_session)
+                        return
         
        
 def metadata_download(listOfAvailableAccessions, user_session):
