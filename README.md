@@ -113,5 +113,6 @@ Contacts
 
 Credits and acknowledgments
 ---------------------------
+* __Sara Fumagalli__
 * __Giulia Soletta__
 * __Giulia Agostinetto__
